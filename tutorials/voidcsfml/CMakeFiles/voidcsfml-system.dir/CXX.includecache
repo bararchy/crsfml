@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/blaxpirit/projects/crsfml/voidcsfml/src/voidcsfml/system.cpp
+voidcsfml/system.h
+-
+SFML/System.hpp
+-
+
+voidcsfml/include/voidcsfml/config.h
+stddef.h
+-
+stdint.h
+-
+
+voidcsfml/include/voidcsfml/system.h
+voidcsfml/config.h
+-
+

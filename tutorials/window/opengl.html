@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Using OpenGL in an SFML window · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Using OpenGL in an SFML window · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,7 +490,16 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="using-opengl-in-an-sfml-window">Using OpenGL in an SFML window</h1><p>Relevant examples: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/gl.cr" target="_blank">gl</a></strong>, <strong><a href="https://github.com/BlaXpirit/crsfml-examples/tree/master/cube" target="_blank">cube</a></strong></p><h2 id="introduction">Introduction</h2><p>This tutorial is not about OpenGL itself, but rather how to use CrSFML as an environment for OpenGL, and how to mix them together.</p><p>As you know, one of the most important features of OpenGL is portability. But OpenGL alone won&apos;t be enough to create complete programs: you need a window, a rendering context, user input, etc. You would have no choice but to write OS-specific code to handle this stuff on your own. That&apos;s where the sfml-window module comes into play. Let&apos;s see how it allows you to play with OpenGL.</p><h2 id="opengl">OpenGL?</h2><p>To use OpenGL, you&apos;ll need to find a library that implements Crystal bindings to it. This tutorial also contains small bits of OpenGL bindings.</p><h2 id="creating-an-opengl-window">Creating an OpenGL window</h2><p>Since SFML is based on OpenGL, its windows are ready for OpenGL calls without any extra effort.</p><pre><code class="lang-crystal"><span class="hljs-meta">@[Link(<span class="hljs-string">&quot;GL&quot;</span>)]</span> <span class="hljs-comment"># Use @[Link(framework: &quot;OpenGL&quot;)] on Mac OSX</span>
+                                <h1 id="using-opengl-in-an-sfml-window">Using OpenGL in an SFML window</h1>
+<p>Relevant examples: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/gl.cr" target="_blank">gl</a></strong>, <strong><a href="https://github.com/BlaXpirit/crsfml-examples/tree/master/cube" target="_blank">cube</a></strong></p>
+<h2 id="introduction">Introduction</h2>
+<p>This tutorial is not about OpenGL itself, but rather how to use CrSFML as an environment for OpenGL, and how to mix them together.</p>
+<p>As you know, one of the most important features of OpenGL is portability. But OpenGL alone won&apos;t be enough to create complete programs: you need a window, a rendering context, user input, etc. You would have no choice but to write OS-specific code to handle this stuff on your own. That&apos;s where the sfml-window module comes into play. Let&apos;s see how it allows you to play with OpenGL.</p>
+<h2 id="opengl">OpenGL?</h2>
+<p>To use OpenGL, you&apos;ll need to find a library that implements Crystal bindings to it. This tutorial also contains small bits of OpenGL bindings.</p>
+<h2 id="creating-an-opengl-window">Creating an OpenGL window</h2>
+<p>Since SFML is based on OpenGL, its windows are ready for OpenGL calls without any extra effort.</p>
+<pre><code class="lang-crystal"><span class="hljs-meta">@[Link(<span class="hljs-string">&quot;GL&quot;</span>)]</span> <span class="hljs-comment"># Use @[Link(framework: &quot;OpenGL&quot;)] on Mac OSX</span>
 <span class="hljs-class"><span class="hljs-keyword">lib</span> <span class="hljs-title">GL</span></span>
  <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">enable</span></span> = glEnable(cap : Int32)
  TEXTURE_2D = <span class="hljs-number">3553</span>
@@ -500,15 +509,15 @@ window = <span class="hljs-symbol">SF:</span>:RenderWindow.new(<span class="hljs
 
 <span class="hljs-comment"># it works out of the box</span>
 GL.enable(<span class="hljs-symbol">GL:</span>:TEXTURE_2D)
-...</code></pre>
-<p>In case you think it is <em>too</em> automatic, <a href="http://blaxpirit.github.io/crsfml/api/SF/Window.html" target="_blank">Window</a>&apos;s constructor has an extra argument that allows you to change the settings of the underlying OpenGL context. This argument is an instance of the structure, it provides access to the following settings:</p><ul><li><code>depth_bits</code> is the number of bits per pixel to use for the depth buffer (0 to disable it)
-</li>
-<li><code>stencil_bits</code> is the number of bits per pixel to use for the stencil buffer (0 to disable it)
-</li>
-<li><code>antialiasing_level</code> is the multisampling level
-</li>
-<li><code>major_version</code> and <code>minor_version</code> comprise the requested version of OpenGL
-</li></ul>
+...
+</code></pre>
+<p>In case you think it is <em>too</em> automatic, <a href="http://blaxpirit.github.io/crsfml/api/SF/Window.html" target="_blank">Window</a>&apos;s constructor has an extra argument that allows you to change the settings of the underlying OpenGL context. This argument is an instance of the structure, it provides access to the following settings:</p>
+<ul>
+<li><code>depth_bits</code> is the number of bits per pixel to use for the depth buffer (0 to disable it)</li>
+<li><code>stencil_bits</code> is the number of bits per pixel to use for the stencil buffer (0 to disable it)</li>
+<li><code>antialiasing_level</code> is the multisampling level</li>
+<li><code>major_version</code> and <code>minor_version</code> comprise the requested version of OpenGL</li>
+</ul>
 <pre><code class="lang-crystal">settings = <span class="hljs-symbol">SF:</span>:ContextSettings.new(
   <span class="hljs-symbol">depth:</span> <span class="hljs-number">24</span>, <span class="hljs-symbol">stencil:</span> <span class="hljs-number">8</span>, <span class="hljs-symbol">antialiasing:</span> <span class="hljs-number">4</span>,
   <span class="hljs-symbol">major:</span> <span class="hljs-number">3</span>, <span class="hljs-symbol">minor:</span> <span class="hljs-number">0</span>
@@ -517,14 +526,20 @@ GL.enable(<span class="hljs-symbol">GL:</span>:TEXTURE_2D)
 window = <span class="hljs-symbol">SF:</span>:RenderWindow.new(
     <span class="hljs-symbol">SF:</span>:VideoMode.new(<span class="hljs-number">800</span>, <span class="hljs-number">600</span>),
     <span class="hljs-string">&quot;OpenGL&quot;</span>, <span class="hljs-symbol">settings:</span> settings
-)</code></pre>
-<p>If any of these settings is not supported by the graphics card, SFML tries to find the closest valid match. For example, if 4x anti-aliasing is too high, it tries 2x and then falls back to 0.</p><p>In any case, you can check what settings SFML actually used with the <code>settings</code> method:</p><pre><code class="lang-crystal">settings = window.settings
+)
+</code></pre>
+<p>If any of these settings is not supported by the graphics card, SFML tries to find the closest valid match. For example, if 4x anti-aliasing is too high, it tries 2x and then falls back to 0.<br>In any case, you can check what settings SFML actually used with the <code>settings</code> method:</p>
+<pre><code class="lang-crystal">settings = window.settings
 
 puts <span class="hljs-string">&quot;depth bits: <span class="hljs-subst">#{settings.depth_bits}</span>&quot;</span>
 puts <span class="hljs-string">&quot;stencil bits: <span class="hljs-subst">#{settings.stencil_bits}</span>&quot;</span>
 puts <span class="hljs-string">&quot;antialiasing level: <span class="hljs-subst">#{settings.antialiasing_level}</span>&quot;</span>
-puts <span class="hljs-string">&quot;version: <span class="hljs-subst">#{settings.major_version}</span>.<span class="hljs-subst">#{settings.minor_version}</span>&quot;</span></code></pre>
-<p>OpenGL versions above 3.0 are supported by SFML (as long as your graphics driver can handle them). Support for selecting the profile of 3.2+ contexts and whether the context debug flag is set was added in SFML 2.3. The forward compatibility flag is not supported. By default, SFML creates 3.2+ contexts using the compatibility profile because the graphics module makes use of legacy OpenGL functionality. If you intend on using the graphics module, make sure to create your context without the core profile setting or the graphics module will not function correctly. On OS X, SFML supports creating OpenGL 3.2+ contexts using the core profile only. If you want to use the graphics module on OS X, you are limited to using a legacy context which implies OpenGL version 2.1.</p><h2 id="a-typical-opengl-with-crsfml-program">A typical OpenGL-with-CrSFML program</h2><p>Here is what a complete OpenGL program would look like with CrSFML:</p><pre><code class="lang-crystal"><span class="hljs-keyword">require</span> <span class="hljs-string">&quot;crsfml&quot;</span>
+puts <span class="hljs-string">&quot;version: <span class="hljs-subst">#{settings.major_version}</span>.<span class="hljs-subst">#{settings.minor_version}</span>&quot;</span>
+</code></pre>
+<p>OpenGL versions above 3.0 are supported by SFML (as long as your graphics driver can handle them). Support for selecting the profile of 3.2+ contexts and whether the context debug flag is set was added in SFML 2.3. The forward compatibility flag is not supported. By default, SFML creates 3.2+ contexts using the compatibility profile because the graphics module makes use of legacy OpenGL functionality. If you intend on using the graphics module, make sure to create your context without the core profile setting or the graphics module will not function correctly. On OS X, SFML supports creating OpenGL 3.2+ contexts using the core profile only. If you want to use the graphics module on OS X, you are limited to using a legacy context which implies OpenGL version 2.1.</p>
+<h2 id="a-typical-opengl-with-crsfml-program">A typical OpenGL-with-CrSFML program</h2>
+<p>Here is what a complete OpenGL program would look like with CrSFML:</p>
+<pre><code class="lang-crystal"><span class="hljs-keyword">require</span> <span class="hljs-string">&quot;crsfml&quot;</span>
 
 <span class="hljs-comment"># create bindings</span>
 <span class="hljs-meta">@[Link(<span class="hljs-string">&quot;GL&quot;</span>)]</span>
@@ -567,8 +582,14 @@ running = <span class="hljs-literal">true</span>
 
   <span class="hljs-comment"># end the current frame (internally swaps the front and back buffers)</span>
   window.display
-<span class="hljs-keyword">end</span></code></pre>
-<p>Here we don&apos;t use <code>window.open?</code> as the condition of the main loop, because we need the window to remain open until the program ends, so that we still have a valid OpenGL context for the last iteration of the loop and the cleanup code.</p><p>Don&apos;t hesitate to have a look at the &quot;OpenGL&quot; and &quot;Window&quot; examples in the SFML SDK if you have further problems, they are more complete and most likely contain solutions to your problems.</p><h2 id="managing-multiple-opengl-windows">Managing multiple OpenGL windows</h2><p>Managing multiple OpenGL windows is not more complicated than managing one, there are just a few things to keep in mind.</p><p>OpenGL calls are made on the active context (thus the active window). Therefore if you want to draw to two different windows within the same program, you have to select which window is active before drawing something. This can be done with the <code>active=</code> method:</p><pre><code class="lang-crystal"><span class="hljs-comment"># activate the first window</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>Here we don&apos;t use <code>window.open?</code> as the condition of the main loop, because we need the window to remain open until the program ends, so that we still have a valid OpenGL context for the last iteration of the loop and the cleanup code.</p>
+<p>Don&apos;t hesitate to have a look at the &quot;OpenGL&quot; and &quot;Window&quot; examples in the SFML SDK if you have further problems, they are more complete and most likely contain solutions to your problems.</p>
+<h2 id="managing-multiple-opengl-windows">Managing multiple OpenGL windows</h2>
+<p>Managing multiple OpenGL windows is not more complicated than managing one, there are just a few things to keep in mind.</p>
+<p>OpenGL calls are made on the active context (thus the active window). Therefore if you want to draw to two different windows within the same program, you have to select which window is active before drawing something. This can be done with the <code>active=</code> method:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># activate the first window</span>
 window1.active = <span class="hljs-literal">true</span>
 
 <span class="hljs-comment"># draw to the first window...</span>
@@ -576,20 +597,24 @@ window1.active = <span class="hljs-literal">true</span>
 <span class="hljs-comment"># activate the second window</span>
 window2.active = <span class="hljs-literal">true</span>
 
-<span class="hljs-comment"># draw to the second window...</span></code></pre>
-<p>Only one context (window) can be active in a thread, so you don&apos;t need to deactivate a window before activating another one, it is deactivated automatically. This is how OpenGL works.</p><p>Another thing to know is that all the OpenGL contexts created by SFML share their resources. This means that you can create a texture or vertex buffer with any context active, and use it with any other. This also means that you don&apos;t have to reload all your OpenGL resources when you recreate your window. Only shareable OpenGL resources can be shared among contexts. An example of an unshareable resource is a vertex array object.</p><h2 id="using-opengl-together-with-the-graphics-module">Using OpenGL together with the graphics module</h2><p>This tutorial was about mixing OpenGL with sfml-window, which is fairly easy since it&apos;s the only purpose of this module. Mixing with the graphics module is a little more complicated: sfml-graphics uses OpenGL too, so extra care must be taken so that SFML and user states don&apos;t conflict with each other.</p><p>If you don&apos;t know the graphics module yet, all you have to know is that the <a href="http://blaxpirit.github.io/crsfml/api/SF/Window.html" target="_blank">Window</a> class is replaced with <a href="http://blaxpirit.github.io/crsfml/api/SF/RenderWindow.html" target="_blank">RenderWindow</a>, which inherits all its methods and adds features to draw SFML specific entities.</p><p>The only way to avoid conflicts between SFML and your own OpenGL states, is to save/restore them every time you switch from OpenGL to SFML.</p><ul><li>draw with OpenGL
-</li>
-<li>save OpenGL states
-</li>
-<li>draw with SFML
-</li>
-<li>restore OpenGL states
-</li>
-<li>draw with OpenGL
-</li>
-<li>...
-</li></ul>
-<p>The easiest solution is to let CrSFML do it for you, with the <code>push_gl_states</code>/<code>pop_gl_states</code> methods:</p><pre><code class="lang-crystal">glDraw...
+<span class="hljs-comment"># draw to the second window...</span>
+</code></pre>
+<p>Only one context (window) can be active in a thread, so you don&apos;t need to deactivate a window before activating another one, it is deactivated automatically. This is how OpenGL works.</p>
+<p>Another thing to know is that all the OpenGL contexts created by SFML share their resources. This means that you can create a texture or vertex buffer with any context active, and use it with any other. This also means that you don&apos;t have to reload all your OpenGL resources when you recreate your window. Only shareable OpenGL resources can be shared among contexts. An example of an unshareable resource is a vertex array object.</p>
+<h2 id="using-opengl-together-with-the-graphics-module">Using OpenGL together with the graphics module</h2>
+<p>This tutorial was about mixing OpenGL with sfml-window, which is fairly easy since it&apos;s the only purpose of this module. Mixing with the graphics module is a little more complicated: sfml-graphics uses OpenGL too, so extra care must be taken so that SFML and user states don&apos;t conflict with each other.</p>
+<p>If you don&apos;t know the graphics module yet, all you have to know is that the <a href="http://blaxpirit.github.io/crsfml/api/SF/Window.html" target="_blank">Window</a> class is replaced with <a href="http://blaxpirit.github.io/crsfml/api/SF/RenderWindow.html" target="_blank">RenderWindow</a>, which inherits all its methods and adds features to draw SFML specific entities.</p>
+<p>The only way to avoid conflicts between SFML and your own OpenGL states, is to save/restore them every time you switch from OpenGL to SFML.</p>
+<ul>
+<li>draw with OpenGL</li>
+<li>save OpenGL states</li>
+<li>draw with SFML</li>
+<li>restore OpenGL states</li>
+<li>draw with OpenGL</li>
+<li>...</li>
+</ul>
+<p>The easiest solution is to let CrSFML do it for you, with the <code>push_gl_states</code>/<code>pop_gl_states</code> methods:</p>
+<pre><code class="lang-crystal">glDraw...
 
 window.push_gl_states
 
@@ -597,8 +622,10 @@ window.draw(...)
 
 window.pop_gl_states
 
-glDraw...</code></pre>
-<p>Since it has no knowledge about your OpenGL code, SFML can&apos;t optimize these steps and as a result it saves/restores all available OpenGL states and matrices. This may be acceptable for small projects, but it might also be too slow for bigger programs that require maximum performance. In this case, you can handle saving and restoring the OpenGL states yourself, with <code>glPushAttrib</code>/<code>glPopAttrib</code>, <code>glPushMatrix</code>/<code>glPopMatrix</code>, etc.</p><p>If you do this, you&apos;ll still need to restore SFML&apos;s own states before drawing. This is done with the <code>reset_gl_states</code> method.</p><pre><code class="lang-crystal">glDraw...
+glDraw...
+</code></pre>
+<p>Since it has no knowledge about your OpenGL code, SFML can&apos;t optimize these steps and as a result it saves/restores all available OpenGL states and matrices. This may be acceptable for small projects, but it might also be too slow for bigger programs that require maximum performance. In this case, you can handle saving and restoring the OpenGL states yourself, with <code>glPushAttrib</code>/<code>glPopAttrib</code>, <code>glPushMatrix</code>/<code>glPopMatrix</code>, etc.<br>If you do this, you&apos;ll still need to restore SFML&apos;s own states before drawing. This is done with the <code>reset_gl_states</code> method.</p>
+<pre><code class="lang-crystal">glDraw...
 
 glPush...
 window.reset_gl_states
@@ -607,8 +634,10 @@ window.draw(...)
 
 glPop...
 
-glDraw...</code></pre>
+glDraw...
+</code></pre>
 <p>By saving and restoring OpenGL states yourself, you can manage only the ones that you really need which leads to reducing the number of unnecessary driver calls.</p>
+
                                 
                                 </section>
                             
@@ -651,7 +680,7 @@ glDraw...</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Using OpenGL in an SFML window","level":"3.4","depth":1,"next":{"title":"Drawing 2D stuff","level":"4.1","depth":1,"path":"graphics/draw.md","ref":"graphics/draw.md","articles":[]},"previous":{"title":"Keyboard, mouse and joysticks","level":"3.3","depth":1,"path":"window/inputs.md","ref":"window/inputs.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"window/opengl.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Using OpenGL in an SFML window","level":"3.4","depth":1,"next":{"title":"Drawing 2D stuff","level":"4.1","depth":1,"path":"graphics/draw.md","ref":"graphics/draw.md","articles":[]},"previous":{"title":"Keyboard, mouse and joysticks","level":"3.3","depth":1,"path":"window/inputs.md","ref":"window/inputs.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"window/opengl.md","mtime":"2018-03-07T21:45:04.268Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

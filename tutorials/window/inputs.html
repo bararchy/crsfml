@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Keyboard, mouse and joysticks · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Keyboard, mouse and joysticks · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,34 +490,62 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="keyboard-mouse-and-joystick">Keyboard, mouse and joystick</h1><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/diagnostics.cr" target="_blank">diagnostics</a></strong></p><h2 id="introduction">Introduction</h2><p>This tutorial explains how to access global input devices: keyboard, mouse and joysticks. This must not be confused with events. Real-time input allows you to query the global state of keyboard, mouse and joysticks at any time (&quot;<em>is this button currently pressed?</em>&quot;, &quot;<em>where is the mouse currently?</em>&quot;) while events notify you when something happens (&quot;<em>this button was pressed</em>&quot;, &quot;<em>the mouse has moved</em>&quot;).</p><h2 id="keyboard">Keyboard</h2><p>The class that provides access to the keyboard state is <a href="http://blaxpirit.github.io/crsfml/api/SF/Keyboard.html" target="_blank">Keyboard</a>. It only contains one class method, <code>key_pressed?</code>, which checks the current state of a key (pressed or released). It is a class method, so you don&apos;t need to instantiate <a href="http://blaxpirit.github.io/crsfml/api/SF/Keyboard.html" target="_blank">Keyboard</a> to use it.</p><p>This class method directly reads the keyboard state, ignoring the focus state of your window. This means that <code>key_pressed?</code> may return true even if your window is inactive.</p><pre><code class="lang-crystal"><span class="hljs-keyword">if</span> <span class="hljs-symbol">SF:</span>:Keyboard.key_pressed?(<span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Keyboard:</span>:Left)
+                                <h1 id="keyboard-mouse-and-joystick">Keyboard, mouse and joystick</h1>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/diagnostics.cr" target="_blank">diagnostics</a></strong></p>
+<h2 id="introduction">Introduction</h2>
+<p>This tutorial explains how to access global input devices: keyboard, mouse and joysticks. This must not be confused with events. Real-time input allows you to query the global state of keyboard, mouse and joysticks at any time (&quot;<em>is this button currently pressed?</em>&quot;, &quot;<em>where is the mouse currently?</em>&quot;) while events notify you when something happens (&quot;<em>this button was pressed</em>&quot;, &quot;<em>the mouse has moved</em>&quot;).</p>
+<h2 id="keyboard">Keyboard</h2>
+<p>The class that provides access to the keyboard state is <a href="http://blaxpirit.github.io/crsfml/api/SF/Keyboard.html" target="_blank">Keyboard</a>. It only contains one class method, <code>key_pressed?</code>, which checks the current state of a key (pressed or released). It is a class method, so you don&apos;t need to instantiate <a href="http://blaxpirit.github.io/crsfml/api/SF/Keyboard.html" target="_blank">Keyboard</a> to use it.</p>
+<p>This class method directly reads the keyboard state, ignoring the focus state of your window. This means that <code>key_pressed?</code> may return true even if your window is inactive.</p>
+<pre><code class="lang-crystal"><span class="hljs-keyword">if</span> <span class="hljs-symbol">SF:</span>:Keyboard.key_pressed?(<span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Keyboard:</span>:Left)
   <span class="hljs-comment"># left key is pressed: move our character</span>
   character.move(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>)
-<span class="hljs-keyword">end</span></code></pre>
-<p>Key codes are defined in the <code>SF::Keyboard::Key</code> enum.</p><p>Depending on your operating system and keyboard layout, some key codes might be missing or interpreted incorrectly. This is something that will be improved in a future version of SFML.</p><h2 id="mouse">Mouse</h2><p>The class that provides access to the mouse state is <a href="http://blaxpirit.github.io/crsfml/api/SF/Mouse.html" target="_blank">Mouse</a>. Like its friend <a href="http://blaxpirit.github.io/crsfml/api/SF/Keyboard.html" target="_blank">Keyboard</a>, <a href="http://blaxpirit.github.io/crsfml/api/SF/Mouse.html" target="_blank">Mouse</a> only contains class methods and is not meant to be instantiated (SFML only handles a single mouse for the time being).</p><p>You can check if buttons are pressed:</p><pre><code class="lang-crystal"><span class="hljs-keyword">if</span> <span class="hljs-symbol">SF:</span>:Mouse.button_pressed?(<span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Mouse:</span>:Left)
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>Key codes are defined in the <code>SF::Keyboard::Key</code> enum.</p>
+<p>Depending on your operating system and keyboard layout, some key codes might be missing or interpreted incorrectly. This is something that will be improved in a future version of SFML.</p>
+<h2 id="mouse">Mouse</h2>
+<p>The class that provides access to the mouse state is <a href="http://blaxpirit.github.io/crsfml/api/SF/Mouse.html" target="_blank">Mouse</a>. Like its friend <a href="http://blaxpirit.github.io/crsfml/api/SF/Keyboard.html" target="_blank">Keyboard</a>, <a href="http://blaxpirit.github.io/crsfml/api/SF/Mouse.html" target="_blank">Mouse</a> only contains class methods and is not meant to be instantiated (SFML only handles a single mouse for the time being).</p>
+<p>You can check if buttons are pressed:</p>
+<pre><code class="lang-crystal"><span class="hljs-keyword">if</span> <span class="hljs-symbol">SF:</span>:Mouse.button_pressed?(<span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Mouse:</span>:Left)
   <span class="hljs-comment"># left mouse button is pressed: shoot</span>
   gun.fire
-<span class="hljs-keyword">end</span></code></pre>
-<p>Mouse button codes are defined in the <code>SF::Mouse::Button</code> enum. SFML supports up to 5 buttons: left, right, middle (wheel), and two additional buttons whatever they may be.</p><p>You can also get and set the current position of the mouse, either relative to the desktop or to a window:</p><pre><code class="lang-crystal"><span class="hljs-comment"># get the global mouse position (relative to the desktop)</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>Mouse button codes are defined in the <code>SF::Mouse::Button</code> enum. SFML supports up to 5 buttons: left, right, middle (wheel), and two additional buttons whatever they may be.</p>
+<p>You can also get and set the current position of the mouse, either relative to the desktop or to a window:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># get the global mouse position (relative to the desktop)</span>
 global_position = <span class="hljs-symbol">SF:</span>:Mouse.position
 
 <span class="hljs-comment"># get the local mouse position (relative to a window)</span>
-local_position = <span class="hljs-symbol">SF:</span>:Mouse.get_position(window) <span class="hljs-comment"># window is a SF::Window</span></code></pre>
+local_position = <span class="hljs-symbol">SF:</span>:Mouse.get_position(window) <span class="hljs-comment"># window is a SF::Window</span>
+</code></pre>
 <pre><code class="lang-crystal"><span class="hljs-comment"># set the mouse position globally (relative to the desktop)</span>
 <span class="hljs-symbol">SF:</span>:Mouse.position = SF.vector2(<span class="hljs-number">10</span>, <span class="hljs-number">50</span>)
 
 <span class="hljs-comment"># set the mouse position locally (relative to a window)</span>
-<span class="hljs-symbol">SF:</span>:Mouse.set_position(SF.vector2(<span class="hljs-number">10</span>, <span class="hljs-number">50</span>), window) <span class="hljs-comment"># window is a SF::Window</span></code></pre>
-<p>There is no function for reading the current state of the mouse wheel. Since the wheel can only be moved relatively, it has no absolute state that can be queried. By looking at a key you can tell whether it&apos;s pressed or released. By looking at the mouse cursor you can tell where it is located on the screen. However, looking at the mouse wheel doesn&apos;t tell you which &quot;tick&quot; it is on. You can only be notified when it moves (<code>MouseWheelMoved</code> event).</p><h2 id="joystick">Joystick</h2><p>The class that provides access to the joysticks&apos; states is <a href="http://blaxpirit.github.io/crsfml/api/SF/Joystick.html" target="_blank">Joystick</a>. Like the other classes in this tutorial, it only contains class methods.</p><p>Joysticks are identified by their index (0 to 7, since SFML supports up to 8 joysticks). Therefore, the first argument of every class method of <a href="http://blaxpirit.github.io/crsfml/api/SF/Joystick.html" target="_blank">Joystick</a> is the index of the joystick that you want to query.</p><p>You can check whether a joystick is connected or not:</p><pre><code class="lang-crystal"><span class="hljs-keyword">if</span> <span class="hljs-symbol">SF:</span>:Joystick.connected?(<span class="hljs-number">0</span>)
+<span class="hljs-symbol">SF:</span>:Mouse.set_position(SF.vector2(<span class="hljs-number">10</span>, <span class="hljs-number">50</span>), window) <span class="hljs-comment"># window is a SF::Window</span>
+</code></pre>
+<p>There is no function for reading the current state of the mouse wheel. Since the wheel can only be moved relatively, it has no absolute state that can be queried. By looking at a key you can tell whether it&apos;s pressed or released. By looking at the mouse cursor you can tell where it is located on the screen. However, looking at the mouse wheel doesn&apos;t tell you which &quot;tick&quot; it is on. You can only be notified when it moves (<code>MouseWheelMoved</code> event).</p>
+<h2 id="joystick">Joystick</h2>
+<p>The class that provides access to the joysticks&apos; states is <a href="http://blaxpirit.github.io/crsfml/api/SF/Joystick.html" target="_blank">Joystick</a>. Like the other classes in this tutorial, it only contains class methods.</p>
+<p>Joysticks are identified by their index (0 to 7, since SFML supports up to 8 joysticks). Therefore, the first argument of every class method of <a href="http://blaxpirit.github.io/crsfml/api/SF/Joystick.html" target="_blank">Joystick</a> is the index of the joystick that you want to query.</p>
+<p>You can check whether a joystick is connected or not:</p>
+<pre><code class="lang-crystal"><span class="hljs-keyword">if</span> <span class="hljs-symbol">SF:</span>:Joystick.connected?(<span class="hljs-number">0</span>)
   <span class="hljs-comment"># joystick number 0 is connected</span>
   ...
-<span class="hljs-keyword">end</span></code></pre>
-<p>You can also get the capabilities of a connected joystick:</p><pre><code class="lang-crystal"><span class="hljs-comment"># check how many buttons joystick number 0 has</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>You can also get the capabilities of a connected joystick:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># check how many buttons joystick number 0 has</span>
 button_count = <span class="hljs-symbol">SF:</span>:Joystick.get_button_count(<span class="hljs-number">0</span>)
 
 <span class="hljs-comment"># check if joystick number 0 has a Z axis</span>
-has_z = <span class="hljs-symbol">SF:</span>:Joystick.axis?(<span class="hljs-number">0</span>, <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Joystick:</span>:Z)</code></pre>
-<p>Joystick axes are defined in the <code>SF::Joystick::Axis</code> enum. Since buttons have no special meaning, they are simply numbered from 0 to 31.</p><p>Finally, you can query the state of a joystick&apos;s axes and buttons as well:</p><pre><code class="lang-crystal"><span class="hljs-comment"># is button 1 of joystick number 0 pressed?</span>
+has_z = <span class="hljs-symbol">SF:</span>:Joystick.axis?(<span class="hljs-number">0</span>, <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Joystick:</span>:Z)
+</code></pre>
+<p>Joystick axes are defined in the <code>SF::Joystick::Axis</code> enum. Since buttons have no special meaning, they are simply numbered from 0 to 31.</p>
+<p>Finally, you can query the state of a joystick&apos;s axes and buttons as well:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># is button 1 of joystick number 0 pressed?</span>
 <span class="hljs-keyword">if</span> <span class="hljs-symbol">SF:</span>:Joystick.button_pressed?(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>)
   <span class="hljs-comment"># yes: shoot!</span>
   gun.fire
@@ -526,8 +554,10 @@ has_z = <span class="hljs-symbol">SF:</span>:Joystick.axis?(<span class="hljs-nu
 <span class="hljs-comment"># what&apos;s the current position of the X and Y axes of joystick number 0?</span>
 x = <span class="hljs-symbol">SF:</span>:Joystick.get_axis_position(<span class="hljs-number">0</span>, <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Joystick:</span>:X)
 y = <span class="hljs-symbol">SF:</span>:Joystick.get_axis_position(<span class="hljs-number">0</span>, <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Joystick:</span>:Y)
-character.move(x, y)</code></pre>
+character.move(x, y)
+</code></pre>
 <p>Joystick states are automatically updated when you check for events. If you don&apos;t check for events, or need to query a joystick state (for example, checking which joysticks are connected) before starting your game loop, you&apos;ll have to manually call the <code>SF::Joystick.update</code> class method yourself to make sure that the joystick states are up to date.</p>
+
                                 
                                 </section>
                             
@@ -570,7 +600,7 @@ character.move(x, y)</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Keyboard, mouse and joysticks","level":"3.3","depth":1,"next":{"title":"Using OpenGL in an SFML window","level":"3.4","depth":1,"path":"window/opengl.md","ref":"window/opengl.md","articles":[]},"previous":{"title":"Events explained","level":"3.2","depth":1,"path":"window/events.md","ref":"window/events.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"window/inputs.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Keyboard, mouse and joysticks","level":"3.3","depth":1,"next":{"title":"Using OpenGL in an SFML window","level":"3.4","depth":1,"path":"window/opengl.md","ref":"window/opengl.md","articles":[]},"previous":{"title":"Events explained","level":"3.2","depth":1,"path":"window/events.md","ref":"window/events.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"window/inputs.md","mtime":"2018-03-07T21:44:51.462Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

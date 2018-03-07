@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Position, rotation, scale: transforming entities · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Position, rotation, scale: transforming entities · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,7 +490,14 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="position-rotation-scale-transforming-entities">Position, rotation, scale: Transforming entities</h1><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/transformable.cr" target="_blank">transformable</a></strong></p><h2 id="transforming-crsfml-entities">Transforming CrSFML entities</h2><p>All CrSFML classes (sprites, text, shapes) use the same interface for transformations: <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a>. This base class provides a simple API to move, rotate and scale your entities. It doesn&apos;t provide maximum flexibility, but instead defines an interface which is easy to understand and to use, and which covers 99% of all use cases -- for the remaining 1%, see the last chapters.</p><p><a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> (and all its derived classes) defines four properties: <strong>position</strong>, <strong>rotation</strong>, <strong>scale</strong> and <strong>origin</strong>. They all have their respective getters and setters. These transformation components are all independent of one another: If you want to change the orientation of the entity, you just have to set its rotation property, you don&apos;t have to care about the current position and scale.</p><h3 id="position">Position</h3><p>The position is the... position of the entity in the 2D world. I don&apos;t think it needs more explanation :).</p><pre><code class="lang-crystal"><span class="hljs-comment"># &apos;entity&apos; can be a SF::Sprite, a SF::Text, a SF::Shape or any other transformable class</span>
+                                <h1 id="position-rotation-scale-transforming-entities">Position, rotation, scale: Transforming entities</h1>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/transformable.cr" target="_blank">transformable</a></strong></p>
+<h2 id="transforming-crsfml-entities">Transforming CrSFML entities</h2>
+<p>All CrSFML classes (sprites, text, shapes) use the same interface for transformations: <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a>. This base class provides a simple API to move, rotate and scale your entities. It doesn&apos;t provide maximum flexibility, but instead defines an interface which is easy to understand and to use, and which covers 99% of all use cases -- for the remaining 1%, see the last chapters.</p>
+<p><a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> (and all its derived classes) defines four properties: <strong>position</strong>, <strong>rotation</strong>, <strong>scale</strong> and <strong>origin</strong>. They all have their respective getters and setters. These transformation components are all independent of one another: If you want to change the orientation of the entity, you just have to set its rotation property, you don&apos;t have to care about the current position and scale.</p>
+<h3 id="position">Position</h3>
+<p>The position is the... position of the entity in the 2D world. I don&apos;t think it needs more explanation :).</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># &apos;entity&apos; can be a SF::Sprite, a SF::Text, a SF::Shape or any other transformable class</span>
 
 <span class="hljs-comment"># set the absolute position of the entity</span>
 entity.position = SF.vector2(<span class="hljs-number">10</span>, <span class="hljs-number">50</span>)
@@ -499,8 +506,13 @@ entity.position = SF.vector2(<span class="hljs-number">10</span>, <span class="h
 entity.move(SF.vector2(<span class="hljs-number">5</span>, <span class="hljs-number">5</span>))
 
 <span class="hljs-comment"># retrieve the absolute position of the entity</span>
-position = entity.position <span class="hljs-comment"># = (15, 55)</span></code></pre>
-<p><img alt="A translated entity" src="images/transform-position.png"></p><p>By default, entities are positioned relative to their top-left corner. We&apos;ll see how to change that with the &apos;origin&apos; property later.</p><h3 id="rotation">Rotation</h3><p>The rotation is the orientation of the entity in the 2D world. It is defined in <em>degrees</em>, in clockwise order (because the Y axis is pointing down in SFML).</p><pre><code class="lang-crystal"><span class="hljs-comment"># &apos;entity&apos; can be a SF::Sprite, a SF::Text, a SF::Shape or any other transformable class</span>
+position = entity.position <span class="hljs-comment"># = (15, 55)</span>
+</code></pre>
+<p><img src="images/transform-position.png" alt="A translated entity"></p>
+<p>By default, entities are positioned relative to their top-left corner. We&apos;ll see how to change that with the &apos;origin&apos; property later.</p>
+<h3 id="rotation">Rotation</h3>
+<p>The rotation is the orientation of the entity in the 2D world. It is defined in <em>degrees</em>, in clockwise order (because the Y axis is pointing down in SFML).</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># &apos;entity&apos; can be a SF::Sprite, a SF::Text, a SF::Shape or any other transformable class</span>
 
 <span class="hljs-comment"># set the absolute rotation of the entity</span>
 entity.rotation = <span class="hljs-number">45</span>
@@ -509,8 +521,14 @@ entity.rotation = <span class="hljs-number">45</span>
 entity.rotate(<span class="hljs-number">10</span>)
 
 <span class="hljs-comment"># retrieve the absolute rotation of the entity</span>
-rotation = entity.rotation <span class="hljs-comment"># = 55</span></code></pre>
-<p><img alt="A rotated entity" src="images/transform-rotation.png"></p><p>Note that SFML always returns an angle in range [0, 360) when you call <code>rotation</code>.</p><p>As with the position, the rotation is performed around the top-left corner by default, but this can be changed by setting the origin.</p><h3 id="scale">Scale</h3><p>The scale factor allows the entity to be resized. The default scale is 1. Setting it to a value less than 1 makes the entity smaller, greater than 1 makes it bigger. Negative scale values are also allowed, so that you can mirror the entity.</p><pre><code class="lang-crystal"><span class="hljs-comment"># &apos;entity&apos; can be a SF::Sprite, a SF::Text, a SF::Shape or any other transformable class</span>
+rotation = entity.rotation <span class="hljs-comment"># = 55</span>
+</code></pre>
+<p><img src="images/transform-rotation.png" alt="A rotated entity"></p>
+<p>Note that SFML always returns an angle in range [0, 360) when you call <code>rotation</code>.</p>
+<p>As with the position, the rotation is performed around the top-left corner by default, but this can be changed by setting the origin.</p>
+<h3 id="scale">Scale</h3>
+<p>The scale factor allows the entity to be resized. The default scale is 1. Setting it to a value less than 1 makes the entity smaller, greater than 1 makes it bigger. Negative scale values are also allowed, so that you can mirror the entity.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># &apos;entity&apos; can be a SF::Sprite, a SF::Text, a SF::Shape or any other transformable class</span>
 
 <span class="hljs-comment"># set the absolute scale of the entity</span>
 entity.scale = SF.vector2(<span class="hljs-number">4.0</span>, <span class="hljs-number">1.6</span>)
@@ -519,28 +537,43 @@ entity.scale = SF.vector2(<span class="hljs-number">4.0</span>, <span class="hlj
 entity.scale(SF.vector2(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.5</span>))
 
 <span class="hljs-comment"># retrieve the absolute scale of the entity</span>
-scale = entity.scale <span class="hljs-comment"># = (2, 0.8)</span></code></pre>
-<p><img alt="A scaled entity" src="images/transform-scale.png"></p><h3 id="origin">Origin</h3><p>The origin is the center point of the three other transformations. The entity&apos;s position is the position of its origin, its rotation is performed around the origin, and the scale is applied relative to the origin as well. By default, it is the top-left corner of the entity (point (0, 0)), but you can set it to the center of the entity, or any other corner of the entity for example.</p><p>To keep things simple, there&apos;s only a single origin for all three transformation components. This means that you can&apos;t position an entity relative to its top-left corner while rotating it around its center for example. If you need to do such things, have a look at the next chapters.</p><pre><code class="lang-crystal"><span class="hljs-comment"># &apos;entity&apos; can be a SF::Sprite, a SF::Text, a SF::Shape or any other transformable class</span>
+scale = entity.scale <span class="hljs-comment"># = (2, 0.8)</span>
+</code></pre>
+<p><img src="images/transform-scale.png" alt="A scaled entity"></p>
+<h3 id="origin">Origin</h3>
+<p>The origin is the center point of the three other transformations. The entity&apos;s position is the position of its origin, its rotation is performed around the origin, and the scale is applied relative to the origin as well. By default, it is the top-left corner of the entity (point (0, 0)), but you can set it to the center of the entity, or any other corner of the entity for example.</p>
+<p>To keep things simple, there&apos;s only a single origin for all three transformation components. This means that you can&apos;t position an entity relative to its top-left corner while rotating it around its center for example. If you need to do such things, have a look at the next chapters.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># &apos;entity&apos; can be a SF::Sprite, a SF::Text, a SF::Shape or any other transformable class</span>
 
 <span class="hljs-comment"># set the origin of the entity</span>
 entity.origin = SF.vector2(<span class="hljs-number">10</span>, <span class="hljs-number">20</span>)
 
 <span class="hljs-comment"># retrieve the origin of the entity</span>
-origin = entity.origin <span class="hljs-comment"># = (10, 20)</span></code></pre>
-<p>Note that changing the origin also changes where the entity is drawn on screen, even though its position property hasn&apos;t changed. If you don&apos;t understand why, read this tutorial one more time!</p><h2 id="transforming-your-own-classes">Transforming your own classes</h2><p><a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> is not only made for CrSFML classes, it can also be a base (or a member) of your own classes.</p><pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyGraphicalEntity</span> &lt; <span class="hljs-title">SF::Transformable</span></span>
+origin = entity.origin <span class="hljs-comment"># = (10, 20)</span>
+</code></pre>
+<p>Note that changing the origin also changes where the entity is drawn on screen, even though its position property hasn&apos;t changed. If you don&apos;t understand why, read this tutorial one more time!</p>
+<h2 id="transforming-your-own-classes">Transforming your own classes</h2>
+<p><a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> is not only made for CrSFML classes, it can also be a base (or a member) of your own classes.</p>
+<pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyGraphicalEntity</span> &lt; <span class="hljs-title">SF::Transformable</span></span>
   <span class="hljs-comment"># ...</span>
 <span class="hljs-keyword">end</span>
 
 entity.position = SF.vector2(<span class="hljs-number">10</span>, <span class="hljs-number">30</span>)
 entity.rotation = <span class="hljs-number">110</span>
-entity.scale = SF.vector2(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.2</span>)</code></pre>
-<p>To retrieve the final transform of the entity (commonly needed when drawing it), call the <code>transform</code> method. This method returns a <a href="http://blaxpirit.github.io/crsfml/api/SF/Transform.html" target="_blank">Transform</a> object. See below for an explanation about it, and how to use it to transform an SFML entity.</p><p>If you don&apos;t need/want the complete set of methods provided by the <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> interface, don&apos;t hesitate to simply use it as a member instead and provide your own methods on top of it. It is not abstract, so it is possible to instantiate it instead of only being able to use it as a base class.</p><h2 id="custom-transforms">Custom transforms</h2><p>The <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> class is easy to use, but it is also limited. Some users might need more flexibility. They might need to specify a final transformation as a custom combination of individual transformations. For these users, a lower-level class is available: <a href="http://blaxpirit.github.io/crsfml/api/SF/Transform.html" target="_blank">Transform</a>. It is nothing more than a 3x3 matrix, so it can represent any transformation in 2D space.</p><p>There are many ways to construct a <a href="http://blaxpirit.github.io/crsfml/api/SF/Transform.html" target="_blank">Transform</a>:</p><ul><li>by using the predefined methods for the most common transformations (translation, rotation, scale)
-</li>
-<li>by combining two transforms
-</li>
-<li>by specifying its 9 elements directly
-</li></ul>
-<p>Here are a few examples:</p><pre><code class="lang-crystal"><span class="hljs-comment"># the identity transform (does nothing)</span>
+entity.scale = SF.vector2(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.2</span>)
+</code></pre>
+<p>To retrieve the final transform of the entity (commonly needed when drawing it), call the <code>transform</code> method. This method returns a <a href="http://blaxpirit.github.io/crsfml/api/SF/Transform.html" target="_blank">Transform</a> object. See below for an explanation about it, and how to use it to transform an SFML entity.</p>
+<p>If you don&apos;t need/want the complete set of methods provided by the <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> interface, don&apos;t hesitate to simply use it as a member instead and provide your own methods on top of it. It is not abstract, so it is possible to instantiate it instead of only being able to use it as a base class.</p>
+<h2 id="custom-transforms">Custom transforms</h2>
+<p>The <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> class is easy to use, but it is also limited. Some users might need more flexibility. They might need to specify a final transformation as a custom combination of individual transformations. For these users, a lower-level class is available: <a href="http://blaxpirit.github.io/crsfml/api/SF/Transform.html" target="_blank">Transform</a>. It is nothing more than a 3x3 matrix, so it can represent any transformation in 2D space.</p>
+<p>There are many ways to construct a <a href="http://blaxpirit.github.io/crsfml/api/SF/Transform.html" target="_blank">Transform</a>:</p>
+<ul>
+<li>by using the predefined methods for the most common transformations (translation, rotation, scale)</li>
+<li>by combining two transforms</li>
+<li>by specifying its 9 elements directly</li>
+</ul>
+<p>Here are a few examples:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># the identity transform (does nothing)</span>
 t1 = <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Transform:</span>:Identity
 
 <span class="hljs-comment"># a rotation transform</span>
@@ -551,16 +584,27 @@ t2.rotate(<span class="hljs-number">45</span>)
 t3 = <span class="hljs-symbol">SF:</span>:Transform.new(<span class="hljs-number">2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">20</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">50</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>)
 
 <span class="hljs-comment"># a combined transform</span>
-t4 = t1 * t2 * t3</code></pre>
-<p>You can apply several predefined transformations to the same transform as well. They will all be combined sequentially:</p><pre><code class="lang-crystal">t = <span class="hljs-symbol">SF:</span>:Transform.new
+t4 = t1 * t2 * t3
+</code></pre>
+<p>You can apply several predefined transformations to the same transform as well. They will all be combined sequentially:</p>
+<pre><code class="lang-crystal">t = <span class="hljs-symbol">SF:</span>:Transform.new
 t.translate(<span class="hljs-number">10</span>, <span class="hljs-number">100</span>)
 t.rotate(<span class="hljs-number">90</span>)
 t.translate(-<span class="hljs-number">10</span>, <span class="hljs-number">50</span>)
-t.scale(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.75</span>)</code></pre>
-<p>Back to the point: How can a custom transform be applied to a graphical entity? Simple: Pass it to the draw method.</p><pre><code class="lang-crystal">states = <span class="hljs-symbol">SF:</span>:RenderStates.new
+t.scale(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.75</span>)
+</code></pre>
+<p>Back to the point: How can a custom transform be applied to a graphical entity? Simple: Pass it to the draw method.</p>
+<pre><code class="lang-crystal">states = <span class="hljs-symbol">SF:</span>:RenderStates.new
 states.transform = transform
-window.draw(entity, states)</code></pre>
-<p>If your entity is a <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> (sprite, text, shape), which contains its own internal transform, both the internal and the passed transform are combined to produce the final transform.</p><h2 id="bounding-boxes">Bounding boxes</h2><p>After transforming entities and drawing them, you might want to perform some computations using them e.g. checking for collisions.</p><p>SFML entities can give you their bounding box. The bounding box is the minimal rectangle that contains all points belonging to the entity, with sides aligned to the X and Y axes.</p><p><img alt="Bounding box of entities" src="images/transform-bounds.png"></p><p>The bounding box is very useful when implementing collision detection: Checks against a point or another axis-aligned rectangle can be done very quickly, and its area is close enough to that of the real entity to provide a good approximation.</p><pre><code class="lang-crystal"><span class="hljs-comment"># get the bounding box of the entity</span>
+window.draw(entity, states)
+</code></pre>
+<p>If your entity is a <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> (sprite, text, shape), which contains its own internal transform, both the internal and the passed transform are combined to produce the final transform.</p>
+<h2 id="bounding-boxes">Bounding boxes</h2>
+<p>After transforming entities and drawing them, you might want to perform some computations using them e.g. checking for collisions.</p>
+<p>SFML entities can give you their bounding box. The bounding box is the minimal rectangle that contains all points belonging to the entity, with sides aligned to the X and Y axes.</p>
+<p><img src="images/transform-bounds.png" alt="Bounding box of entities"></p>
+<p>The bounding box is very useful when implementing collision detection: Checks against a point or another axis-aligned rectangle can be done very quickly, and its area is close enough to that of the real entity to provide a good approximation.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># get the bounding box of the entity</span>
 bounding_box = entity.global_bounds
 
 <span class="hljs-comment"># check collision with a point</span>
@@ -575,8 +619,13 @@ other_box = ...
 
 <span class="hljs-keyword">if</span> bounding_box.intersects? other_box
   <span class="hljs-comment"># collision!</span>
-<span class="hljs-keyword">end</span></code></pre>
-<p>The method is named <code>global_bounds</code> because it returns the bounding box of the entity in the global coordinate system, i.e. after all of its transformations (position, rotation, scale) have been applied.</p><p>There&apos;s another method that returns the bounding box of the entity in its <em>local</em> coordinate system (before its transformations are applied): <code>local_bounds</code>. This method can be used to get the initial size of an entity, for example, or to perform more specific calculations.</p><h2 id="object-hierarchies-scene-graph">Object hierarchies (scene graph)</h2><p>With the custom transforms seen previously, it becomes easy to implement a hierarchy of objects in which children are transformed relative to their parent. All you have to do is pass the combined transform from parent to children when you draw them, all the way until you reach the final drawable entities (sprites, text, shapes, vertex arrays or your own drawables).</p><pre><code class="lang-crystal"><span class="hljs-comment"># the abstract base class</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>The method is named <code>global_bounds</code> because it returns the bounding box of the entity in the global coordinate system, i.e. after all of its transformations (position, rotation, scale) have been applied.</p>
+<p>There&apos;s another method that returns the bounding box of the entity in its <em>local</em> coordinate system (before its transformations are applied): <code>local_bounds</code>. This method can be used to get the initial size of an entity, for example, or to perform more specific calculations.</p>
+<h2 id="object-hierarchies-scene-graph">Object hierarchies (scene graph)</h2>
+<p>With the custom transforms seen previously, it becomes easy to implement a hierarchy of objects in which children are transformed relative to their parent. All you have to do is pass the combined transform from parent to children when you draw them, all the way until you reach the final drawable entities (sprites, text, shapes, vertex arrays or your own drawables).</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># the abstract base class</span>
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Node</span></span>
   <span class="hljs-comment"># ... methods to transform the node</span>
 
@@ -607,7 +656,8 @@ other_box = ...
   <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">on_draw</span></span>(target, transform)
     target.draw(@sprite, transform)
   <span class="hljs-keyword">end</span>
-<span class="hljs-keyword">end</span></code></pre>
+<span class="hljs-keyword">end</span>
+</code></pre>
 
                                 
                                 </section>
@@ -651,7 +701,7 @@ other_box = ...
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Position, rotation, scale: transforming entities","level":"4.6","depth":1,"next":{"title":"Adding special effects with shaders","level":"4.7","depth":1,"path":"graphics/shader.md","ref":"graphics/shader.md","articles":[]},"previous":{"title":"Designing your own entities with vertex arrays","level":"4.5","depth":1,"path":"graphics/vertex-array.md","ref":"graphics/vertex-array.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/transform.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Position, rotation, scale: transforming entities","level":"4.6","depth":1,"next":{"title":"Adding special effects with shaders","level":"4.7","depth":1,"path":"graphics/shader.md","ref":"graphics/shader.md","articles":[]},"previous":{"title":"Designing your own entities with vertex arrays","level":"4.5","depth":1,"path":"graphics/vertex-array.md","ref":"graphics/vertex-array.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/transform.md","mtime":"2018-03-07T21:44:51.461Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

@@ -1,0 +1,5 @@
+# Hashes of file build rules.
+4529b4ad35fd095ff4b74e6d16c35386 CMakeFiles/CrSFML
+4529b4ad35fd095ff4b74e6d16c35386 CMakeFiles/c-sources
+4529b4ad35fd095ff4b74e6d16c35386 CMakeFiles/crystal-sources
+4d1e981db0348d9d6b4cf0cfe07989d5 voidcsfml/include/voidcsfml/system.h

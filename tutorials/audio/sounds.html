@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Playing sounds and music · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Playing sounds and music · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,26 +490,51 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="playing-sounds-and-music">Playing sounds and music</h1><h2 id="sound-or-music">Sound or music?</h2><p>SFML provides two classes for playing audio: <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a> and <a href="http://blaxpirit.github.io/crsfml/api/SF/Music.html" target="_blank">Music</a>. They both provide more or less the same features, the main difference is how they work.</p><p><a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a> is a lightweight object that plays loaded audio data from a <a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBuffer.html" target="_blank">SoundBuffer</a>. It should be used for small sounds that can fit in memory and should suffer no lag when they are played. Examples are gun shots, foot steps, etc.</p><p><a href="http://blaxpirit.github.io/crsfml/api/SF/Music.html" target="_blank">Music</a> doesn&apos;t load all the audio data into memory, instead it streams it on the fly from the source file. It is typically used to play compressed music that lasts several minutes, and would otherwise take many seconds to load and eat hundreds of MB in memory.</p><h2 id="loading-and-playing-a-sound">Loading and playing a sound</h2><p>As mentioned above, the sound data is not stored directly in <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a> but in a separate class named <a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBuffer.html" target="_blank">SoundBuffer</a>. This class encapsulates the audio data, which is basically an array of 16-bit signed integers (called &quot;audio samples&quot;). A sample is the amplitude of the sound signal at a given point in time, and an array of samples therefore represents a full sound.</p><p>In fact, the <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a>/<a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBuffer.html" target="_blank">SoundBuffer</a> classes work the same way as <a href="http://blaxpirit.github.io/crsfml/api/SF/Sprite.html" target="_blank">Sprite</a>/<a href="http://blaxpirit.github.io/crsfml/api/SF/Texture.html" target="_blank">Texture</a> from the graphics module. So if you understand how sprites and textures work together, you can apply the same concept to sounds and sound buffers.</p><p>You can load a sound buffer from a file on disk with its <code>from_file</code> class method:</p><pre><code class="lang-crystal"><span class="hljs-symbol">SF:</span>:SoundBuffer.from_file(<span class="hljs-string">&quot;sound.wav&quot;</span>)</code></pre>
-<p>As with everything else, you can also load an audio file from memory (<code>from_memory</code>) or from a <a title="Input streams tutorial" href="../system/stream.html">custom input stream</a> (<code>from_stream</code>).</p><p>SFML supports the audio file formats WAV, OGG/Vorbis and FLAC. Due to licensing issues MP3 is <strong>not</strong> supported.</p><p>You can also load a sound buffer directly from an array of samples, in the case they originate from another source:</p><pre><code class="lang-crystal">buffer.from_samples(samples, samples.size, <span class="hljs-number">2</span>, <span class="hljs-number">44100</span>)</code></pre>
-<p>Since <code>from_samples</code> loads a raw array of samples rather than an audio file, it requires additional arguments in order to have a complete description of the sound. The first one (third argument) is the number of channels; 1 channel defines a mono sound, 2 channels define a stereo sound, etc. The second additional attribute (fourth argument) is the sample rate; it defines how many samples must be played per second in order to reconstruct the original sound.</p><p>Now that the audio data is loaded, we can play it with a <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a> instance.</p><pre><code class="lang-crystal"><span class="hljs-comment"># load something into the sound buffer...</span>
+                                <h1 id="playing-sounds-and-music">Playing sounds and music</h1>
+<h2 id="sound-or-music">Sound or music?</h2>
+<p>SFML provides two classes for playing audio: <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a> and <a href="http://blaxpirit.github.io/crsfml/api/SF/Music.html" target="_blank">Music</a>. They both provide more or less the same features, the main difference is how they work.</p>
+<p><a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a> is a lightweight object that plays loaded audio data from a <a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBuffer.html" target="_blank">SoundBuffer</a>. It should be used for small sounds that can fit in memory and should suffer no lag when they are played. Examples are gun shots, foot steps, etc.</p>
+<p><a href="http://blaxpirit.github.io/crsfml/api/SF/Music.html" target="_blank">Music</a> doesn&apos;t load all the audio data into memory, instead it streams it on the fly from the source file. It is typically used to play compressed music that lasts several minutes, and would otherwise take many seconds to load and eat hundreds of MB in memory.</p>
+<h2 id="loading-and-playing-a-sound">Loading and playing a sound</h2>
+<p>As mentioned above, the sound data is not stored directly in <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a> but in a separate class named <a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBuffer.html" target="_blank">SoundBuffer</a>. This class encapsulates the audio data, which is basically an array of 16-bit signed integers (called &quot;audio samples&quot;). A sample is the amplitude of the sound signal at a given point in time, and an array of samples therefore represents a full sound.</p>
+<p>In fact, the <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a>/<a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBuffer.html" target="_blank">SoundBuffer</a> classes work the same way as <a href="http://blaxpirit.github.io/crsfml/api/SF/Sprite.html" target="_blank">Sprite</a>/<a href="http://blaxpirit.github.io/crsfml/api/SF/Texture.html" target="_blank">Texture</a> from the graphics module. So if you understand how sprites and textures work together, you can apply the same concept to sounds and sound buffers.</p>
+<p>You can load a sound buffer from a file on disk with its <code>from_file</code> class method:</p>
+<pre><code class="lang-crystal"><span class="hljs-symbol">SF:</span>:SoundBuffer.from_file(<span class="hljs-string">&quot;sound.wav&quot;</span>)
+</code></pre>
+<p>As with everything else, you can also load an audio file from memory (<code>from_memory</code>) or from a <a href="../system/stream.html" title="Input streams tutorial">custom input stream</a> (<code>from_stream</code>).</p>
+<p>SFML supports the audio file formats WAV, OGG/Vorbis and FLAC. Due to licensing issues MP3 is <strong>not</strong> supported.</p>
+<p>You can also load a sound buffer directly from an array of samples, in the case they originate from another source:</p>
+<pre><code class="lang-crystal">buffer.from_samples(samples, samples.size, <span class="hljs-number">2</span>, <span class="hljs-number">44100</span>)
+</code></pre>
+<p>Since <code>from_samples</code> loads a raw array of samples rather than an audio file, it requires additional arguments in order to have a complete description of the sound. The first one (third argument) is the number of channels; 1 channel defines a mono sound, 2 channels define a stereo sound, etc. The second additional attribute (fourth argument) is the sample rate; it defines how many samples must be played per second in order to reconstruct the original sound.</p>
+<p>Now that the audio data is loaded, we can play it with a <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a> instance.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># load something into the sound buffer...</span>
 buffer = ...
 
 sound = <span class="hljs-symbol">SF:</span>:Sound.new(buffer)
-sound.play</code></pre>
-<p>The cool thing is that you can assign the same sound buffer to multiple sounds if you want. You can even play them together without any issues.</p><p>Sounds (and music) are played in a separate thread. This means that you are free to do whatever you want after calling <code>play</code> (except destroying the sound or its data, of course), the sound will continue to play until it&apos;s finished or explicitly stopped.</p><h2 id="playing-a-music">Playing a music</h2><p>Unlike <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a>, <a href="http://blaxpirit.github.io/crsfml/api/SF/Music.html" target="_blank">Music</a> doesn&apos;t pre-load the audio data, instead it streams the data directly from the source. The initialization of music is thus more direct:</p><pre><code class="lang-crystal">music = <span class="hljs-symbol">SF:</span>:Music.from_file(<span class="hljs-string">&quot;music.ogg&quot;</span>)
+sound.play
+</code></pre>
+<p>The cool thing is that you can assign the same sound buffer to multiple sounds if you want. You can even play them together without any issues.</p>
+<p>Sounds (and music) are played in a separate thread. This means that you are free to do whatever you want after calling <code>play</code> (except destroying the sound or its data, of course), the sound will continue to play until it&apos;s finished or explicitly stopped.</p>
+<h2 id="playing-a-music">Playing a music</h2>
+<p>Unlike <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a>, <a href="http://blaxpirit.github.io/crsfml/api/SF/Music.html" target="_blank">Music</a> doesn&apos;t pre-load the audio data, instead it streams the data directly from the source. The initialization of music is thus more direct:</p>
+<pre><code class="lang-crystal">music = <span class="hljs-symbol">SF:</span>:Music.from_file(<span class="hljs-string">&quot;music.ogg&quot;</span>)
 
-music.play</code></pre>
+music.play
+</code></pre>
 <p>It is important to note that, unlike all other SFML resources, the loading class method only opens the file. The music is not really loaded, this method merely opens it. The data is only loaded later, when the music is played. It also helps to keep in mind that the audio file has to remain available as long as it is played.
-The other loading methods of <a href="http://blaxpirit.github.io/crsfml/api/SF/Music.html" target="_blank">Music</a> follow the same convention: <code>from_memory</code>, <code>from_stream</code>.</p><h2 id="whats-next">What&apos;s next?</h2><p>Now that you are able to load and play a sound or music, let&apos;s see what you can do with it.</p><p>To control playback, the following methods are available:</p><ul><li><code>play</code> starts or resumes playback
-</li>
-<li><code>pause</code> pauses playback
-</li>
-<li><code>stop</code> stops playback and rewind
-</li>
-<li><code>playing_offset=</code> changes the current playing position
-</li></ul>
-<p>Example:</p><pre><code class="lang-crystal"><span class="hljs-comment"># start playback</span>
+The other loading methods of <a href="http://blaxpirit.github.io/crsfml/api/SF/Music.html" target="_blank">Music</a> follow the same convention: <code>from_memory</code>, <code>from_stream</code>.</p>
+<h2 id="whats-next">What&apos;s next?</h2>
+<p>Now that you are able to load and play a sound or music, let&apos;s see what you can do with it.</p>
+<p>To control playback, the following methods are available:</p>
+<ul>
+<li><code>play</code> starts or resumes playback</li>
+<li><code>pause</code> pauses playback</li>
+<li><code>stop</code> stops playback and rewind</li>
+<li><code>playing_offset=</code> changes the current playing position</li>
+</ul>
+<p>Example:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># start playback</span>
 sound.play
 
 <span class="hljs-comment"># advance to 2 seconds</span>
@@ -522,11 +547,26 @@ sound.pause
 sound.play
 
 <span class="hljs-comment"># stop playback and rewind</span>
-sound.stop</code></pre>
-<p>The <code>status</code> method returns the current status of a sound or music, you can use it to know whether it is stopped, playing or paused.</p><p>Sound and music playback is also controlled by a few attributes which can be changed at any moment.</p><p>The <em>pitch</em> is a factor that changes the perceived frequency of the sound: greater than 1 plays the sound at a higher pitch, less than 1 plays the sound at a lower pitch, and 1 leaves it unchanged. Changing the pitch has a side effect: it impacts the playing speed.</p><pre><code class="lang-crystal">sound.pitch = <span class="hljs-number">1.2</span></code></pre>
-<p>The <em>volume</em> is... the volume. The value ranges from 0 (mute) to 100 (full volume). The default value is 100, which means that you can&apos;t make a sound louder than its initial volume.</p><pre><code class="lang-crystal">sound.volume = <span class="hljs-number">50</span></code></pre>
-<p>The <em>loop</em> attribute controls whether the sound/music automatically loops or not. If it loops, it will restart playing from the beginning when it&apos;s finished, again and again until you explicitly call <code>stop</code>. If not set to loop, it will stop automatically when it&apos;s finished.</p><pre><code class="lang-crystal">sound.loop = <span class="hljs-literal">true</span></code></pre>
-<p>More attributes are available, but they are related to spatialization and are explained in the <a title="Spatialization tutorial" href="spatialization.html">corresponding tutorial</a>.</p><h2 id="common-mistakes">Common mistakes</h2><h3 id="too-many-sounds">Too many sounds</h3><p>One source of error is when you try to create a huge number of sounds. SFML internally has a limit; it can vary depending on the OS, but you should never exceed 256. This limit is the number of <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a> and <a href="http://blaxpirit.github.io/crsfml/api/SF/Music.html" target="_blank">Music</a> instances that can exist simultaneously. A good way to stay below the limit is to destroy (or recycle) unused sounds when they are no longer needed. This only applies if you have to manage a really large amount of sounds and music, of course.</p><h3 id="destroying-the-music-source-while-it-plays">Destroying the music source while it plays</h3><p>Remember that a music needs its source as long as it is played. A music file on your disk probably won&apos;t be deleted or moved while your application plays it, however things get more complicated when you play a music from a file in memory, or from a custom input stream:</p><pre><code class="lang-crystal"><span class="hljs-comment"># we start with a music file in memory (imagine that we extracted it from a zip archive)</span>
+sound.stop
+</code></pre>
+<p>The <code>status</code> method returns the current status of a sound or music, you can use it to know whether it is stopped, playing or paused.</p>
+<p>Sound and music playback is also controlled by a few attributes which can be changed at any moment.</p>
+<p>The <em>pitch</em> is a factor that changes the perceived frequency of the sound: greater than 1 plays the sound at a higher pitch, less than 1 plays the sound at a lower pitch, and 1 leaves it unchanged. Changing the pitch has a side effect: it impacts the playing speed.</p>
+<pre><code class="lang-crystal">sound.pitch = <span class="hljs-number">1.2</span>
+</code></pre>
+<p>The <em>volume</em> is... the volume. The value ranges from 0 (mute) to 100 (full volume). The default value is 100, which means that you can&apos;t make a sound louder than its initial volume.</p>
+<pre><code class="lang-crystal">sound.volume = <span class="hljs-number">50</span>
+</code></pre>
+<p>The <em>loop</em> attribute controls whether the sound/music automatically loops or not. If it loops, it will restart playing from the beginning when it&apos;s finished, again and again until you explicitly call <code>stop</code>. If not set to loop, it will stop automatically when it&apos;s finished.</p>
+<pre><code class="lang-crystal">sound.loop = <span class="hljs-literal">true</span>
+</code></pre>
+<p>More attributes are available, but they are related to spatialization and are explained in the <a href="spatialization.html" title="Spatialization tutorial">corresponding tutorial</a>.</p>
+<h2 id="common-mistakes">Common mistakes</h2>
+<h3 id="too-many-sounds">Too many sounds</h3>
+<p>One source of error is when you try to create a huge number of sounds. SFML internally has a limit; it can vary depending on the OS, but you should never exceed 256. This limit is the number of <a href="http://blaxpirit.github.io/crsfml/api/SF/Sound.html" target="_blank">Sound</a> and <a href="http://blaxpirit.github.io/crsfml/api/SF/Music.html" target="_blank">Music</a> instances that can exist simultaneously. A good way to stay below the limit is to destroy (or recycle) unused sounds when they are no longer needed. This only applies if you have to manage a really large amount of sounds and music, of course.</p>
+<h3 id="destroying-the-music-source-while-it-plays">Destroying the music source while it plays</h3>
+<p>Remember that a music needs its source as long as it is played. A music file on your disk probably won&apos;t be deleted or moved while your application plays it, however things get more complicated when you play a music from a file in memory, or from a custom input stream:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># we start with a music file in memory (imagine that we extracted it from a zip archive)</span>
 file_data = ...
 
 <span class="hljs-comment"># we play it</span>
@@ -536,7 +576,8 @@ music.play
 <span class="hljs-comment"># &quot;ok, it seems that we don&apos;t need the source file any longer&quot;</span>
 file_data.clear
 
-<span class="hljs-comment"># ERROR: the music was still streaming the contents of file_data! The behavior is now undefined</span></code></pre>
+<span class="hljs-comment"># ERROR: the music was still streaming the contents of file_data! The behavior is now undefined</span>
+</code></pre>
 
                                 
                                 </section>
@@ -580,7 +621,7 @@ file_data.clear
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Playing sounds and music","level":"5.1","depth":1,"next":{"title":"Recording audio","level":"5.2","depth":1,"path":"audio/recording.md","ref":"audio/recording.md","articles":[]},"previous":{"title":"Controlling the 2D camera with views","level":"4.8","depth":1,"path":"graphics/view.md","ref":"graphics/view.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"audio/sounds.md","mtime":"2016-08-10T15:34:53.267Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Playing sounds and music","level":"5.1","depth":1,"next":{"title":"Recording audio","level":"5.2","depth":1,"path":"audio/recording.md","ref":"audio/recording.md","articles":[]},"previous":{"title":"Controlling the 2D camera with views","level":"4.8","depth":1,"path":"graphics/view.md","ref":"graphics/view.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"audio/sounds.md","mtime":"2018-03-07T21:44:51.451Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

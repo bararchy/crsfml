@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC   -shared -Wl,-soname,libvoidcsfml-graphics.so.2.4 -o libvoidcsfml-graphics.so.2.4 CMakeFiles/voidcsfml-graphics.dir/src/voidcsfml/graphics.cpp.o -lsfml-graphics -lsfml-window -lsfml-system 

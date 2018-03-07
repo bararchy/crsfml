@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Recording audio · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Recording audio · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,7 +490,12 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="recording-audio">Recording audio</h1><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/sound_capture.cr" target="_blank">sound_capture</a></strong></p><h2 id="recording-to-a-sound-buffer">Recording to a sound buffer</h2><p>The most common use for captured audio data is for it to be saved to a sound buffer (<a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBuffer.html" target="_blank">SoundBuffer</a>) so that it can either be played or saved to a file.</p><p>This can be achieved with the very simple interface of the <a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBufferRecorder.html" target="_blank">SoundBufferRecorder</a> class:</p><pre><code class="lang-crystal"><span class="hljs-comment"># first check if an input audio device is available on the system</span>
+                                <h1 id="recording-audio">Recording audio</h1>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/sound_capture.cr" target="_blank">sound_capture</a></strong></p>
+<h2 id="recording-to-a-sound-buffer">Recording to a sound buffer</h2>
+<p>The most common use for captured audio data is for it to be saved to a sound buffer (<a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBuffer.html" target="_blank">SoundBuffer</a>) so that it can either be played or saved to a file.</p>
+<p>This can be achieved with the very simple interface of the <a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBufferRecorder.html" target="_blank">SoundBufferRecorder</a> class:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># first check if an input audio device is available on the system</span>
 <span class="hljs-keyword">if</span> !<span class="hljs-symbol">SF:</span>:SoundBufferRecorder.available?
   <span class="hljs-comment"># error: audio capture is not available on this system</span>
   ...
@@ -508,20 +513,35 @@ recorder.start
 recorder.stop
 
 <span class="hljs-comment"># retrieve the buffer that contains the captured audio data</span>
-buffer = recorder.buffer</code></pre>
-<p>The <code>SoundBufferRecorder.available?</code> class method checks if audio recording is supported by the system. It if returns <code>false</code>, you won&apos;t be able to use the <a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBufferRecorder.html" target="_blank">SoundBufferRecorder</a> class at all.</p><p>The <code>start</code> and <code>stop</code> methods are self-explanatory. The capture runs in its own thread, which means that you can do whatever you want between start and stop. After the end of the capture, the recorded audio data is available in a sound buffer that you can get with the <code>buffer</code> method.</p><p>With the recorded data, you can then:</p><ul><li>Save it to a file
-</li></ul>
-<pre><code class="lang-crystal">buffer.save_to_file(<span class="hljs-string">&quot;my_record.ogg&quot;</span>)</code></pre>
-<ul><li>Play it directly
-</li></ul>
+buffer = recorder.buffer
+</code></pre>
+<p>The <code>SoundBufferRecorder.available?</code> class method checks if audio recording is supported by the system. It if returns <code>false</code>, you won&apos;t be able to use the <a href="http://blaxpirit.github.io/crsfml/api/SF/SoundBufferRecorder.html" target="_blank">SoundBufferRecorder</a> class at all.</p>
+<p>The <code>start</code> and <code>stop</code> methods are self-explanatory. The capture runs in its own thread, which means that you can do whatever you want between start and stop. After the end of the capture, the recorded audio data is available in a sound buffer that you can get with the <code>buffer</code> method.</p>
+<p>With the recorded data, you can then:</p>
+<ul>
+<li>Save it to a file</li>
+</ul>
+<pre><code class="lang-crystal">buffer.save_to_file(<span class="hljs-string">&quot;my_record.ogg&quot;</span>)
+</code></pre>
+<ul>
+<li>Play it directly</li>
+</ul>
 <pre><code class="lang-crystal">sound = <span class="hljs-symbol">SF:</span>:Sound.new(buffer)
-sound.play</code></pre>
-<ul><li>Access the raw audio data and analyze it, transform it, etc.
-</li></ul>
+sound.play
+</code></pre>
+<ul>
+<li>Access the raw audio data and analyze it, transform it, etc.</li>
+</ul>
 <pre><code class="lang-crystal">samples = buffer.samples
 count = buffer.sample_count
-do_something(samples, count)</code></pre>
-<p>If you want to use the captured audio data after the recorder is destroyed or restarted, don&apos;t forget to make a <em>copy</em> of the buffer.</p><h2 id="selecting-the-input-device">Selecting the input device</h2><p>If you have multiple sound input devices connected to your computer (for example a microphone, a sound interface (external soundcard) or a webcam microphone) you can specify the device that is used for recording. A sound input device is identified by its name. An <code>Array(String)</code> containing the names of all connected devices is available through the class method <code>SoundBufferRecorder.available_devices</code>. You can then select a device from the list for recording, by passing the chosen device name to the <code>device=</code> method. It is even possible to change the device on the fly (i.e. while recording).</p><p>The name of the currently used device can be obtained by calling <code>device</code>. If you don&apos;t choose a device yourself, the default device will be used. Its name can be obtained through the <code>default_device</code> class method.</p><p>Here is a small example of how to set the input device:</p><pre><code class="lang-crystal"><span class="hljs-comment"># get the available sound input device names</span>
+do_something(samples, count)
+</code></pre>
+<p>If you want to use the captured audio data after the recorder is destroyed or restarted, don&apos;t forget to make a <em>copy</em> of the buffer.</p>
+<h2 id="selecting-the-input-device">Selecting the input device</h2>
+<p>If you have multiple sound input devices connected to your computer (for example a microphone, a sound interface (external soundcard) or a webcam microphone) you can specify the device that is used for recording. A sound input device is identified by its name. An <code>Array(String)</code> containing the names of all connected devices is available through the class method <code>SoundBufferRecorder.available_devices</code>. You can then select a device from the list for recording, by passing the chosen device name to the <code>device=</code> method. It is even possible to change the device on the fly (i.e. while recording).</p>
+<p>The name of the currently used device can be obtained by calling <code>device</code>. If you don&apos;t choose a device yourself, the default device will be used. Its name can be obtained through the <code>default_device</code> class method.</p>
+<p>Here is a small example of how to set the input device:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># get the available sound input device names</span>
 available_devices = <span class="hljs-symbol">SF:</span>:SoundRecorder.available_devices
 
 <span class="hljs-comment"># choose a device</span>
@@ -536,7 +556,8 @@ recorder = <span class="hljs-symbol">SF:</span>:SoundBufferRecorder.new
     ...
 <span class="hljs-keyword">end</span>
 
-<span class="hljs-comment"># use recorder as usual</span></code></pre>
+<span class="hljs-comment"># use recorder as usual</span>
+</code></pre>
 <!--
 
 ## Custom recording
@@ -603,8 +624,6 @@ If you're not familiar enough with threading, you can refer to the [correspondin
 
 -->
 
-
-
                                 
                                 </section>
                             
@@ -647,7 +666,7 @@ If you're not familiar enough with threading, you can refer to the [correspondin
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Recording audio","level":"5.2","depth":1,"next":{"title":"Custom audio streams","level":"5.3","depth":1,"path":"audio/streams.md","ref":"audio/streams.md","articles":[]},"previous":{"title":"Playing sounds and music","level":"5.1","depth":1,"path":"audio/sounds.md","ref":"audio/sounds.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"audio/recording.md","mtime":"2016-08-10T15:34:53.267Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Recording audio","level":"5.2","depth":1,"next":{"title":"Custom audio streams","level":"5.3","depth":1,"path":"audio/streams.md","ref":"audio/streams.md","articles":[]},"previous":{"title":"Playing sounds and music","level":"5.1","depth":1,"path":"audio/sounds.md","ref":"audio/sounds.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"audio/recording.md","mtime":"2018-03-07T21:45:04.268Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

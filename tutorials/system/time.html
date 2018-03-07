@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Handling time · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Handling time · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,22 +490,39 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="handling-time">Handling time</h1><h2 id="time-in-sfml">Time in SFML</h2><p>Unlike many other libraries where time is a number of milliseconds, or a decimal number of seconds, SFML doesn&apos;t impose any specific unit or type for time values. Instead it leaves this choice to the user through a flexible class: <a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a>. All SFML classes and functions that manipulate time values use this class.</p><p><a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a> represents a time period (in other words, the time that elapses between two events). It is <em>not</em> a date-time class which would represent the current year/month/day/hour/minute/second as a timestamp, it&apos;s just a value that represents a certain amount of time, and how to interpret it depends on the context where it is used.</p><h2 id="converting-time">Converting time</h2><p>A <a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a> value can be constructed from different source units: seconds, milliseconds and microseconds. There is a (non-member) function to turn each of them into a <a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a>:</p><pre><code class="lang-crystal">t1 = SF.microseconds(<span class="hljs-number">10000</span>)
+                                <h1 id="handling-time">Handling time</h1>
+<h2 id="time-in-sfml">Time in SFML</h2>
+<p>Unlike many other libraries where time is a number of milliseconds, or a decimal number of seconds, SFML doesn&apos;t impose any specific unit or type for time values. Instead it leaves this choice to the user through a flexible class: <a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a>. All SFML classes and functions that manipulate time values use this class.</p>
+<p><a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a> represents a time period (in other words, the time that elapses between two events). It is <em>not</em> a date-time class which would represent the current year/month/day/hour/minute/second as a timestamp, it&apos;s just a value that represents a certain amount of time, and how to interpret it depends on the context where it is used.</p>
+<h2 id="converting-time">Converting time</h2>
+<p>A <a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a> value can be constructed from different source units: seconds, milliseconds and microseconds. There is a (non-member) function to turn each of them into a <a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a>:</p>
+<pre><code class="lang-crystal">t1 = SF.microseconds(<span class="hljs-number">10000</span>)
 t2 = SF.milliseconds(<span class="hljs-number">10</span>)
-t3 = SF.seconds(<span class="hljs-number">0.01</span>)</code></pre>
-<p>Note that these three times are all equal.</p><p>Similarly, a <a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a> can be converted back to either seconds, milliseconds or microseconds:</p><pre><code class="lang-crystal">time = ...
+t3 = SF.seconds(<span class="hljs-number">0.01</span>)
+</code></pre>
+<p>Note that these three times are all equal.</p>
+<p>Similarly, a <a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a> can be converted back to either seconds, milliseconds or microseconds:</p>
+<pre><code class="lang-crystal">time = ...
 
 microseconds = time.as_microseconds
 milliseconds = time.as_milliseconds
-seconds = time.as_seconds</code></pre>
-<h2 id="playing-with-time-values">Playing with time values</h2><p><a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a> is just an amount of time, so it supports arithmetic operations such as addition, subtraction, comparison, etc. Times can also be negative.</p><pre><code class="lang-crystal">t1 = ...
+seconds = time.as_seconds
+</code></pre>
+<h2 id="playing-with-time-values">Playing with time values</h2>
+<p><a href="http://blaxpirit.github.io/crsfml/api/SF/Time.html" target="_blank">Time</a> is just an amount of time, so it supports arithmetic operations such as addition, subtraction, comparison, etc. Times can also be negative.</p>
+<pre><code class="lang-crystal">t1 = ...
 t2 = t1 * <span class="hljs-number">2</span>
 t3 = t1 + t2
 t4 = -t3
 
 b1 = (t1 == t2)
-b2 = (t3 &gt; t4)</code></pre>
-<h2 id="measuring-time">Measuring time</h2><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/transformable.cr" target="_blank">transformable</a></strong></p><p>Now that we&apos;ve seen how to manipulate time values with CrSFML, let&apos;s see how to do something that almost every program needs: measuring the time elapsed.</p><p>CrSFML has a very simple class for measuring time: <a href="http://blaxpirit.github.io/crsfml/api/SF/Clock.html" target="_blank">Clock</a>. It only has two methods: <code>elapsed_time</code>, to retrieve the time elapsed since the clock started, and <code>restart</code>, to restart the clock.</p><pre><code class="lang-crystal">clock = <span class="hljs-symbol">SF:</span>:Clock.new <span class="hljs-comment"># Starts the clock</span>
+b2 = (t3 &gt; t4)
+</code></pre>
+<h2 id="measuring-time">Measuring time</h2>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/transformable.cr" target="_blank">transformable</a></strong></p>
+<p>Now that we&apos;ve seen how to manipulate time values with CrSFML, let&apos;s see how to do something that almost every program needs: measuring the time elapsed.</p>
+<p>CrSFML has a very simple class for measuring time: <a href="http://blaxpirit.github.io/crsfml/api/SF/Clock.html" target="_blank">Clock</a>. It only has two methods: <code>elapsed_time</code>, to retrieve the time elapsed since the clock started, and <code>restart</code>, to restart the clock.</p>
+<pre><code class="lang-crystal">clock = <span class="hljs-symbol">SF:</span>:Clock.new <span class="hljs-comment"># Starts the clock</span>
 
 sleep(<span class="hljs-number">2</span>)
 
@@ -516,14 +533,17 @@ clock.restart
 sleep(<span class="hljs-number">3</span>)
 
 elapsed_2 = clock.elapsed_time
-p elapsed_2.as_seconds</code></pre>
-<p>Note that <code>restart</code> also returns the elapsed time, so that you can avoid the slight gap that would exist if you had to call <code>elapsed_time</code> explicitly before <code>restart</code>.</p><p>Here is an example that uses the time elapsed at each iteration of the game loop to update the game logic:</p><pre><code class="lang-crystal">clock = <span class="hljs-symbol">SF:</span>:Clock.new
+p elapsed_2.as_seconds
+</code></pre>
+<p>Note that <code>restart</code> also returns the elapsed time, so that you can avoid the slight gap that would exist if you had to call <code>elapsed_time</code> explicitly before <code>restart</code>.<br>Here is an example that uses the time elapsed at each iteration of the game loop to update the game logic:</p>
+<pre><code class="lang-crystal">clock = <span class="hljs-symbol">SF:</span>:Clock.new
 
 <span class="hljs-keyword">while</span> window.open?
   elapsed = clock.restart
   update_game(elapsed)
   ...
-<span class="hljs-keyword">end</span></code></pre>
+<span class="hljs-keyword">end</span>
+</code></pre>
 
                                 
                                 </section>
@@ -567,7 +587,7 @@ p elapsed_2.as_seconds</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Handling time","level":"2.1","depth":1,"next":{"title":"Threads","level":"2.2","depth":1,"path":"system/thread.md","ref":"system/thread.md","articles":[]},"previous":{"title":"CrSFML tutorials","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"system/time.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Handling time","level":"2.1","depth":1,"next":{"title":"Threads","level":"2.2","depth":1,"path":"system/thread.md","ref":"system/thread.md","articles":[]},"previous":{"title":"CrSFML tutorials","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"system/time.md","mtime":"2018-03-07T21:44:51.462Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

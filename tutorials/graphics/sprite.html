@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Sprites and textures · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Sprites and textures · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,28 +490,73 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="sprites-and-textures">Sprites and textures</h1><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/flippy_bird.cr" target="_blank">flippy_bird</a></strong></p><h2 id="vocabulary">Vocabulary</h2><p>Most (if not all) of you are already familiar with these two very common objects, so let&apos;s define them very briefly.</p><p>A texture is an image. But we call it &quot;texture&quot; because it has a very specific role: being mapped to a 2D entity.</p><p>A sprite is nothing more than a textured rectangle.</p><p><img src="images/sprites-definition.png"></p><p>Ok, that was short but if you really don&apos;t understand what sprites and textures are, then you&apos;ll find a much better description on Wikipedia.</p><h2 id="loading-a-texture">Loading a texture</h2><p>Before creating any sprite, we need a valid texture. The class that encapsulates textures in CrSFML is, unsurprisingly, <a href="http://blaxpirit.github.io/crsfml/api/SF/Texture.html" target="_blank">Texture</a>. Since the only role of a texture is to be loaded and mapped to graphical entities, almost all its methods are about loading and updating it.</p><p>The most common way of loading a texture is from an image file on disk, which is done with the <code>from_file</code> class method.</p><pre><code class="lang-crystal">texture = <span class="hljs-symbol">SF:</span>:Texture.from_file(<span class="hljs-string">&quot;image.png&quot;</span>)</code></pre>
-<p>The <code>from_file</code> class method can sometimes fail with no obvious reason. First, check the error message that SFML prints to the standard output (check the console). If the message is unable to open file, make sure that the <em>working directory</em> (which is the directory that any file path will be interpreted relative to) is what you think it is.</p><p>You can also load an image file from memory (<code>from_memory</code>), from a <a title="Input streams tutorial" href="../system/stream.html">custom input stream</a> (<code>from_stream</code>), or from an image that has already been loaded (<code>from_image</code>). The latter loads the texture from an <a href="http://blaxpirit.github.io/crsfml/api/SF/Image.html" target="_blank">Image</a>, which is a utility class that helps store and manipulate image data (modify pixels, create transparency channel, etc.). The pixels of an <a href="http://blaxpirit.github.io/crsfml/api/SF/Image.html" target="_blank">Image</a> stay in system memory, which ensures that operations on them will be as fast as possible, in contrast to the pixels of a texture which reside in video memory and are therefore slow to retrieve or update but very fast to draw.</p><p>SFML supports most common image file formats. The full list is available in the API documentation.</p><p>All these loading class methods have an optional argument, which can be used if you want to load a smaller part of the image.</p><pre><code class="lang-crystal"><span class="hljs-comment"># load a 32x32 rectangle that starts at (10, 10)</span>
-texture = <span class="hljs-symbol">SF:</span>:Texture.from_file(<span class="hljs-string">&quot;image.png&quot;</span>, SF.int_rect(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-number">32</span>, <span class="hljs-number">32</span>))</code></pre>
-<p>The <a href="http://blaxpirit.github.io/crsfml/api/SF/IntRect" target="_blank">IntRect</a> class is a simple utility type that represents a rectangle. Its constructor takes the coordinates of the top-left corner, and the size of the rectangle.</p><p>If you don&apos;t want to load a texture from an image, but instead want to update it directly from an array of pixels, you can create it empty and update it later:</p><pre><code class="lang-crystal"><span class="hljs-comment"># create an empty 200x200 texture</span>
-texture = <span class="hljs-symbol">SF:</span>:Texture.new(<span class="hljs-number">200</span>, <span class="hljs-number">200</span>)</code></pre>
-<p>Note that the contents of the texture are undefined at this point.</p><p>To update the pixels of an existing texture, you have to use the <code>update</code> method. It has overloads for many kinds of data sources:</p><pre><code class="lang-crystal"><span class="hljs-comment"># update a texture from an array of pixels</span>
+                                <h1 id="sprites-and-textures">Sprites and textures</h1>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/flippy_bird.cr" target="_blank">flippy_bird</a></strong></p>
+<h2 id="vocabulary">Vocabulary</h2>
+<p>Most (if not all) of you are already familiar with these two very common objects, so let&apos;s define them very briefly.</p>
+<p>A texture is an image. But we call it &quot;texture&quot; because it has a very specific role: being mapped to a 2D entity.</p>
+<p>A sprite is nothing more than a textured rectangle.</p>
+<p><img src="images/sprites-definition.png" alt=""></p>
+<p>Ok, that was short but if you really don&apos;t understand what sprites and textures are, then you&apos;ll find a much better description on Wikipedia.</p>
+<h2 id="loading-a-texture">Loading a texture</h2>
+<p>Before creating any sprite, we need a valid texture. The class that encapsulates textures in CrSFML is, unsurprisingly, <a href="http://blaxpirit.github.io/crsfml/api/SF/Texture.html" target="_blank">Texture</a>. Since the only role of a texture is to be loaded and mapped to graphical entities, almost all its methods are about loading and updating it.</p>
+<p>The most common way of loading a texture is from an image file on disk, which is done with the <code>from_file</code> class method.</p>
+<pre><code class="lang-crystal">texture = <span class="hljs-symbol">SF:</span>:Texture.from_file(<span class="hljs-string">&quot;image.png&quot;</span>)
+</code></pre>
+<p>The <code>from_file</code> class method can sometimes fail with no obvious reason. First, check the error message that SFML prints to the standard output (check the console). If the message is unable to open file, make sure that the <em>working directory</em> (which is the directory that any file path will be interpreted relative to) is what you think it is.</p>
+<p>You can also load an image file from memory (<code>from_memory</code>), from a <a href="../system/stream.html" title="Input streams tutorial">custom input stream</a> (<code>from_stream</code>), or from an image that has already been loaded (<code>from_image</code>). The latter loads the texture from an <a href="http://blaxpirit.github.io/crsfml/api/SF/Image.html" target="_blank">Image</a>, which is a utility class that helps store and manipulate image data (modify pixels, create transparency channel, etc.). The pixels of an <a href="http://blaxpirit.github.io/crsfml/api/SF/Image.html" target="_blank">Image</a> stay in system memory, which ensures that operations on them will be as fast as possible, in contrast to the pixels of a texture which reside in video memory and are therefore slow to retrieve or update but very fast to draw.</p>
+<p>SFML supports most common image file formats. The full list is available in the API documentation.</p>
+<p>All these loading class methods have an optional argument, which can be used if you want to load a smaller part of the image.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># load a 32x32 rectangle that starts at (10, 10)</span>
+texture = <span class="hljs-symbol">SF:</span>:Texture.from_file(<span class="hljs-string">&quot;image.png&quot;</span>, SF.int_rect(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-number">32</span>, <span class="hljs-number">32</span>))
+</code></pre>
+<p>The <a href="http://blaxpirit.github.io/crsfml/api/SF/IntRect" target="_blank">IntRect</a> class is a simple utility type that represents a rectangle. Its constructor takes the coordinates of the top-left corner, and the size of the rectangle.</p>
+<p>If you don&apos;t want to load a texture from an image, but instead want to update it directly from an array of pixels, you can create it empty and update it later:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># create an empty 200x200 texture</span>
+texture = <span class="hljs-symbol">SF:</span>:Texture.new(<span class="hljs-number">200</span>, <span class="hljs-number">200</span>)
+</code></pre>
+<p>Note that the contents of the texture are undefined at this point.</p>
+<p>To update the pixels of an existing texture, you have to use the <code>update</code> method. It has overloads for many kinds of data sources:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># update a texture from an array of pixels</span>
 texture.update(pixels)
 
 <span class="hljs-comment"># update a texture from a SF::Image</span>
 texture.update(image)
 
 <span class="hljs-comment"># update the texture from the current contents of the window</span>
-texture.update(window)</code></pre>
-<p>These examples all assume that the source is of the same size as the texture. If this is not the case, i.e. if you want to update only a part of the texture, you can specify the coordinates of the sub-rectangle that you want to update. You can refer to the documentation for further details.</p><p>Additionally, a texture has two properties that change how it is rendered.</p><p>The first property allows one to smooth the texture. Smoothing a texture makes pixel boundaries less visible (but the image a little more blurry), which can be desirable if it is up-scaled.</p><pre><code class="lang-crystal">texture.smooth = <span class="hljs-literal">true</span></code></pre>
-<p><img src="images/sprites-smooth.png"></p><p>Since smoothing samples from adjacent pixels in the texture as well, it can lead to the unwanted side effect of factoring in pixels outside the selected texture area. This can happen when your sprite is located at non-integer coordinates.</p><p>The second property allows a texture to be repeatedly tiled within a single sprite.</p><pre><code class="lang-crystal">texture.repeated = <span class="hljs-literal">true</span></code></pre>
-<p><img src="images/sprites-repeated.png"></p><p>This only works if your sprite is configured to show a rectangle which is larger than the texture, otherwise this property has no effect.</p><h2 id="ok-can-i-have-my-sprite-now">Ok, can I have my sprite now?</h2><p>Yes, you can now create your sprite.</p><pre><code class="lang-crystal">sprite = <span class="hljs-symbol">SF:</span>:Sprite.new(texture)</code></pre>
-<p>... and finally draw it.</p><pre><code class="lang-crystal"><span class="hljs-comment"># inside the main loop, between window.clear() and window.display()</span>
-window.draw(sprite)</code></pre>
-<p>If you don&apos;t want your sprite to use the entire texture, you can set its texture rectangle.</p><pre><code class="lang-crystal">sprite.texture_rect = SF.int_rect(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-number">32</span>, <span class="hljs-number">32</span>)</code></pre>
-<p>You can also change the color of a sprite. The color that you set is modulated (multiplied) with the texture of the sprite. This can also be used to change the global transparency (alpha) of the sprite.</p><pre><code class="lang-crystal">sprite.color = SF.color(<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>) <span class="hljs-comment"># green</span>
-sprite.color = SF.color(<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">128</span>) <span class="hljs-comment"># half transparent</span></code></pre>
-<p>These sprites all use the same texture, but have a different color:</p><p><img src="images/sprites-color.png"></p><p>Sprites can also be transformed: They have a position, an orientation and a scale.</p><pre><code class="lang-crystal"><span class="hljs-comment"># position</span>
+texture.update(window)
+</code></pre>
+<p>These examples all assume that the source is of the same size as the texture. If this is not the case, i.e. if you want to update only a part of the texture, you can specify the coordinates of the sub-rectangle that you want to update. You can refer to the documentation for further details.</p>
+<p>Additionally, a texture has two properties that change how it is rendered.</p>
+<p>The first property allows one to smooth the texture. Smoothing a texture makes pixel boundaries less visible (but the image a little more blurry), which can be desirable if it is up-scaled.</p>
+<pre><code class="lang-crystal">texture.smooth = <span class="hljs-literal">true</span>
+</code></pre>
+<p><img src="images/sprites-smooth.png" alt=""></p>
+<p>Since smoothing samples from adjacent pixels in the texture as well, it can lead to the unwanted side effect of factoring in pixels outside the selected texture area. This can happen when your sprite is located at non-integer coordinates.</p>
+<p>The second property allows a texture to be repeatedly tiled within a single sprite.</p>
+<pre><code class="lang-crystal">texture.repeated = <span class="hljs-literal">true</span>
+</code></pre>
+<p><img src="images/sprites-repeated.png" alt=""></p>
+<p>This only works if your sprite is configured to show a rectangle which is larger than the texture, otherwise this property has no effect.</p>
+<h2 id="ok-can-i-have-my-sprite-now">Ok, can I have my sprite now?</h2>
+<p>Yes, you can now create your sprite.</p>
+<pre><code class="lang-crystal">sprite = <span class="hljs-symbol">SF:</span>:Sprite.new(texture)
+</code></pre>
+<p>... and finally draw it.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># inside the main loop, between window.clear() and window.display()</span>
+window.draw(sprite)
+</code></pre>
+<p>If you don&apos;t want your sprite to use the entire texture, you can set its texture rectangle.</p>
+<pre><code class="lang-crystal">sprite.texture_rect = SF.int_rect(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-number">32</span>, <span class="hljs-number">32</span>)
+</code></pre>
+<p>You can also change the color of a sprite. The color that you set is modulated (multiplied) with the texture of the sprite. This can also be used to change the global transparency (alpha) of the sprite.</p>
+<pre><code class="lang-crystal">sprite.color = SF.color(<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>) <span class="hljs-comment"># green</span>
+sprite.color = SF.color(<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">128</span>) <span class="hljs-comment"># half transparent</span>
+</code></pre>
+<p>These sprites all use the same texture, but have a different color:</p>
+<p><img src="images/sprites-color.png" alt=""></p>
+<p>Sprites can also be transformed: They have a position, an orientation and a scale.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># position</span>
 sprite.position = SF.vector2(<span class="hljs-number">10</span>, <span class="hljs-number">50</span>) <span class="hljs-comment"># absolute position</span>
 sprite.move(SF.vector2(<span class="hljs-number">5</span>, <span class="hljs-number">10</span>)) <span class="hljs-comment"># offset relative to the current position</span>
 
@@ -521,9 +566,20 @@ sprite.rotate(<span class="hljs-number">15</span>) <span class="hljs-comment"># 
 
 <span class="hljs-comment"># scale</span>
 sprite.scale = SF.vector2(<span class="hljs-number">0.5</span>, <span class="hljs-number">2.0</span>) <span class="hljs-comment"># absolute scale factor</span>
-sprite.scale(SF.vector2(<span class="hljs-number">1.5</span>, <span class="hljs-number">3.0</span>)) <span class="hljs-comment"># factor relative to the current scale</span></code></pre>
-<p>By default, the origin for these three transformations is the top-left corner of the sprite. If you want to set the origin to a different point (for example the center of the sprite, or another corner), you can use the <code>origin=</code> method.</p><pre><code class="lang-crystal">sprite.origin = SF.vector2(<span class="hljs-number">25</span>, <span class="hljs-number">25</span>)</code></pre>
-<p>Since transformation methods are common to all CrSFML entities, they are explained in a separate tutorial: <a title="&apos;Transforming entities&apos; tutorial" href="transform.html">Transforming entities</a>.</p><h2 id="the-importance-of-using-as-few-textures-as-possible">The importance of using as few textures as possible</h2><p>Using as few textures as possible is a good strategy, and the reason is simple: Changing the current texture is an expensive operation for the graphics card. Drawing many sprites that use the same texture will yield the best performance.</p><p>Additionally, using a single texture allows you to group static geometry into a single entity (you can only use one texture per <code>draw</code> call), which will be much faster to draw than a set of many entities. Batching static geometry involves other classes and is therefore beyond the scope of this tutorial, for further details see the <a title="Vertex array tutorial" href="vertex-array.html">vertex array</a> tutorial.</p><p>Try to keep this in mind when you create your animation sheets or your tilesets: Use as few textures as possible.</p><h2 id="using-sftexture-with-opengl-code">Using SF::Texture with OpenGL code</h2><p>If you&apos;re using OpenGL rather than the graphics entities of CrSFML, you can still use <a href="http://blaxpirit.github.io/crsfml/api/SF/Texture.html" target="_blank">Texture</a> as a wrapper around an OpenGL texture object and use it along with the rest of your OpenGL code.</p><p>To bind a <a href="http://blaxpirit.github.io/crsfml/api/SF/Texture.html" target="_blank">Texture</a> for drawing (basically <code>glBindTexture</code>), you call the <code>bind</code> class method:</p><pre><code class="lang-crystal">texture = ...
+sprite.scale(SF.vector2(<span class="hljs-number">1.5</span>, <span class="hljs-number">3.0</span>)) <span class="hljs-comment"># factor relative to the current scale</span>
+</code></pre>
+<p>By default, the origin for these three transformations is the top-left corner of the sprite. If you want to set the origin to a different point (for example the center of the sprite, or another corner), you can use the <code>origin=</code> method.</p>
+<pre><code class="lang-crystal">sprite.origin = SF.vector2(<span class="hljs-number">25</span>, <span class="hljs-number">25</span>)
+</code></pre>
+<p>Since transformation methods are common to all CrSFML entities, they are explained in a separate tutorial: <a href="transform.html" title="&apos;Transforming entities&apos; tutorial">Transforming entities</a>.</p>
+<h2 id="the-importance-of-using-as-few-textures-as-possible">The importance of using as few textures as possible</h2>
+<p>Using as few textures as possible is a good strategy, and the reason is simple: Changing the current texture is an expensive operation for the graphics card. Drawing many sprites that use the same texture will yield the best performance.</p>
+<p>Additionally, using a single texture allows you to group static geometry into a single entity (you can only use one texture per <code>draw</code> call), which will be much faster to draw than a set of many entities. Batching static geometry involves other classes and is therefore beyond the scope of this tutorial, for further details see the <a href="vertex-array.html" title="Vertex array tutorial">vertex array</a> tutorial.</p>
+<p>Try to keep this in mind when you create your animation sheets or your tilesets: Use as few textures as possible.</p>
+<h2 id="using-sftexture-with-opengl-code">Using SF::Texture with OpenGL code</h2>
+<p>If you&apos;re using OpenGL rather than the graphics entities of CrSFML, you can still use <a href="http://blaxpirit.github.io/crsfml/api/SF/Texture.html" target="_blank">Texture</a> as a wrapper around an OpenGL texture object and use it along with the rest of your OpenGL code.</p>
+<p>To bind a <a href="http://blaxpirit.github.io/crsfml/api/SF/Texture.html" target="_blank">Texture</a> for drawing (basically <code>glBindTexture</code>), you call the <code>bind</code> class method:</p>
+<pre><code class="lang-crystal">texture = ...
 
 <span class="hljs-comment"># bind the texture</span>
 <span class="hljs-symbol">SF:</span>:Texture.bind texture
@@ -531,7 +587,8 @@ sprite.scale(SF.vector2(<span class="hljs-number">1.5</span>, <span class="hljs-
 <span class="hljs-comment"># draw your textured OpenGL entity here...</span>
 
 <span class="hljs-comment"># bind no texture</span>
-<span class="hljs-symbol">SF:</span>:Texture.bind <span class="hljs-literal">nil</span></code></pre>
+<span class="hljs-symbol">SF:</span>:Texture.bind <span class="hljs-literal">nil</span>
+</code></pre>
 
                                 
                                 </section>
@@ -575,7 +632,7 @@ sprite.scale(SF.vector2(<span class="hljs-number">1.5</span>, <span class="hljs-
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Sprites and textures","level":"4.2","depth":1,"next":{"title":"Text and fonts","level":"4.3","depth":1,"path":"graphics/text.md","ref":"graphics/text.md","articles":[]},"previous":{"title":"Drawing 2D stuff","level":"4.1","depth":1,"path":"graphics/draw.md","ref":"graphics/draw.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/sprite.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Sprites and textures","level":"4.2","depth":1,"next":{"title":"Text and fonts","level":"4.3","depth":1,"path":"graphics/text.md","ref":"graphics/text.md","articles":[]},"previous":{"title":"Drawing 2D stuff","level":"4.1","depth":1,"path":"graphics/draw.md","ref":"graphics/draw.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/sprite.md","mtime":"2018-03-07T21:44:51.460Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

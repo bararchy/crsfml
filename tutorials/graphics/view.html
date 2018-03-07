@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Controlling the 2D camera with views · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Controlling the 2D camera with views · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,43 +490,83 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="controlling-the-2d-camera-with-views">Controlling the 2D camera with views</h1><h2 id="what-is-a-view">What is a view?</h2><p>In games, it is not uncommon to have levels which are much bigger than the window itself. You only see is a small part of them. This is typically the case in RPGs, platform games, and many other genres. What developers might tend to forget is that they define entities <em>in a 2D world</em>, not directly in the window. The window is just a view, it shows a specific area of the whole world. It is perfectly fine to draw several views of the same world in parallel, or draw the world to a texture rather than to a window. The world itself remains unchanged, what changes is just the way it is seen.</p><p>Since what is seen in the window is just a small part of the entire 2D world, you need a way to specify which part of the world is shown in the window. Additionally, you may also want to define where/how this area will be shown <em>within</em> the window. These are the two main features of SFML views.</p><p>To summarize, views are what you need if you want to scroll, rotate or zoom your world. They are also the key to creating split screens and mini-maps.</p><h2 id="defining-what-the-view-views">Defining what the view views</h2><p>The class which encapsulates views in SFML is <a href="http://blaxpirit.github.io/crsfml/api/SF/View.html" target="_blank">View</a>. It can be constructed directly with a definition of the area to view:</p><pre><code class="lang-crystal"><span class="hljs-comment"># create a view with the rectangular area of the 2D world to show</span>
+                                <h1 id="controlling-the-2d-camera-with-views">Controlling the 2D camera with views</h1>
+<h2 id="what-is-a-view">What is a view?</h2>
+<p>In games, it is not uncommon to have levels which are much bigger than the window itself. You only see is a small part of them. This is typically the case in RPGs, platform games, and many other genres. What developers might tend to forget is that they define entities <em>in a 2D world</em>, not directly in the window. The window is just a view, it shows a specific area of the whole world. It is perfectly fine to draw several views of the same world in parallel, or draw the world to a texture rather than to a window. The world itself remains unchanged, what changes is just the way it is seen.</p>
+<p>Since what is seen in the window is just a small part of the entire 2D world, you need a way to specify which part of the world is shown in the window. Additionally, you may also want to define where/how this area will be shown <em>within</em> the window. These are the two main features of SFML views.</p>
+<p>To summarize, views are what you need if you want to scroll, rotate or zoom your world. They are also the key to creating split screens and mini-maps.</p>
+<h2 id="defining-what-the-view-views">Defining what the view views</h2>
+<p>The class which encapsulates views in SFML is <a href="http://blaxpirit.github.io/crsfml/api/SF/View.html" target="_blank">View</a>. It can be constructed directly with a definition of the area to view:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># create a view with the rectangular area of the 2D world to show</span>
 view1 = <span class="hljs-symbol">SF:</span>:View.new(SF.float_rect(<span class="hljs-number">200</span>, <span class="hljs-number">200</span>, <span class="hljs-number">300</span>, <span class="hljs-number">200</span>))
 
 <span class="hljs-comment"># create a view with its center and size</span>
-view2 = <span class="hljs-symbol">SF:</span>:View.new(SF.vector2(<span class="hljs-number">350</span>, <span class="hljs-number">300</span>), SF.vector2(<span class="hljs-number">300</span>, <span class="hljs-number">200</span>))</code></pre>
-<p>These two definitions are equivalent: Both views will show the same area of the 2D world, a 300x200 rectangle <em>centered</em> on the point (350, 300).</p><p><img src="images/view-initial.png"></p><p>If you don&apos;t want to define the view upon construction or want to modify it later, you can use the equivalent setters:</p><pre><code class="lang-crystal">view1.reset(SF.float_rect(<span class="hljs-number">200</span>, <span class="hljs-number">200</span>, <span class="hljs-number">300</span>, <span class="hljs-number">200</span>))
+view2 = <span class="hljs-symbol">SF:</span>:View.new(SF.vector2(<span class="hljs-number">350</span>, <span class="hljs-number">300</span>), SF.vector2(<span class="hljs-number">300</span>, <span class="hljs-number">200</span>))
+</code></pre>
+<p>These two definitions are equivalent: Both views will show the same area of the 2D world, a 300x200 rectangle <em>centered</em> on the point (350, 300).</p>
+<p><img src="images/view-initial.png" alt=""></p>
+<p>If you don&apos;t want to define the view upon construction or want to modify it later, you can use the equivalent setters:</p>
+<pre><code class="lang-crystal">view1.reset(SF.float_rect(<span class="hljs-number">200</span>, <span class="hljs-number">200</span>, <span class="hljs-number">300</span>, <span class="hljs-number">200</span>))
 
 view2.center = SF.vector2(<span class="hljs-number">350</span>, <span class="hljs-number">300</span>)
-view2.size = SF.vector2(<span class="hljs-number">200</span>, <span class="hljs-number">200</span>)</code></pre>
-<p>Once your view is defined, you can transform it to make it show a translated/rotated/scaled version of your 2D world.</p><h3 id="moving-scrolling-the-view">Moving (scrolling) the view</h3><p>Unlike drawable entities, such as sprites or shapes whose positions are defined by their top-left corner (and can be changed to any other point), views are always manipulated by their center -- this is simply more convenient. That&apos;s why the method to change the position of a view is named <code>center=</code>, and not <code>position=</code>.</p><pre><code class="lang-crystal"><span class="hljs-comment"># move the view at point (200, 200)</span>
+view2.size = SF.vector2(<span class="hljs-number">200</span>, <span class="hljs-number">200</span>)
+</code></pre>
+<p>Once your view is defined, you can transform it to make it show a translated/rotated/scaled version of your 2D world.</p>
+<h3 id="moving-scrolling-the-view">Moving (scrolling) the view</h3>
+<p>Unlike drawable entities, such as sprites or shapes whose positions are defined by their top-left corner (and can be changed to any other point), views are always manipulated by their center -- this is simply more convenient. That&apos;s why the method to change the position of a view is named <code>center=</code>, and not <code>position=</code>.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># move the view at point (200, 200)</span>
 view.center = SF.vector2(<span class="hljs-number">200</span>, <span class="hljs-number">200</span>)
 
 <span class="hljs-comment"># move the view by an offset of (100, 100) (so its final position is (300, 300))</span>
-view.move(SF.vector2(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>))</code></pre>
-<p><img src="images/view-translated.png"></p><h3 id="rotating-the-view">Rotating the view</h3><p>To rotate a view, use the <code>rotation=</code> method.</p><pre><code class="lang-crystal"><span class="hljs-comment"># rotate the view at 20 degrees</span>
+view.move(SF.vector2(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>))
+</code></pre>
+<p><img src="images/view-translated.png" alt=""></p>
+<h3 id="rotating-the-view">Rotating the view</h3>
+<p>To rotate a view, use the <code>rotation=</code> method.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># rotate the view at 20 degrees</span>
 view.rotation = <span class="hljs-number">20</span>
 
 <span class="hljs-comment"># rotate the view by 5 degrees relatively to its current orientation (so its final orientation is 25 degrees)</span>
-view.rotate(<span class="hljs-number">5</span>)</code></pre>
-<p><img src="images/view-rotated.png"></p><h3 id="zooming-scaling-the-view">Zooming (scaling) the view</h3><p>Zooming in (or out) a view is done through to resizing it, so the method to use is <code>size=</code>.</p><pre><code class="lang-crystal"><span class="hljs-comment"># resize the view to show a 1200x800 area (we see a bigger area, so this is a zoom out)</span>
+view.rotate(<span class="hljs-number">5</span>)
+</code></pre>
+<p><img src="images/view-rotated.png" alt=""></p>
+<h3 id="zooming-scaling-the-view">Zooming (scaling) the view</h3>
+<p>Zooming in (or out) a view is done through to resizing it, so the method to use is <code>size=</code>.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># resize the view to show a 1200x800 area (we see a bigger area, so this is a zoom out)</span>
 view.size = SF.vector2(<span class="hljs-number">1200</span>, <span class="hljs-number">800</span>)
 
 <span class="hljs-comment"># zoom the view relatively to its current size (apply a factor 0.5, so its final size is 600x400)</span>
-view.zoom(<span class="hljs-number">0.5</span>)</code></pre>
-<p><img src="images/view-scaled.png"></p><h2 id="defining-how-the-view-is-viewed">Defining how the view is viewed</h2><p>Now that you&apos;ve defined which part of the 2D world is seen in the window, let&apos;s define <em>where</em> it is shown. By default, the viewed contents occupy the full window. If the view has the same size as the window, everything is rendered 1:1. If the view is smaller or larger than the window, everything is scaled to fit in the window.</p><p>This default behavior is suitable for most situations, but it might need to be changed sometimes. For example, to split the screen in a multiplayer game, you may want to use two views which each only occupy half of the window. You can also implement a minimap by drawing your entire world to a view which is rendered in a small area in a corner of the window. The area in which the contents of the view is shown is called the <em>viewport</em>.</p><p>To set the viewport of a view, you can use the <code>viewport=</code> method.</p><pre><code class="lang-crystal"><span class="hljs-comment"># define a centered viewport, with half the size of the window</span>
-view.viewport = SF.float_rect(<span class="hljs-number">0.25</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">0.5</span>)</code></pre>
-<p><img src="images/view-viewport.png"></p><p>You might have noticed something very important: The viewport is not defined in pixels, but instead as a ratio of the window size. This is more convenient: It allows you to not have to track resize events in order to update the size of the viewport every time the size of the window changes. It is also more intuitive: You would probably define your viewport as a fraction of the entire window area anyway, not as a fixed-size rectangle.</p><p>Using a viewport, it is straightforward to split the screen for multiplayer games:</p><pre><code class="lang-crystal"><span class="hljs-comment"># player 1 (left side of the screen)</span>
+view.zoom(<span class="hljs-number">0.5</span>)
+</code></pre>
+<p><img src="images/view-scaled.png" alt=""></p>
+<h2 id="defining-how-the-view-is-viewed">Defining how the view is viewed</h2>
+<p>Now that you&apos;ve defined which part of the 2D world is seen in the window, let&apos;s define <em>where</em> it is shown. By default, the viewed contents occupy the full window. If the view has the same size as the window, everything is rendered 1:1. If the view is smaller or larger than the window, everything is scaled to fit in the window.</p>
+<p>This default behavior is suitable for most situations, but it might need to be changed sometimes. For example, to split the screen in a multiplayer game, you may want to use two views which each only occupy half of the window. You can also implement a minimap by drawing your entire world to a view which is rendered in a small area in a corner of the window. The area in which the contents of the view is shown is called the <em>viewport</em>.</p>
+<p>To set the viewport of a view, you can use the <code>viewport=</code> method.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># define a centered viewport, with half the size of the window</span>
+view.viewport = SF.float_rect(<span class="hljs-number">0.25</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">0.5</span>)
+</code></pre>
+<p><img src="images/view-viewport.png" alt=""></p>
+<p>You might have noticed something very important: The viewport is not defined in pixels, but instead as a ratio of the window size. This is more convenient: It allows you to not have to track resize events in order to update the size of the viewport every time the size of the window changes. It is also more intuitive: You would probably define your viewport as a fraction of the entire window area anyway, not as a fixed-size rectangle.</p>
+<p>Using a viewport, it is straightforward to split the screen for multiplayer games:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># player 1 (left side of the screen)</span>
 player1_view.viewport = SF.float_rect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">1</span>)
 
 <span class="hljs-comment"># player 2 (right side of the screen)</span>
-player2_view.viewport = SF.float_rect(<span class="hljs-number">0.5</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">1</span>)</code></pre>
-<p><img src="images/view-split-screen.png"></p><p>... or a mini-map:</p><pre><code class="lang-crystal"><span class="hljs-comment"># the game view (full window)</span>
+player2_view.viewport = SF.float_rect(<span class="hljs-number">0.5</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">1</span>)
+</code></pre>
+<p><img src="images/view-split-screen.png" alt=""></p>
+<p>... or a mini-map:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># the game view (full window)</span>
 game_view.viewport = SF.float_rect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)
 
 <span class="hljs-comment"># mini-map (upper-right corner)</span>
-minimap_view.viewport = SF.float_rect(<span class="hljs-number">0.75</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">0.25</span>)</code></pre>
-<p><img src="images/view-minimap.png"></p><h2 id="using-a-view">Using a view</h2><p>To draw something using a view, you must draw it after calling the <code>view=</code> method of the target to which you are drawing (<a href="http://blaxpirit.github.io/crsfml/api/SF/RenderWindow.html" target="_blank">RenderWindow</a> or <a href="http://blaxpirit.github.io/crsfml/api/SF/RenderTexture.html" target="_blank">RenderTexture</a>).</p><pre><code class="lang-crystal"><span class="hljs-comment"># let&apos;s define a view</span>
+minimap_view.viewport = SF.float_rect(<span class="hljs-number">0.75</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">0.25</span>)
+</code></pre>
+<p><img src="images/view-minimap.png" alt=""></p>
+<h2 id="using-a-view">Using a view</h2>
+<p>To draw something using a view, you must draw it after calling the <code>view=</code> method of the target to which you are drawing (<a href="http://blaxpirit.github.io/crsfml/api/SF/RenderWindow.html" target="_blank">RenderWindow</a> or <a href="http://blaxpirit.github.io/crsfml/api/SF/RenderTexture.html" target="_blank">RenderTexture</a>).</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># let&apos;s define a view</span>
 view = <span class="hljs-symbol">SF:</span>:View.new(SF.float_rect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1000</span>, <span class="hljs-number">600</span>))
 
 <span class="hljs-comment"># activate it</span>
@@ -538,15 +578,22 @@ window.draw(some_sprite)
 <span class="hljs-comment"># want to do visibility checks? retrieve the view</span>
 current_view = window.view
 
-...</code></pre>
-<p>The view remains active until you set another one. This means that there is always a view which defines what appears in the target, and where it is drawn. If you don&apos;t explicitly set any view, the render-target uses its own default view, which matches its size 1:1. You can get the default view of a render-target with the <code>default_view</code> method. This can be useful if you want to define your own view based on it, or restore it to draw fixed entities (like a GUI) on top of your scene.</p><pre><code class="lang-crystal"><span class="hljs-comment"># create a view half the size of the default view</span>
+...
+</code></pre>
+<p>The view remains active until you set another one. This means that there is always a view which defines what appears in the target, and where it is drawn. If you don&apos;t explicitly set any view, the render-target uses its own default view, which matches its size 1:1. You can get the default view of a render-target with the <code>default_view</code> method. This can be useful if you want to define your own view based on it, or restore it to draw fixed entities (like a GUI) on top of your scene.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># create a view half the size of the default view</span>
 view = window.default_view
 view.zoom(<span class="hljs-number">0.5</span>)
 window.view = view
 
 <span class="hljs-comment"># restore the default view</span>
-window.view = window.default_view</code></pre>
-<p>When you call <code>view=</code>, the render-target makes a <em>copy</em> of the view, and doesn&apos;t store a pointer to the one that is passed. This means that whenever you update your view, you need to call <code>view=</code> again to apply the modifications.</p><p>Don&apos;t be afraid to copy views or create them on the fly, they aren&apos;t expensive objects (they just hold a few floats).</p><h2 id="showing-more-when-the-window-is-resized">Showing more when the window is resized</h2><p>Since the default view never changes after the window is created, the viewed contents are always the same. So when the window is resized, everything is squeezed/stretched to the new size.</p><p>If, instead of this default behavior, you&apos;d like to show more/less stuff depending on the new size of the window, all you have to do is update the size of the view with the size of the window.</p><pre><code class="lang-crystal"><span class="hljs-comment"># the event loop</span>
+window.view = window.default_view
+</code></pre>
+<p>When you call <code>view=</code>, the render-target makes a <em>copy</em> of the view, and doesn&apos;t store a pointer to the one that is passed. This means that whenever you update your view, you need to call <code>view=</code> again to apply the modifications.<br>Don&apos;t be afraid to copy views or create them on the fly, they aren&apos;t expensive objects (they just hold a few floats).</p>
+<h2 id="showing-more-when-the-window-is-resized">Showing more when the window is resized</h2>
+<p>Since the default view never changes after the window is created, the viewed contents are always the same. So when the window is resized, everything is squeezed/stretched to the new size.</p>
+<p>If, instead of this default behavior, you&apos;d like to show more/less stuff depending on the new size of the window, all you have to do is update the size of the view with the size of the window.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># the event loop</span>
 <span class="hljs-keyword">while</span> event = window.poll_event
   ...
 
@@ -556,13 +603,19 @@ window.view = window.default_view</code></pre>
     visible_area = SF.float_rect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, event.width, event.height)
     window.view = <span class="hljs-symbol">SF:</span>:View.new(visible_area)
   <span class="hljs-keyword">end</span>
-<span class="hljs-keyword">end</span></code></pre>
-<h2 id="coordinates-conversions">Coordinates conversions</h2><p>When you use a custom view, or when you resize the window without using the code above, pixels displayed on the target no longer match units in the 2D world. For example, clicking on pixel (10, 50) may hit the point (26.5, -84) of your world. You end up having to use a conversion method to map your pixel coordinates to world coordinates: <code>map_pixel_to_coords</code>.</p><pre><code class="lang-crystal"><span class="hljs-comment"># get the current mouse position in the window</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<h2 id="coordinates-conversions">Coordinates conversions</h2>
+<p>When you use a custom view, or when you resize the window without using the code above, pixels displayed on the target no longer match units in the 2D world. For example, clicking on pixel (10, 50) may hit the point (26.5, -84) of your world. You end up having to use a conversion method to map your pixel coordinates to world coordinates: <code>map_pixel_to_coords</code>.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># get the current mouse position in the window</span>
 pixel_pos = <span class="hljs-symbol">SF:</span>:Mouse.get_position(window)
 
 <span class="hljs-comment"># convert it to world coordinates</span>
-world_pos = window.map_pixel_to_coords(pixel_pos, window.view)</code></pre>
-<p>By default, <code>map_pixel_to_coords</code> uses the current view. If you want to convert the coordinates using view which is not the active one, you can pass it as an additional argument to the method.</p><p>The opposite, converting world coordinates to pixel coordinates, is also possible with the <code>map_coords_to_pixel</code> method.</p>
+world_pos = window.map_pixel_to_coords(pixel_pos, window.view)
+</code></pre>
+<p>By default, <code>map_pixel_to_coords</code> uses the current view. If you want to convert the coordinates using view which is not the active one, you can pass it as an additional argument to the method.</p>
+<p>The opposite, converting world coordinates to pixel coordinates, is also possible with the <code>map_coords_to_pixel</code> method.</p>
+
                                 
                                 </section>
                             
@@ -605,7 +658,7 @@ world_pos = window.map_pixel_to_coords(pixel_pos, window.view)</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Controlling the 2D camera with views","level":"4.8","depth":1,"next":{"title":"Playing sounds and music","level":"5.1","depth":1,"path":"audio/sounds.md","ref":"audio/sounds.md","articles":[]},"previous":{"title":"Adding special effects with shaders","level":"4.7","depth":1,"path":"graphics/shader.md","ref":"graphics/shader.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/view.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Controlling the 2D camera with views","level":"4.8","depth":1,"next":{"title":"Playing sounds and music","level":"5.1","depth":1,"path":"audio/sounds.md","ref":"audio/sounds.md","articles":[]},"previous":{"title":"Adding special effects with shaders","level":"4.7","depth":1,"path":"graphics/shader.md","ref":"graphics/shader.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/view.md","mtime":"2018-03-07T21:44:51.461Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

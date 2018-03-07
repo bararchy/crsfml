@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Shapes · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Shapes · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,45 +490,87 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="shapes">Shapes</h1><h2 id="introduction">Introduction</h2><p>CrSFML provides a set of classes that represent simple shape entities. Each type of shape is a separate class, but they all derive from the same base class so that they have access to the same subset of common features. Each class then adds its own specifics: a radius property for the circle class, a size for the rectangle class, points for the polygon class, etc.</p><h2 id="common-shape-properties">Common shape properties</h2><h3 id="transformation-position-rotation-scale">Transformation (position, rotation, scale)</h3><p>These properties are common to all the CrSFML graphical classes, so they are explained in a separate tutorial: <a title="&apos;Transforming entities&apos; tutorial" href="transform.html">Transforming entities</a>.</p><h3 id="color">Color</h3><p>One of the basic properties of a shape is its color. You can change with the <code>fill_color=</code> method.</p><pre><code class="lang-crystal">shape = <span class="hljs-symbol">SF:</span>:CircleShape.new(<span class="hljs-number">50</span>)
+                                <h1 id="shapes">Shapes</h1>
+<h2 id="introduction">Introduction</h2>
+<p>CrSFML provides a set of classes that represent simple shape entities. Each type of shape is a separate class, but they all derive from the same base class so that they have access to the same subset of common features. Each class then adds its own specifics: a radius property for the circle class, a size for the rectangle class, points for the polygon class, etc.</p>
+<h2 id="common-shape-properties">Common shape properties</h2>
+<h3 id="transformation-position-rotation-scale">Transformation (position, rotation, scale)</h3>
+<p>These properties are common to all the CrSFML graphical classes, so they are explained in a separate tutorial: <a href="transform.html" title="&apos;Transforming entities&apos; tutorial">Transforming entities</a>.</p>
+<h3 id="color">Color</h3>
+<p>One of the basic properties of a shape is its color. You can change with the <code>fill_color=</code> method.</p>
+<pre><code class="lang-crystal">shape = <span class="hljs-symbol">SF:</span>:CircleShape.new(<span class="hljs-number">50</span>)
 
 <span class="hljs-comment"># set the shape color to green</span>
-shape.fill_color = SF.color(<span class="hljs-number">100</span>, <span class="hljs-number">250</span>, <span class="hljs-number">50</span>)</code></pre>
-<p><img alt="A colored shape" src="images/shape-color.png"></p><h3 id="outline">Outline</h3><p>Shapes can have an outline. You can set the thickness and color of the outline with the <code>outline_thickness=</code> and <code>outline_color=</code> methods.</p><pre><code class="lang-crystal">shape = <span class="hljs-symbol">SF:</span>:CircleShape.new(<span class="hljs-number">50</span>)
+shape.fill_color = SF.color(<span class="hljs-number">100</span>, <span class="hljs-number">250</span>, <span class="hljs-number">50</span>)
+</code></pre>
+<p><img src="images/shape-color.png" alt="A colored shape"></p>
+<h3 id="outline">Outline</h3>
+<p>Shapes can have an outline. You can set the thickness and color of the outline with the <code>outline_thickness=</code> and <code>outline_color=</code> methods.</p>
+<pre><code class="lang-crystal">shape = <span class="hljs-symbol">SF:</span>:CircleShape.new(<span class="hljs-number">50</span>)
 shape.fill_color = SF.color(<span class="hljs-number">150</span>, <span class="hljs-number">50</span>, <span class="hljs-number">250</span>)
 
 <span class="hljs-comment"># set a 10-pixel wide orange outline</span>
 shape.outline_thickness = <span class="hljs-number">10</span>
-shape.outline_color = SF.color(<span class="hljs-number">250</span>, <span class="hljs-number">150</span>, <span class="hljs-number">100</span>)</code></pre>
-<p><img alt="An outlined shape" src="images/shape-outline.png"></p><p>By default, the outline is extruded outwards from the shape (e.g. if you have a circle with a radius of 10 and an outline thickness of 5, the total radius of the circle will be 15). You can make it extrude towards the center of the shape instead, by setting a negative thickness.</p><p>To disable the outline, set its thickness to 0. If you only want the outline, you can set the fill color to <code>SF::Color::Transparent</code>.</p><h3 id="texture">Texture</h3><p>Shapes can also be textured, just like sprites. To specify a part of the texture to be mapped to the shape, you must use the <code>texture_rect=</code> method. It takes the texture rectangle to map to the bounding rectangle of the shape. This method doesn&apos;t offer maximum flexibility, but it is much easier to use than individually setting the texture coordinates of each point of the shape.</p><pre><code class="lang-crystal">shape = <span class="hljs-symbol">SF:</span>:CircleShape.new(<span class="hljs-number">50</span>)
+shape.outline_color = SF.color(<span class="hljs-number">250</span>, <span class="hljs-number">150</span>, <span class="hljs-number">100</span>)
+</code></pre>
+<p><img src="images/shape-outline.png" alt="An outlined shape"></p>
+<p>By default, the outline is extruded outwards from the shape (e.g. if you have a circle with a radius of 10 and an outline thickness of 5, the total radius of the circle will be 15). You can make it extrude towards the center of the shape instead, by setting a negative thickness.</p>
+<p>To disable the outline, set its thickness to 0. If you only want the outline, you can set the fill color to <code>SF::Color::Transparent</code>.</p>
+<h3 id="texture">Texture</h3>
+<p>Shapes can also be textured, just like sprites. To specify a part of the texture to be mapped to the shape, you must use the <code>texture_rect=</code> method. It takes the texture rectangle to map to the bounding rectangle of the shape. This method doesn&apos;t offer maximum flexibility, but it is much easier to use than individually setting the texture coordinates of each point of the shape.</p>
+<pre><code class="lang-crystal">shape = <span class="hljs-symbol">SF:</span>:CircleShape.new(<span class="hljs-number">50</span>)
 
 <span class="hljs-comment"># map a 100x100 textured rectangle to the shape</span>
 shape.set_texture(texture, <span class="hljs-symbol">reset_rect:</span> <span class="hljs-literal">false</span>) <span class="hljs-comment"># texture is a SF::Texture</span>
-shape.texture_rect = SF.int_rect(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-number">100</span>, <span class="hljs-number">100</span>)</code></pre>
-<p><img alt="A textured shape" src="images/shape-texture.png"></p><p>Note that the outline is not textured.</p><p>It is important to know that the texture is modulated (multiplied) with the shape&apos;s fill color. If its fill color is <code>SF::Color::White</code>, the texture will appear unmodified.
-To disable texturing, call <code>set_texture(nil, false)</code>.</p><h2 id="drawing-a-shape">Drawing a shape</h2><p>Drawing a shape is as simple as drawing any other SFML entity:</p><pre><code class="lang-crystal">window.draw(shape)</code></pre>
-<h2 id="built-in-shape-types">Built-in shape types</h2><h3 id="rectangles">Rectangles</h3><p>To draw rectangles, you can use the <a href="http://blaxpirit.github.io/crsfml/api/SF/RectangleShape.html" target="_blank">RectangleShape</a> class. It has a single attribute: The size of the rectangle.</p><pre><code class="lang-crystal"><span class="hljs-comment"># define a 120x50 rectangle</span>
+shape.texture_rect = SF.int_rect(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, <span class="hljs-number">100</span>, <span class="hljs-number">100</span>)
+</code></pre>
+<p><img src="images/shape-texture.png" alt="A textured shape"></p>
+<p>Note that the outline is not textured.<br>It is important to know that the texture is modulated (multiplied) with the shape&apos;s fill color. If its fill color is <code>SF::Color::White</code>, the texture will appear unmodified.
+To disable texturing, call <code>set_texture(nil, false)</code>.</p>
+<h2 id="drawing-a-shape">Drawing a shape</h2>
+<p>Drawing a shape is as simple as drawing any other SFML entity:</p>
+<pre><code class="lang-crystal">window.draw(shape)
+</code></pre>
+<h2 id="built-in-shape-types">Built-in shape types</h2>
+<h3 id="rectangles">Rectangles</h3>
+<p>To draw rectangles, you can use the <a href="http://blaxpirit.github.io/crsfml/api/SF/RectangleShape.html" target="_blank">RectangleShape</a> class. It has a single attribute: The size of the rectangle.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># define a 120x50 rectangle</span>
 rectangle = <span class="hljs-symbol">SF:</span>:RectangleShape.new(SF.vector2(<span class="hljs-number">120</span>, <span class="hljs-number">50</span>))
 
 <span class="hljs-comment"># change the size to 100x100</span>
-rectangle.size = SF.vector2(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>)</code></pre>
-<p><img alt="A rectangle shape" src="images/shape-rectangle.png"></p><h3 id="circles">Circles</h3><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/snakes.cr" target="_blank">snakes</a></strong></p><p>Circles are represented by the <a href="http://blaxpirit.github.io/crsfml/api/SF/CircleShape.html" target="_blank">CircleShape</a> class. It has two attributes: The radius and the number of sides. The number of sides is an optional attribute, it allows you to adjust the &quot;quality&quot; of the circle: Circles have to be approximated by polygons with many sides (the graphics card is unable to draw a perfect circle directly), and this attribute defines how many sides your circle approximation will have. If you draw small circles, you&apos;ll probably only need a few sides. If you draw big circles, or zoom on regular circles, you&apos;ll most likely need more sides.</p><pre><code class="lang-crystal"><span class="hljs-comment"># define a circle with radius = 200</span>
+rectangle.size = SF.vector2(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>)
+</code></pre>
+<p><img src="images/shape-rectangle.png" alt="A rectangle shape"></p>
+<h3 id="circles">Circles</h3>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/snakes.cr" target="_blank">snakes</a></strong></p>
+<p>Circles are represented by the <a href="http://blaxpirit.github.io/crsfml/api/SF/CircleShape.html" target="_blank">CircleShape</a> class. It has two attributes: The radius and the number of sides. The number of sides is an optional attribute, it allows you to adjust the &quot;quality&quot; of the circle: Circles have to be approximated by polygons with many sides (the graphics card is unable to draw a perfect circle directly), and this attribute defines how many sides your circle approximation will have. If you draw small circles, you&apos;ll probably only need a few sides. If you draw big circles, or zoom on regular circles, you&apos;ll most likely need more sides.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># define a circle with radius = 200</span>
 circle = <span class="hljs-symbol">SF:</span>:CircleShape.new(<span class="hljs-number">200</span>)
 
 <span class="hljs-comment"># change the radius to 40</span>
 circle.radius = <span class="hljs-number">40</span>
 
 <span class="hljs-comment"># change the number of sides (points) to 100</span>
-circle.point_count = <span class="hljs-number">100</span></code></pre>
-<p><img alt="A circle shape" src="images/shape-circle.png"></p><h3 id="regular-polygons">Regular polygons</h3><p>There&apos;s no dedicated class for regular polygons, in fact you can represent a regular polygon with any number of sides using the <a href="http://blaxpirit.github.io/crsfml/api/SF/CircleShape.html" target="_blank">CircleShape</a> class: Since circles are approximated by polygons with many sides, you just have to play with the number of sides to get the desired polygons. A <a href="http://blaxpirit.github.io/crsfml/api/SF/CircleShape.html" target="_blank">CircleShape</a> with 3 points is a triangle, with 4 points it&apos;s a square, etc.</p><pre><code class="lang-crystal"><span class="hljs-comment"># define a triangle</span>
+circle.point_count = <span class="hljs-number">100</span>
+</code></pre>
+<p><img src="images/shape-circle.png" alt="A circle shape"></p>
+<h3 id="regular-polygons">Regular polygons</h3>
+<p>There&apos;s no dedicated class for regular polygons, in fact you can represent a regular polygon with any number of sides using the <a href="http://blaxpirit.github.io/crsfml/api/SF/CircleShape.html" target="_blank">CircleShape</a> class: Since circles are approximated by polygons with many sides, you just have to play with the number of sides to get the desired polygons. A <a href="http://blaxpirit.github.io/crsfml/api/SF/CircleShape.html" target="_blank">CircleShape</a> with 3 points is a triangle, with 4 points it&apos;s a square, etc.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># define a triangle</span>
 triangle = <span class="hljs-symbol">SF:</span>:CircleShape.new(<span class="hljs-number">80</span>, <span class="hljs-number">3</span>)
 
 <span class="hljs-comment"># define a square</span>
 square = <span class="hljs-symbol">SF:</span>:CircleShape.new(<span class="hljs-number">80</span>, <span class="hljs-number">4</span>)
 
 <span class="hljs-comment"># define an octagon</span>
-octagon = <span class="hljs-symbol">SF:</span>:CircleShape.new(<span class="hljs-number">80</span>, <span class="hljs-number">8</span>)</code></pre>
-<p><img alt="Regular polygons" src="images/shape-regular.png"></p><h3 id="convex-shapes">Convex shapes</h3><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml-examples/tree/master/2048/rounded_rectangle.cr" target="_blank">rounded_rectangle</a></strong></p><p>The <a href="http://blaxpirit.github.io/crsfml/api/SF/ConvexShape.html" target="_blank">ConvexShape</a> class is the ultimate shape class: It allows you to define any <em>convex</em> shape. SFML is unable to draw concave shapes. If you need to draw a concave shape, you&apos;ll have to split it into multiple convex polygons.</p><p>To construct a convex shape, you must first set the number of points it should have and then define the points.</p><pre><code class="lang-crystal"><span class="hljs-comment"># create an empty shape</span>
+octagon = <span class="hljs-symbol">SF:</span>:CircleShape.new(<span class="hljs-number">80</span>, <span class="hljs-number">8</span>)
+</code></pre>
+<p><img src="images/shape-regular.png" alt="Regular polygons"></p>
+<h3 id="convex-shapes">Convex shapes</h3>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml-examples/tree/master/2048/rounded_rectangle.cr" target="_blank">rounded_rectangle</a></strong></p>
+<p>The <a href="http://blaxpirit.github.io/crsfml/api/SF/ConvexShape.html" target="_blank">ConvexShape</a> class is the ultimate shape class: It allows you to define any <em>convex</em> shape. SFML is unable to draw concave shapes. If you need to draw a concave shape, you&apos;ll have to split it into multiple convex polygons.</p>
+<p>To construct a convex shape, you must first set the number of points it should have and then define the points.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># create an empty shape</span>
 convex = <span class="hljs-symbol">SF:</span>:ConvexShape.new
 
 <span class="hljs-comment"># resize it to 5 points</span>
@@ -539,20 +581,38 @@ convex[<span class="hljs-number">0</span>] = SF.vector2(<span class="hljs-number
 convex[<span class="hljs-number">1</span>] = SF.vector2(<span class="hljs-number">150</span>, <span class="hljs-number">10</span>)
 convex[<span class="hljs-number">2</span>] = SF.vector2(<span class="hljs-number">120</span>, <span class="hljs-number">90</span>)
 convex[<span class="hljs-number">3</span>] = SF.vector2(<span class="hljs-number">30</span>, <span class="hljs-number">100</span>)
-convex[<span class="hljs-number">4</span>] = SF.vector2(<span class="hljs-number">0</span>, <span class="hljs-number">50</span>)</code></pre>
-<p>The order in which you define the points is very important. They must <em>all</em> be defined either in clockwise or counter-clockwise order. If you define them in an inconsistent order, the shape will be constructed incorrectly.</p><p><img alt="A convex shape" src="images/shape-convex.png"></p><p>Although the name of <a href="http://blaxpirit.github.io/crsfml/api/SF/ConvexShape.html" target="_blank">ConvexShape</a> implies that it should only be used to represent convex shapes, its requirements are a little more relaxed. In fact, the only requirement that your shape must meet is that if you went ahead and drew lines from its <em>center of gravity</em> to all of its points, these lines must be drawn in the same order. You are not allowed to &quot;jump behind a previous line&quot;. Internally, convex shapes are automatically constructed using <a title="Go to Wikipedia&apos;s article about triangle fans" href="http://en.wikipedia.org/wiki/Triangle_fan" target="_blank">triangle fans</a>, so if your shape is representable by a triangle fan, you can use <a href="http://blaxpirit.github.io/crsfml/api/SF/ConvexShape.html" target="_blank">ConvexShape</a>. With this relaxed definition, you can draw stars using <a href="http://blaxpirit.github.io/crsfml/api/SF/ConvexShape.html" target="_blank">ConvexShape</a> for example.</p><h3 id="lines">Lines</h3><p>There&apos;s no shape class for lines. The reason is simple: If your line has a thickness, it is a rectangle. If it doesn&apos;t, it can be drawn with a line primitive.</p><p>Line with thickness:</p><pre><code class="lang-crystal">line = <span class="hljs-symbol">SF:</span>:RectangleShape.new(SF.vector2(<span class="hljs-number">150</span>, <span class="hljs-number">5</span>))
-line.rotate(<span class="hljs-number">45</span>)</code></pre>
-<p><img alt="A line shape drawn as a rectangle" src="images/shape-line-rectangle.png"></p><p>Line without thickness:</p><pre><code class="lang-crystal">line = [
+convex[<span class="hljs-number">4</span>] = SF.vector2(<span class="hljs-number">0</span>, <span class="hljs-number">50</span>)
+</code></pre>
+<p>The order in which you define the points is very important. They must <em>all</em> be defined either in clockwise or counter-clockwise order. If you define them in an inconsistent order, the shape will be constructed incorrectly.</p>
+<p><img src="images/shape-convex.png" alt="A convex shape"></p>
+<p>Although the name of <a href="http://blaxpirit.github.io/crsfml/api/SF/ConvexShape.html" target="_blank">ConvexShape</a> implies that it should only be used to represent convex shapes, its requirements are a little more relaxed. In fact, the only requirement that your shape must meet is that if you went ahead and drew lines from its <em>center of gravity</em> to all of its points, these lines must be drawn in the same order. You are not allowed to &quot;jump behind a previous line&quot;. Internally, convex shapes are automatically constructed using <a href="http://en.wikipedia.org/wiki/Triangle_fan" title="Go to Wikipedia&apos;s article about triangle fans" target="_blank">triangle fans</a>, so if your shape is representable by a triangle fan, you can use <a href="http://blaxpirit.github.io/crsfml/api/SF/ConvexShape.html" target="_blank">ConvexShape</a>. With this relaxed definition, you can draw stars using <a href="http://blaxpirit.github.io/crsfml/api/SF/ConvexShape.html" target="_blank">ConvexShape</a> for example.</p>
+<h3 id="lines">Lines</h3>
+<p>There&apos;s no shape class for lines. The reason is simple: If your line has a thickness, it is a rectangle. If it doesn&apos;t, it can be drawn with a line primitive.</p>
+<p>Line with thickness:</p>
+<pre><code class="lang-crystal">line = <span class="hljs-symbol">SF:</span>:RectangleShape.new(SF.vector2(<span class="hljs-number">150</span>, <span class="hljs-number">5</span>))
+line.rotate(<span class="hljs-number">45</span>)
+</code></pre>
+<p><img src="images/shape-line-rectangle.png" alt="A line shape drawn as a rectangle"></p>
+<p>Line without thickness:</p>
+<pre><code class="lang-crystal">line = [
   <span class="hljs-symbol">SF:</span>:Vertex.new(SF.vector2(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>)),
   <span class="hljs-symbol">SF:</span>:Vertex.new(SF.vector2(<span class="hljs-number">150</span>, <span class="hljs-number">150</span>))
 ]
 
-window.draw(line, <span class="hljs-symbol">SF:</span>:Lines)</code></pre>
-<p><img alt="A line shape drawn as a primitive" src="images/shape-line-primitive.png"></p><p>To learn more about vertices and primitives, you can read the tutorial on <a title="&apos;Vertex arrays&apos; tutorial" href="vertex-array.html">vertex arrays</a>.</p><h2 id="custom-shape-types">Custom shape types</h2><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/shapes.cr" target="_blank">shapes</a></strong></p><p>You can extend the set of shape classes with your own shape types. To do so, you must derive from <a href="http://blaxpirit.github.io/crsfml/api/SF/Shape.html" target="_blank">Shape</a> and override two methods:</p><ul><li><code>point_count</code>: return the number of points in the shape
-</li>
-<li><code>get_point</code>: return a point of the shape
-</li></ul>
-<p>You must also call the <code>update()</code> method whenever any point in your shape changes, so that the base class is informed and can update its internal geometry.</p><p>Here is a complete example of a custom shape class: <code>EllipseShape</code>.</p><pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EllipseShape</span> &lt; <span class="hljs-title">SF::Shape</span></span>
+window.draw(line, <span class="hljs-symbol">SF:</span>:Lines)
+</code></pre>
+<p><img src="images/shape-line-primitive.png" alt="A line shape drawn as a primitive"></p>
+<p>To learn more about vertices and primitives, you can read the tutorial on <a href="vertex-array.html" title="&apos;Vertex arrays&apos; tutorial">vertex arrays</a>.</p>
+<h2 id="custom-shape-types">Custom shape types</h2>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/shapes.cr" target="_blank">shapes</a></strong></p>
+<p>You can extend the set of shape classes with your own shape types. To do so, you must derive from <a href="http://blaxpirit.github.io/crsfml/api/SF/Shape.html" target="_blank">Shape</a> and override two methods:</p>
+<ul>
+<li><code>point_count</code>: return the number of points in the shape</li>
+<li><code>get_point</code>: return a point of the shape</li>
+</ul>
+<p>You must also call the <code>update()</code> method whenever any point in your shape changes, so that the base class is informed and can update its internal geometry.</p>
+<p>Here is a complete example of a custom shape class: <code>EllipseShape</code>.</p>
+<pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EllipseShape</span> &lt; <span class="hljs-title">SF::Shape</span></span>
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">initialize</span></span>(@radius : <span class="hljs-symbol">SF:</span>:Vector2f)
     <span class="hljs-keyword">super</span>()
     update()
@@ -575,13 +635,21 @@ window.draw(line, <span class="hljs-symbol">SF:</span>:Lines)</code></pre>
     <span class="hljs-comment"># origin is {0, 0}, center is @radius</span>
     @radius + @radius * {Math.cos(angle), Math.sin(angle)}
   <span class="hljs-keyword">end</span>
-<span class="hljs-keyword">end</span></code></pre>
-<p><img alt="An ellipse shape" src="images/shape-ellipse.png"></p><h2 id="antialiased-shapes">Antialiased shapes</h2><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/snakes.cr" target="_blank">snakes</a></strong></p><p>There&apos;s no option to anti-alias a single shape. To get anti-aliased shapes (i.e. shapes with smoothed edges), you have to enable anti-aliasing globally when you create the window, with the corresponding attribute of the structure.</p><pre><code class="lang-crystal">window = <span class="hljs-symbol">SF:</span>:RenderWindow.new(
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p><img src="images/shape-ellipse.png" alt="An ellipse shape"></p>
+<h2 id="antialiased-shapes">Antialiased shapes</h2>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/snakes.cr" target="_blank">snakes</a></strong></p>
+<p>There&apos;s no option to anti-alias a single shape. To get anti-aliased shapes (i.e. shapes with smoothed edges), you have to enable anti-aliasing globally when you create the window, with the corresponding attribute of the structure.</p>
+<pre><code class="lang-crystal">window = <span class="hljs-symbol">SF:</span>:RenderWindow.new(
   <span class="hljs-symbol">SF:</span>:VideoMode.new(<span class="hljs-number">800</span>, <span class="hljs-number">600</span>),
   <span class="hljs-string">&quot;SFML shapes&quot;</span>,
   <span class="hljs-symbol">settings:</span> <span class="hljs-symbol">SF:</span>:ContextSettings.new(<span class="hljs-symbol">depth:</span> <span class="hljs-number">24</span>, <span class="hljs-symbol">antialiasing:</span> <span class="hljs-number">8</span>)
-)</code></pre>
-<p><img alt="Aliased vs antialiased shape" src="images/shape-antialiasing.png"></p><p>Remember that anti-aliasing availability depends on the graphics card: It might not support it, or have it forced to disabled in the driver settings.</p><p>Sometimes antialiasing does not work if <code>depth_bits</code> is not specified (use 24 if unsure).</p>
+)
+</code></pre>
+<p><img src="images/shape-antialiasing.png" alt="Aliased vs antialiased shape"></p>
+<p>Remember that anti-aliasing availability depends on the graphics card: It might not support it, or have it forced to disabled in the driver settings.<br>Sometimes antialiasing does not work if <code>depth_bits</code> is not specified (use 24 if unsure).</p>
+
                                 
                                 </section>
                             
@@ -624,7 +692,7 @@ window.draw(line, <span class="hljs-symbol">SF:</span>:Lines)</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Shapes","level":"4.4","depth":1,"next":{"title":"Designing your own entities with vertex arrays","level":"4.5","depth":1,"path":"graphics/vertex-array.md","ref":"graphics/vertex-array.md","articles":[]},"previous":{"title":"Text and fonts","level":"4.3","depth":1,"path":"graphics/text.md","ref":"graphics/text.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/shape.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Shapes","level":"4.4","depth":1,"next":{"title":"Designing your own entities with vertex arrays","level":"4.5","depth":1,"path":"graphics/vertex-array.md","ref":"graphics/vertex-array.md","articles":[]},"previous":{"title":"Text and fonts","level":"4.3","depth":1,"path":"graphics/text.md","ref":"graphics/text.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/shape.md","mtime":"2018-03-07T21:44:51.460Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

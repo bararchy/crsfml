@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Web requests with HTTP · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Web requests with HTTP · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,24 +490,35 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="web-requests-with-http">Web requests with HTTP</h1><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/shader.cr" target="_blank">shader</a></strong></p><h2 id="introduction">Introduction</h2><p>CrSFML provides a simple HTTP client class which you can use to communicate with HTTP servers. &quot;Simple&quot; means that it supports the most basic features of HTTP: POST, GET and HEAD request types, accessing HTTP header fields, and reading/writing the pages body.</p><p>If you need more advanced features, such as secured HTTP (HTTPS) for example, you&apos;re better off using a true HTTP library.</p><p>For basic interaction between your program and an HTTP server, it should be enough.</p><h2 id="sfhttp">SF::Http</h2><p>To communicate with an HTTP server you must use the <a href="http://blaxpirit.github.io/crsfml/api/SF/Http.html" target="_blank">Http</a> class.</p><pre><code class="lang-crystal">http = <span class="hljs-symbol">SF:</span>:Http.new
+                                <h1 id="web-requests-with-http">Web requests with HTTP</h1>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/shader.cr" target="_blank">shader</a></strong></p>
+<h2 id="introduction">Introduction</h2>
+<p>CrSFML provides a simple HTTP client class which you can use to communicate with HTTP servers. &quot;Simple&quot; means that it supports the most basic features of HTTP: POST, GET and HEAD request types, accessing HTTP header fields, and reading/writing the pages body.</p>
+<p>If you need more advanced features, such as secured HTTP (HTTPS) for example, you&apos;re better off using a true HTTP library.</p>
+<p>For basic interaction between your program and an HTTP server, it should be enough.</p>
+<h2 id="sfhttp">SF::Http</h2>
+<p>To communicate with an HTTP server you must use the <a href="http://blaxpirit.github.io/crsfml/api/SF/Http.html" target="_blank">Http</a> class.</p>
+<pre><code class="lang-crystal">http = <span class="hljs-symbol">SF:</span>:Http.new
 http.set_host(<span class="hljs-string">&quot;http://example.org/&quot;</span>)
 
 <span class="hljs-comment"># or</span>
-http = <span class="hljs-symbol">SF:</span>:Http.new(<span class="hljs-string">&quot;http://example.org/&quot;</span>)</code></pre>
-<p>Note that setting the host doesn&apos;t trigger any connection. A temporary connection is created for each request.</p><p>The only other method in <a href="http://blaxpirit.github.io/crsfml/api/SF/Http.html" target="_blank">Http</a>, sends requests. This is basically all that the class does.</p><pre><code class="lang-crystal">request = <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Http:</span>:Request.new
+http = <span class="hljs-symbol">SF:</span>:Http.new(<span class="hljs-string">&quot;http://example.org/&quot;</span>)
+</code></pre>
+<p>Note that setting the host doesn&apos;t trigger any connection. A temporary connection is created for each request.</p>
+<p>The only other method in <a href="http://blaxpirit.github.io/crsfml/api/SF/Http.html" target="_blank">Http</a>, sends requests. This is basically all that the class does.</p>
+<pre><code class="lang-crystal">request = <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Http:</span>:Request.new
 <span class="hljs-comment"># fill the request...</span>
-response = http.send_request(request)</code></pre>
-<h2 id="requests">Requests</h2><p>An HTTP request, represented by the <a href="http://blaxpirit.github.io/crsfml/api/SF/Http/Request.html" target="_blank">Http::Request</a> class, contains the following information:</p><ul><li>The method: POST (send content), GET (retrieve a resource), HEAD (retrieve a resource header, without its body)
-</li>
-<li>The URI: the address of the resource (page, image, ...) to get/post, relative to the root directory
-</li>
-<li>The HTTP version (it is 1.0 by default but you can choose a different version if you use specific features)
-</li>
-<li>The header: a set of fields with key and value
-</li>
-<li>The body of the page (used only with the POST method)
-</li></ul>
+response = http.send_request(request)
+</code></pre>
+<h2 id="requests">Requests</h2>
+<p>An HTTP request, represented by the <a href="http://blaxpirit.github.io/crsfml/api/SF/Http/Request.html" target="_blank">Http::Request</a> class, contains the following information:</p>
+<ul>
+<li>The method: POST (send content), GET (retrieve a resource), HEAD (retrieve a resource header, without its body)</li>
+<li>The URI: the address of the resource (page, image, ...) to get/post, relative to the root directory</li>
+<li>The HTTP version (it is 1.0 by default but you can choose a different version if you use specific features)</li>
+<li>The header: a set of fields with key and value</li>
+<li>The body of the page (used only with the POST method)</li>
+</ul>
 <pre><code class="lang-crystal">request = <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Http:</span>:Request.new
 request.method = <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Http:</span>:<span class="hljs-symbol">Request:</span>:Post
 request.uri = <span class="hljs-string">&quot;/index.html&quot;</span>
@@ -516,21 +527,27 @@ request.set_field(<span class="hljs-string">&quot;From&quot;</span>, <span class
 request.set_field(<span class="hljs-string">&quot;Content-Type&quot;</span>, <span class="hljs-string">&quot;application/x-www-form-urlencoded&quot;</span>)
 request.body = <span class="hljs-string">&quot;para1=value1&amp;param2=value2&quot;</span>
 
-response = http.send_request(request)</code></pre>
-<p>SFML automatically fills mandatory header fields, such as &quot;Host&quot;, &quot;Content-Length&quot;, etc. You can send your requests without worrying about them. SFML will do its best to make sure they are valid.</p><h2 id="responses">Responses</h2><p>If the <a href="http://blaxpirit.github.io/crsfml/api/SF/Http.html" target="_blank">Http</a> class could successfully connect to the host and send the request, a response is sent back and returned to the user, encapsulated in an instance of the <a href="http://blaxpirit.github.io/crsfml/api/SF/Http/Response.html" target="_blank">Http::Response</a> class. Responses contain the following members:</p><ul><li>A status code which precisely indicates how the server processed the request (OK, redirected, not found, etc.)
-</li>
-<li>The HTTP version of the server
-</li>
-<li>The header: a set of fields with key and value
-</li>
-<li>The body of the response
-</li></ul>
+response = http.send_request(request)
+</code></pre>
+<p>SFML automatically fills mandatory header fields, such as &quot;Host&quot;, &quot;Content-Length&quot;, etc. You can send your requests without worrying about them. SFML will do its best to make sure they are valid.</p>
+<h2 id="responses">Responses</h2>
+<p>If the <a href="http://blaxpirit.github.io/crsfml/api/SF/Http.html" target="_blank">Http</a> class could successfully connect to the host and send the request, a response is sent back and returned to the user, encapsulated in an instance of the <a href="http://blaxpirit.github.io/crsfml/api/SF/Http/Response.html" target="_blank">Http::Response</a> class. Responses contain the following members:</p>
+<ul>
+<li>A status code which precisely indicates how the server processed the request (OK, redirected, not found, etc.)</li>
+<li>The HTTP version of the server</li>
+<li>The header: a set of fields with key and value</li>
+<li>The body of the response</li>
+</ul>
 <pre><code class="lang-crystal">response = http.send_request(request)
 puts <span class="hljs-string">&quot;Status: <span class="hljs-subst">#{response.status}</span>&quot;</span>
 puts <span class="hljs-string">&quot;HTTP version: <span class="hljs-subst">#{response.major_http_version}</span>.<span class="hljs-subst">#{response.minor_http_version}</span>&quot;</span>
 puts <span class="hljs-string">&quot;Content-Type header: &quot;</span> + response.get_field(<span class="hljs-string">&quot;Content-Type&quot;</span>)
-puts <span class="hljs-string">&quot;Body:\n&quot;</span> + response.body</code></pre>
-<p>The status code can be used to check whether the request was successfully processed or not: codes 2xx represent success, codes 3xx represent a redirection, codes 4xx represent client errors, codes 5xx represent server errors, and codes 10xx represent SFML specific errors which are <em>not</em> part of the HTTP standard.</p><h2 id="example-sending-scores-to-an-online-server">Example: sending scores to an online server</h2><p>Here is a short example that demonstrates how to perform a simple task: Sending a score to an online database.</p><pre><code class="lang-crystal"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">send_score</span></span>(score, name)
+puts <span class="hljs-string">&quot;Body:\n&quot;</span> + response.body
+</code></pre>
+<p>The status code can be used to check whether the request was successfully processed or not: codes 2xx represent success, codes 3xx represent a redirection, codes 4xx represent client errors, codes 5xx represent server errors, and codes 10xx represent SFML specific errors which are <em>not</em> part of the HTTP standard.</p>
+<h2 id="example-sending-scores-to-an-online-server">Example: sending scores to an online server</h2>
+<p>Here is a short example that demonstrates how to perform a simple task: Sending a score to an online database.</p>
+<pre><code class="lang-crystal"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">send_score</span></span>(score, name)
   <span class="hljs-comment"># prepare the request</span>
   request = <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Http:</span>:Request.new(<span class="hljs-string">&quot;/send-score.html&quot;</span>, <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Http:</span>:<span class="hljs-symbol">Request:</span>:Post)
 
@@ -548,8 +565,11 @@ puts <span class="hljs-string">&quot;Body:\n&quot;</span> + response.body</code>
   <span class="hljs-keyword">else</span>
     puts <span class="hljs-string">&quot;request failed&quot;</span>
   <span class="hljs-keyword">end</span>
-<span class="hljs-keyword">end</span></code></pre>
-<p>Of course, this is a very simple way to handle online scores. There&apos;s no protection: Anybody could easily send a false score. A more robust approach would probably involve an extra parameter, like a hash code that ensures that the request was sent by the program. That is beyond the scope of this tutorial.</p><p>And finally, here is a very simple example of what the PHP page on server might look like.</p><pre><code class="lang-php"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>Of course, this is a very simple way to handle online scores. There&apos;s no protection: Anybody could easily send a false score. A more robust approach would probably involve an extra parameter, like a hash code that ensures that the request was sent by the program. That is beyond the scope of this tutorial.</p>
+<p>And finally, here is a very simple example of what the PHP page on server might look like.</p>
+<pre><code class="lang-php"><span class="hljs-meta">&lt;?php</span>
 $name = $_POST[<span class="hljs-string">&apos;name&apos;</span>];
 $score = $_POST[<span class="hljs-string">&apos;score&apos;</span>];
 
@@ -557,7 +577,8 @@ $score = $_POST[<span class="hljs-string">&apos;score&apos;</span>];
     <span class="hljs-keyword">echo</span> <span class="hljs-string">&apos;name and score added!&apos;</span>;
 } <span class="hljs-keyword">else</span> {
     <span class="hljs-keyword">echo</span> <span class="hljs-string">&apos;failed to write name and score to database...&apos;</span>;
-}</code></pre>
+}
+</code></pre>
 
                                 
                                 </section>
@@ -601,7 +622,7 @@ $score = $_POST[<span class="hljs-string">&apos;score&apos;</span>];
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Web requests with HTTP","level":"6.3","depth":1,"next":{"title":"File transfers with FTP","level":"6.4","depth":1,"path":"network/ftp.md","ref":"network/ftp.md","articles":[]},"previous":{"title":"Using packets","level":"6.2","depth":1,"path":"network/packet.md","ref":"network/packet.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"network/http.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Web requests with HTTP","level":"6.3","depth":1,"next":{"title":"File transfers with FTP","level":"6.4","depth":1,"path":"network/ftp.md","ref":"network/ftp.md","articles":[]},"previous":{"title":"Using packets","level":"6.2","depth":1,"path":"network/packet.md","ref":"network/packet.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"network/http.md","mtime":"2018-03-07T21:44:51.462Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

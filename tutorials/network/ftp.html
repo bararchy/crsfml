@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>File transfers with FTP · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>File transfers with FTP · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -488,45 +488,77 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="file-transfers-with-ftp">File transfers with FTP</h1><h2 id="ftp-for-dummies">FTP for dummies</h2><p>If you know what FTP is, and just want to know how to use the FTP class that SFML provides, you can skip this section.</p><p>FTP (<em>File Transfer Protocol</em>) is a simple protocol that allows manipulation of files and directories on a remote server. The protocol consists of commands such as &quot;create directory&quot;, &quot;delete file&quot;, &quot;download file&quot;, etc. You can&apos;t send FTP commands to any remote computer, it needs to have an FTP server running which can understand and execute the commands that clients send.</p><p>So what can you do with FTP, and how can it be helpful to your program? Basically, with FTP you can access existing remote file systems, or even create your own. This can be useful if you want your network game to download resources (maps, images, ...) from a server, or your program to update itself automatically when it&apos;s connected to the internet.</p><p>If you want to know more about the FTP protocol, the <a title="FTP on wikipedia" href="http://en.wikipedia.org/wiki/File_Transfer_Protocol" target="_blank">Wikipedia article</a> provides more detailed information than this short introduction.</p><h2 id="the-ftp-client-class">The FTP client class</h2><p>The class provided by CrSFML is <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp.html" target="_blank">Ftp</a> (surprising, isn&apos;t it?). It&apos;s a client, which means that it can connect to an FTP server, send commands to it and upload or download files.</p><p>Every method of the <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp.html" target="_blank">Ftp</a> class wraps an FTP command, and returns a standard FTP response. An FTP response contains a status code (similar to HTTP status codes but not identical), and a message that informs the user of what happened. FTP responses are encapsulated in the <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp/Response.html" target="_blank">Ftp::Response</a> class.</p><pre><code class="lang-crystal">ftp = <span class="hljs-symbol">SF:</span>:Ftp.new
+                                <h1 id="file-transfers-with-ftp">File transfers with FTP</h1>
+<h2 id="ftp-for-dummies">FTP for dummies</h2>
+<p>If you know what FTP is, and just want to know how to use the FTP class that SFML provides, you can skip this section.</p>
+<p>FTP (<em>File Transfer Protocol</em>) is a simple protocol that allows manipulation of files and directories on a remote server. The protocol consists of commands such as &quot;create directory&quot;, &quot;delete file&quot;, &quot;download file&quot;, etc. You can&apos;t send FTP commands to any remote computer, it needs to have an FTP server running which can understand and execute the commands that clients send.</p>
+<p>So what can you do with FTP, and how can it be helpful to your program? Basically, with FTP you can access existing remote file systems, or even create your own. This can be useful if you want your network game to download resources (maps, images, ...) from a server, or your program to update itself automatically when it&apos;s connected to the internet.</p>
+<p>If you want to know more about the FTP protocol, the <a href="http://en.wikipedia.org/wiki/File_Transfer_Protocol" title="FTP on wikipedia" target="_blank">Wikipedia article</a> provides more detailed information than this short introduction.</p>
+<h2 id="the-ftp-client-class">The FTP client class</h2>
+<p>The class provided by CrSFML is <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp.html" target="_blank">Ftp</a> (surprising, isn&apos;t it?). It&apos;s a client, which means that it can connect to an FTP server, send commands to it and upload or download files.</p>
+<p>Every method of the <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp.html" target="_blank">Ftp</a> class wraps an FTP command, and returns a standard FTP response. An FTP response contains a status code (similar to HTTP status codes but not identical), and a message that informs the user of what happened. FTP responses are encapsulated in the <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp/Response.html" target="_blank">Ftp::Response</a> class.</p>
+<pre><code class="lang-crystal">ftp = <span class="hljs-symbol">SF:</span>:Ftp.new
 
 ...
 
 response = ftp.login(<span class="hljs-string">&quot;username&quot;</span>, <span class="hljs-string">&quot;password&quot;</span>) <span class="hljs-comment"># just an example, could be any method</span>
 
 puts <span class="hljs-string">&quot;Response status: <span class="hljs-subst">#{response.status}</span>&quot;</span>
-puts <span class="hljs-string">&quot;Response message: <span class="hljs-subst">#{response.message}</span>&quot;</span></code></pre>
-<p>The status code can be used to check whether the command was successful or failed: Codes lower than 400 represent success, all others represent errors. You can use the <code>ok?</code> method as a shortcut to test a status code for success.</p><pre><code class="lang-crystal">response = ftp.login(<span class="hljs-string">&quot;username&quot;</span>, <span class="hljs-string">&quot;password&quot;</span>)
+puts <span class="hljs-string">&quot;Response message: <span class="hljs-subst">#{response.message}</span>&quot;</span>
+</code></pre>
+<p>The status code can be used to check whether the command was successful or failed: Codes lower than 400 represent success, all others represent errors. You can use the <code>ok?</code> method as a shortcut to test a status code for success.</p>
+<pre><code class="lang-crystal">response = ftp.login(<span class="hljs-string">&quot;username&quot;</span>, <span class="hljs-string">&quot;password&quot;</span>)
 <span class="hljs-keyword">if</span> response.ok?
   <span class="hljs-comment"># success!</span>
 <span class="hljs-keyword">else</span>
   <span class="hljs-comment"># error...</span>
-<span class="hljs-keyword">end</span></code></pre>
-<p>If you don&apos;t care about the details of the response, you can check for success with even less code:</p><pre><code class="lang-crystal"><span class="hljs-keyword">if</span> ftp.login(<span class="hljs-string">&quot;username&quot;</span>, <span class="hljs-string">&quot;password&quot;</span>).ok?
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>If you don&apos;t care about the details of the response, you can check for success with even less code:</p>
+<pre><code class="lang-crystal"><span class="hljs-keyword">if</span> ftp.login(<span class="hljs-string">&quot;username&quot;</span>, <span class="hljs-string">&quot;password&quot;</span>).ok?
   <span class="hljs-comment"># success!</span>
 <span class="hljs-keyword">else</span>
   <span class="hljs-comment"># error...</span>
-<span class="hljs-keyword">end</span></code></pre>
-<p>For readability, these checks won&apos;t be performed in the following examples in this tutorial. Don&apos;t forget to perform them in your code!</p><p>Now that you understand how the class works, let&apos;s have a look at what it can do.</p><h2 id="connecting-to-the-ftp-server">Connecting to the FTP server</h2><p>The first thing to do is connect to an FTP server.</p><pre><code class="lang-crystal">ftp = <span class="hljs-symbol">SF:</span>:Ftp.new
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>For readability, these checks won&apos;t be performed in the following examples in this tutorial. Don&apos;t forget to perform them in your code!</p>
+<p>Now that you understand how the class works, let&apos;s have a look at what it can do.</p>
+<h2 id="connecting-to-the-ftp-server">Connecting to the FTP server</h2>
+<p>The first thing to do is connect to an FTP server.</p>
+<pre><code class="lang-crystal">ftp = <span class="hljs-symbol">SF:</span>:Ftp.new
 ip_address = <span class="hljs-symbol">SF:</span>:IpAddress.new(<span class="hljs-string">&quot;ftp.myserver.org&quot;</span>)
-ftp.connect(ip_address)</code></pre>
-<p>The server address can be any valid <a href="http://blaxpirit.github.io/crsfml/api/SF/IpAddress.html" target="_blank">IpAddress</a>: A URL, an IP address, a network name, ...</p><p>The standard port for FTP is 21. If, for some reason, your server uses a different port, you can specify it as an additional argument:</p><pre><code class="lang-crystal">ftp = <span class="hljs-symbol">SF:</span>:Ftp.new
+ftp.connect(ip_address)
+</code></pre>
+<p>The server address can be any valid <a href="http://blaxpirit.github.io/crsfml/api/SF/IpAddress.html" target="_blank">IpAddress</a>: A URL, an IP address, a network name, ...</p>
+<p>The standard port for FTP is 21. If, for some reason, your server uses a different port, you can specify it as an additional argument:</p>
+<pre><code class="lang-crystal">ftp = <span class="hljs-symbol">SF:</span>:Ftp.new
 ip_address = <span class="hljs-symbol">SF:</span>:IpAddress.new(<span class="hljs-string">&quot;ftp.myserver.org&quot;</span>)
-ftp.connect(ip_address, <span class="hljs-number">45000</span>)</code></pre>
-<p>You can also pass a third parameter, which is a time out value. This prevents you from having to wait forever (or at least a very long time) if the server doesn&apos;t respond.</p><pre><code class="lang-crystal">ftp = <span class="hljs-symbol">SF:</span>:Ftp.new
+ftp.connect(ip_address, <span class="hljs-number">45000</span>)
+</code></pre>
+<p>You can also pass a third parameter, which is a time out value. This prevents you from having to wait forever (or at least a very long time) if the server doesn&apos;t respond.</p>
+<pre><code class="lang-crystal">ftp = <span class="hljs-symbol">SF:</span>:Ftp.new
 ip_address = <span class="hljs-symbol">SF:</span>:IpAddress.new(<span class="hljs-string">&quot;ftp.myserver.org&quot;</span>)
-ftp.connect(ip_address, <span class="hljs-number">21</span>, SF.seconds(<span class="hljs-number">5</span>))</code></pre>
-<p>Once you&apos;re connected to the server, the next step is to authenticate yourself:</p><pre><code class="lang-crystal"><span class="hljs-comment"># authenticate with name and password</span>
+ftp.connect(ip_address, <span class="hljs-number">21</span>, SF.seconds(<span class="hljs-number">5</span>))
+</code></pre>
+<p>Once you&apos;re connected to the server, the next step is to authenticate yourself:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># authenticate with name and password</span>
 ftp.login(<span class="hljs-string">&quot;username&quot;</span>, <span class="hljs-string">&quot;password&quot;</span>)
 
 <span class="hljs-comment"># or login anonymously, if the server allows it</span>
-ftp.login</code></pre>
-<h2 id="ftp-commands">FTP commands</h2><p>Here is a short description of all the commands available in the <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp.html" target="_blank">Ftp</a> class. Remember one thing: All these commands are performed relative to the <em>current working directory</em>, exactly as if you were executing file or directory commands in a console on your operating system.</p><p>Getting the current working directory:</p><pre><code class="lang-crystal">response = ftp.working_directory
+ftp.login
+</code></pre>
+<h2 id="ftp-commands">FTP commands</h2>
+<p>Here is a short description of all the commands available in the <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp.html" target="_blank">Ftp</a> class. Remember one thing: All these commands are performed relative to the <em>current working directory</em>, exactly as if you were executing file or directory commands in a console on your operating system.</p>
+<p>Getting the current working directory:</p>
+<pre><code class="lang-crystal">response = ftp.working_directory
 
 <span class="hljs-keyword">if</span> response.ok?
   puts <span class="hljs-string">&quot;Current directory: &quot;</span> + response.directory
-<span class="hljs-keyword">end</span></code></pre>
-<p><a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp/DirectoryResponse.html" target="_blank">Ftp::DirectoryResponse</a> is a specialized <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp/Response.html" target="_blank">Ftp::Response</a> that also contains the requested directory.</p><p>Getting the list of directories and files contained in the current directory:</p><pre><code class="lang-crystal">response = ftp.get_directory_listing
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p><a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp/DirectoryResponse.html" target="_blank">Ftp::DirectoryResponse</a> is a specialized <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp/Response.html" target="_blank">Ftp::Response</a> that also contains the requested directory.</p>
+<p>Getting the list of directories and files contained in the current directory:</p>
+<pre><code class="lang-crystal">response = ftp.get_directory_listing
 
 <span class="hljs-keyword">if</span> response.ok?
   listing = response.listing
@@ -536,17 +568,41 @@ ftp.login</code></pre>
 <span class="hljs-keyword">end</span>
 
 <span class="hljs-comment"># you can also get the listing of a sub-directory of the current directory:</span>
-response = ftp.get_directory_listing(<span class="hljs-string">&quot;subfolder&quot;</span>)</code></pre>
-<p><a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp/ListingResponse.html" target="_blank">Ftp::ListingResponse</a> is a specialized <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp/Response.html" target="_blank">Ftp::Response</a> that also contains the requested directory/file names.</p><p>Changing the current directory:</p><pre><code class="lang-crystal">ftp.change_directory(<span class="hljs-string">&quot;path/to/new_directory&quot;</span>) <span class="hljs-comment"># the given path is relative to the current directory</span></code></pre>
-<p>Going to the parent directory of the current one:</p><pre><code class="lang-crystal">ftp.parent_directory</code></pre>
-<p>Creating a new directory (as a child of the current one):</p><pre><code class="lang-crystal">ftp.create_directory(<span class="hljs-string">&quot;name_of_new_directory&quot;</span>)</code></pre>
-<p>Deleting an existing directory:</p><pre><code class="lang-crystal">ftp.delete_directory(<span class="hljs-string">&quot;name_of_directory_to_delete&quot;</span>)</code></pre>
-<p>Renaming an existing file:</p><pre><code class="lang-crystal">ftp.rename_file(<span class="hljs-string">&quot;old_name.txt&quot;</span>, <span class="hljs-string">&quot;new_name.txt&quot;</span>)</code></pre>
-<p>Deleting an existing file:</p><pre><code class="lang-crystal">ftp.delete_file(<span class="hljs-string">&quot;file_name.txt&quot;</span>)</code></pre>
-<p>Downloading (receiving from the server) a file:</p><pre><code class="lang-crystal">ftp.download(<span class="hljs-string">&quot;remote_file_name.txt&quot;</span>, <span class="hljs-string">&quot;local/destination/path&quot;</span>, <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Ftp:</span>:Ascii)</code></pre>
-<p>The last argument is the transfer mode. It can be either Ascii (for text files), Ebcdic (for text files using the EBCDIC character set) or Binary (for non-text files). The Ascii and Ebcdic modes can transform the file (line endings, encoding) during the transfer to match the client environment. The Binary mode is a direct byte-for-byte transfer.</p><p>Uploading (sending to the server) a file:</p><pre><code class="lang-crystal">ftp.upload(<span class="hljs-string">&quot;local_file_name.pdf&quot;</span>, <span class="hljs-string">&quot;remote/destination/path&quot;</span>, <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Ftp:</span>:Binary)</code></pre>
-<p>FTP servers usually close connections that are inactive for a while. If you want to avoid being disconnected, you can send a no-op command periodically:</p><pre><code class="lang-crystal">ftp.keep_alive()</code></pre>
-<h2 id="disconnecting-from-the-ftp-server">Disconnecting from the FTP server</h2><p>You can close the connection with the server at any moment with the <code>disconnect</code> method.</p><pre><code class="lang-crystal">ftp.disconnect()</code></pre>
+response = ftp.get_directory_listing(<span class="hljs-string">&quot;subfolder&quot;</span>)
+</code></pre>
+<p><a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp/ListingResponse.html" target="_blank">Ftp::ListingResponse</a> is a specialized <a href="http://blaxpirit.github.io/crsfml/api/SF/Ftp/Response.html" target="_blank">Ftp::Response</a> that also contains the requested directory/file names.</p>
+<p>Changing the current directory:</p>
+<pre><code class="lang-crystal">ftp.change_directory(<span class="hljs-string">&quot;path/to/new_directory&quot;</span>) <span class="hljs-comment"># the given path is relative to the current directory</span>
+</code></pre>
+<p>Going to the parent directory of the current one:</p>
+<pre><code class="lang-crystal">ftp.parent_directory
+</code></pre>
+<p>Creating a new directory (as a child of the current one):</p>
+<pre><code class="lang-crystal">ftp.create_directory(<span class="hljs-string">&quot;name_of_new_directory&quot;</span>)
+</code></pre>
+<p>Deleting an existing directory:</p>
+<pre><code class="lang-crystal">ftp.delete_directory(<span class="hljs-string">&quot;name_of_directory_to_delete&quot;</span>)
+</code></pre>
+<p>Renaming an existing file:</p>
+<pre><code class="lang-crystal">ftp.rename_file(<span class="hljs-string">&quot;old_name.txt&quot;</span>, <span class="hljs-string">&quot;new_name.txt&quot;</span>)
+</code></pre>
+<p>Deleting an existing file:</p>
+<pre><code class="lang-crystal">ftp.delete_file(<span class="hljs-string">&quot;file_name.txt&quot;</span>)
+</code></pre>
+<p>Downloading (receiving from the server) a file:</p>
+<pre><code class="lang-crystal">ftp.download(<span class="hljs-string">&quot;remote_file_name.txt&quot;</span>, <span class="hljs-string">&quot;local/destination/path&quot;</span>, <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Ftp:</span>:Ascii)
+</code></pre>
+<p>The last argument is the transfer mode. It can be either Ascii (for text files), Ebcdic (for text files using the EBCDIC character set) or Binary (for non-text files). The Ascii and Ebcdic modes can transform the file (line endings, encoding) during the transfer to match the client environment. The Binary mode is a direct byte-for-byte transfer.</p>
+<p>Uploading (sending to the server) a file:</p>
+<pre><code class="lang-crystal">ftp.upload(<span class="hljs-string">&quot;local_file_name.pdf&quot;</span>, <span class="hljs-string">&quot;remote/destination/path&quot;</span>, <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Ftp:</span>:Binary)
+</code></pre>
+<p>FTP servers usually close connections that are inactive for a while. If you want to avoid being disconnected, you can send a no-op command periodically:</p>
+<pre><code class="lang-crystal">ftp.keep_alive()
+</code></pre>
+<h2 id="disconnecting-from-the-ftp-server">Disconnecting from the FTP server</h2>
+<p>You can close the connection with the server at any moment with the <code>disconnect</code> method.</p>
+<pre><code class="lang-crystal">ftp.disconnect()
+</code></pre>
 
                                 
                                 </section>
@@ -586,7 +642,7 @@ response = ftp.get_directory_listing(<span class="hljs-string">&quot;subfolder&q
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"File transfers with FTP","level":"6.4","depth":1,"previous":{"title":"Web requests with HTTP","level":"6.3","depth":1,"path":"network/http.md","ref":"network/http.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"network/ftp.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"File transfers with FTP","level":"6.4","depth":1,"previous":{"title":"Web requests with HTTP","level":"6.3","depth":1,"path":"network/http.md","ref":"network/http.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"network/ftp.md","mtime":"2018-03-07T21:44:51.461Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

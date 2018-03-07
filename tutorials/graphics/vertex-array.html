@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Designing your own entities with vertex arrays · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Designing your own entities with vertex arrays · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,7 +490,17 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="designing-your-own-entities-with-vertex-arrays">Designing your own entities with vertex arrays</h1><h2 id="introduction">Introduction</h2><p>SFML provides simple classes for the most common 2D entities. And while more complex entities can easily be created from these building blocks, it isn&apos;t always the most efficient solution. For example, you&apos;ll reach the limits of your graphics card very quickly if you draw a large number of sprites. The reason is that performance depends in large part on the number of calls to the <code>draw</code> method. Indeed, each call involves setting a set of OpenGL states, resetting matrices, changing textures, etc. All of this is required even when simply drawing two triangles (a sprite). This is far from optimal for your graphics card: Today&apos;s GPUs are designed to process large batches of triangles, typically several thousand to millions.</p><p>To fill this gap, SFML provides a lower-level mechanism to draw things: Vertex arrays. As a matter of fact, vertex arrays are used internally by all other SFML classes. They allow for a more flexible definition of 2D entities, containing as many triangles as you need. They even allow drawing points or lines.</p><h2 id="what-is-a-vertex-and-why-are-they-always-in-arrays">What is a vertex, and why are they always in arrays?</h2><p>A vertex is the smallest graphical entity that you can manipulate. In short, it is a graphical point: Naturally, it has a 2D position (x, y), but also a color, and a pair of texture coordinates. We&apos;ll go into the roles of these attributes later.</p><p>Vertices (plural of vertex) alone don&apos;t do much. They are always grouped into <em>primitives</em>: Points (1 vertex), lines (2 vertices), triangles (3 vertices) or quads (4 vertices). You can then combine multiple primitives together to create the final geometry of the entity.</p><p>Now you understand why we always talk about vertex arrays, and not vertices alone.</p><h2 id="a-simple-vertex-array">A simple vertex array</h2><p>Let&apos;s have a look at the <a href="http://blaxpirit.github.io/crsfml/api/SF/Vertex.html" target="_blank">Vertex</a> class now. It&apos;s simply a container which contains three public members and no functions besides its constructors. These constructors allow you to construct vertices from the set of attributes you care about -- you don&apos;t always need to color or texture your entity.</p><pre><code class="lang-crystal"><span class="hljs-comment"># create a new vertex</span>
+                                <h1 id="designing-your-own-entities-with-vertex-arrays">Designing your own entities with vertex arrays</h1>
+<h2 id="introduction">Introduction</h2>
+<p>SFML provides simple classes for the most common 2D entities. And while more complex entities can easily be created from these building blocks, it isn&apos;t always the most efficient solution. For example, you&apos;ll reach the limits of your graphics card very quickly if you draw a large number of sprites. The reason is that performance depends in large part on the number of calls to the <code>draw</code> method. Indeed, each call involves setting a set of OpenGL states, resetting matrices, changing textures, etc. All of this is required even when simply drawing two triangles (a sprite). This is far from optimal for your graphics card: Today&apos;s GPUs are designed to process large batches of triangles, typically several thousand to millions.</p>
+<p>To fill this gap, SFML provides a lower-level mechanism to draw things: Vertex arrays. As a matter of fact, vertex arrays are used internally by all other SFML classes. They allow for a more flexible definition of 2D entities, containing as many triangles as you need. They even allow drawing points or lines.</p>
+<h2 id="what-is-a-vertex-and-why-are-they-always-in-arrays">What is a vertex, and why are they always in arrays?</h2>
+<p>A vertex is the smallest graphical entity that you can manipulate. In short, it is a graphical point: Naturally, it has a 2D position (x, y), but also a color, and a pair of texture coordinates. We&apos;ll go into the roles of these attributes later.</p>
+<p>Vertices (plural of vertex) alone don&apos;t do much. They are always grouped into <em>primitives</em>: Points (1 vertex), lines (2 vertices), triangles (3 vertices) or quads (4 vertices). You can then combine multiple primitives together to create the final geometry of the entity.</p>
+<p>Now you understand why we always talk about vertex arrays, and not vertices alone.</p>
+<h2 id="a-simple-vertex-array">A simple vertex array</h2>
+<p>Let&apos;s have a look at the <a href="http://blaxpirit.github.io/crsfml/api/SF/Vertex.html" target="_blank">Vertex</a> class now. It&apos;s simply a container which contains three public members and no functions besides its constructors. These constructors allow you to construct vertices from the set of attributes you care about -- you don&apos;t always need to color or texture your entity.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># create a new vertex</span>
 vertex = <span class="hljs-symbol">SF:</span>:Vertex.new
 
 <span class="hljs-comment"># set its position</span>
@@ -500,9 +510,13 @@ vertex.position = SF.vector2(<span class="hljs-number">10</span>, <span class="h
 vertex.color = <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Color:</span>:Red
 
 <span class="hljs-comment"># set its texture coordinates</span>
-vertex.tex_coords = SF.vector2f(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>)</code></pre>
-<p>... or, using the correct constructor:</p><pre><code class="lang-crystal">vertex = <span class="hljs-symbol">SF:</span>:Vertex.new({<span class="hljs-number">10</span>, <span class="hljs-number">50</span>}, <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Color:</span>:Red, {<span class="hljs-number">100</span>, <span class="hljs-number">100</span>})</code></pre>
-<p>Now, let&apos;s define a primitive. Remember, a primitive consists of several vertices, therefore we need a vertex array. CrSFML provides a simple wrapper for this: <a href="http://blaxpirit.github.io/crsfml/api/SF/VertexArray.html" target="_blank">VertexArray</a>. It provides the semantics of an array, and also stores the type of primitive its vertices define.</p><pre><code class="lang-crystal"><span class="hljs-comment"># create an array of 3 vertices that define a triangle primitive</span>
+vertex.tex_coords = SF.vector2f(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>)
+</code></pre>
+<p>... or, using the correct constructor:</p>
+<pre><code class="lang-crystal">vertex = <span class="hljs-symbol">SF:</span>:Vertex.new({<span class="hljs-number">10</span>, <span class="hljs-number">50</span>}, <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Color:</span>:Red, {<span class="hljs-number">100</span>, <span class="hljs-number">100</span>})
+</code></pre>
+<p>Now, let&apos;s define a primitive. Remember, a primitive consists of several vertices, therefore we need a vertex array. CrSFML provides a simple wrapper for this: <a href="http://blaxpirit.github.io/crsfml/api/SF/VertexArray.html" target="_blank">VertexArray</a>. It provides the semantics of an array, and also stores the type of primitive its vertices define.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># create an array of 3 vertices that define a triangle primitive</span>
 triangle = <span class="hljs-symbol">SF:</span>:VertexArray.new(<span class="hljs-symbol">SF:</span>:Triangles, <span class="hljs-number">3</span>)
 
 <span class="hljs-comment"># define the positions and colors of the triangle&apos;s points</span>
@@ -510,44 +524,73 @@ triangle[<span class="hljs-number">0</span>] = <span class="hljs-symbol">SF:</sp
 triangle[<span class="hljs-number">1</span>] = <span class="hljs-symbol">SF:</span>:Vertex.new(SF.vector2(<span class="hljs-number">100</span>, <span class="hljs-number">10</span>), <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Color:</span>:Blue)
 triangle[<span class="hljs-number">2</span>] = <span class="hljs-symbol">SF:</span>:Vertex.new(SF.vector2(<span class="hljs-number">100</span>, <span class="hljs-number">100</span>), <span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Color:</span>:Green)
 
-<span class="hljs-comment"># no texture coordinates here, we&apos;ll see that later</span></code></pre>
-<p>Your triangle is ready and you can now draw it. Drawing a vertex array can be done similar to drawing any other CrSFML entity, by using the <code>draw</code> function:</p><pre><code class="lang-crystal">window.draw(triangle)</code></pre>
-<p><img alt="A triangle made with vertices" src="images/vertex-array-triangle.png"></p><p>You can see that the vertices&apos; color is interpolated to fill the primitive. This is a nice way of creating gradients.</p><p>Note that you don&apos;t have to use the <a href="http://blaxpirit.github.io/crsfml/api/SF/VertexArray.html" target="_blank">VertexArray</a> class. It&apos;s just defined for convenience, it&apos;s nothing more than an array along with a <code>SF::PrimitiveType</code>. If you need more flexibility, or a normal (or static) array, you can use your own storage. You must then use the overload of the <code>draw</code> function which takes an array of vertices and the primitive type.</p><pre><code class="lang-crystal">vertices = [
+<span class="hljs-comment"># no texture coordinates here, we&apos;ll see that later</span>
+</code></pre>
+<p>Your triangle is ready and you can now draw it. Drawing a vertex array can be done similar to drawing any other CrSFML entity, by using the <code>draw</code> function:</p>
+<pre><code class="lang-crystal">window.draw(triangle)
+</code></pre>
+<p><img src="images/vertex-array-triangle.png" alt="A triangle made with vertices"></p>
+<p>You can see that the vertices&apos; color is interpolated to fill the primitive. This is a nice way of creating gradients.</p>
+<p>Note that you don&apos;t have to use the <a href="http://blaxpirit.github.io/crsfml/api/SF/VertexArray.html" target="_blank">VertexArray</a> class. It&apos;s just defined for convenience, it&apos;s nothing more than an array along with a <code>SF::PrimitiveType</code>. If you need more flexibility, or a normal (or static) array, you can use your own storage. You must then use the overload of the <code>draw</code> function which takes an array of vertices and the primitive type.</p>
+<pre><code class="lang-crystal">vertices = [
   <span class="hljs-symbol">SF:</span>:Vertex.new(...),
   <span class="hljs-symbol">SF:</span>:Vertex.new(...)
 ]
 
-window.draw(vertices, <span class="hljs-symbol">SF:</span>:Lines)</code></pre>
-<h2 id="primitive-types">Primitive types</h2><p>Let&apos;s pause for a while and see what kind of primitives you can create. As explained above, you can define the most basic 2D primitives: Point, line, triangle and quad (quad exists merely as a convenience, internally the graphics card breaks it into two triangles). There are also &quot;chained&quot; variants of these primitive types which allow for sharing of vertices among two consecutive primitives. This can be useful because consecutive primitives are often connected in some way.</p><p>Let&apos;s have a look at the full list:</p><table>
+window.draw(vertices, <span class="hljs-symbol">SF:</span>:Lines)
+</code></pre>
+<h2 id="primitive-types">Primitive types</h2>
+<p>Let&apos;s pause for a while and see what kind of primitives you can create. As explained above, you can define the most basic 2D primitives: Point, line, triangle and quad (quad exists merely as a convenience, internally the graphics card breaks it into two triangles). There are also &quot;chained&quot; variants of these primitive types which allow for sharing of vertices among two consecutive primitives. This can be useful because consecutive primitives are often connected in some way.</p>
+<p>Let&apos;s have a look at the full list:</p>
+<table>
 <thead>
-<tr><th>Primitive type</th>
+<tr>
+<th>Primitive type</th>
 <th>Description</th>
 <th>Example</th>
-</tr></thead><tbody>
-<tr><td><code>SF::Points</code></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SF::Points</code></td>
 <td>A set of unconnected points. These points have no thickness: They will always occupy a single pixel, regardless of the current transform and view.</td>
-<td><img alt="The SF::Points primitive type" src="images/vertex-array-points.png"></td>
-</tr><tr><td><code>SF::Lines</code></td>
+<td><img src="images/vertex-array-points.png" alt="The SF::Points primitive type"></td>
+</tr>
+<tr>
+<td><code>SF::Lines</code></td>
 <td>A set of unconnected lines. These lines have no thickness: They will always be one pixel wide, regardless of the current transform and view.</td>
-<td><img alt="The SF::Lines primitive type" src="images/vertex-array-lines.png"></td>
-</tr><tr><td><code>SF::LinesStrip</code></td>
+<td><img src="images/vertex-array-lines.png" alt="The SF::Lines primitive type"></td>
+</tr>
+<tr>
+<td><code>SF::LinesStrip</code></td>
 <td>A set of connected lines. The end vertex of one line is used as the start vertex of the next one.</td>
-<td><img alt="The SF::LinesStrip primitive type" src="images/vertex-array-lines-strip.png"></td>
-</tr><tr><td><code>SF::Triangles</code></td>
+<td><img src="images/vertex-array-lines-strip.png" alt="The SF::LinesStrip primitive type"></td>
+</tr>
+<tr>
+<td><code>SF::Triangles</code></td>
 <td>A set of unconnected triangles.</td>
-<td><img alt="The SF::Triangles primitive type" src="images/vertex-array-triangles.png"></td>
-</tr><tr><td><code>SF::TrianglesStrip</code></td>
+<td><img src="images/vertex-array-triangles.png" alt="The SF::Triangles primitive type"></td>
+</tr>
+<tr>
+<td><code>SF::TrianglesStrip</code></td>
 <td>A set of connected triangles. Each triangle shares its two last vertices with the next one.</td>
-<td><img alt="The SF::TrianglesStrip primitive type" src="images/vertex-array-triangles-strip.png"></td>
-</tr><tr><td><code>SF::TrianglesFan</code></td>
+<td><img src="images/vertex-array-triangles-strip.png" alt="The SF::TrianglesStrip primitive type"></td>
+</tr>
+<tr>
+<td><code>SF::TrianglesFan</code></td>
 <td>A set of triangles connected to a central point. The first vertex is the center, then each new vertex defines a new triangle, using the center and the previous vertex.</td>
-<td><img alt="The SF::TrianglesFan primitive type" src="images/vertex-array-triangles-fan.png"></td>
-</tr><tr><td><code>SF::Quads</code></td>
+<td><img src="images/vertex-array-triangles-fan.png" alt="The SF::TrianglesFan primitive type"></td>
+</tr>
+<tr>
+<td><code>SF::Quads</code></td>
 <td>A set of unconnected quads. The 4 points of each quad must be defined consistently, either in clockwise or counter-clockwise order.</td>
-<td><img alt="The SF::Quads primitive type" src="images/vertex-array-quads.png"></td>
-</tr></tbody></table>
-
-<h2 id="texturing">Texturing</h2><p>Like other SFML entities, vertex arrays can also be textured. To do so, you&apos;ll need to manipulate the <code>tex_coords</code> attribute of the vertices. This attribute defines which pixel of the texture is mapped to the vertex.</p><pre><code class="lang-crystal"><span class="hljs-comment"># create a quad</span>
+<td><img src="images/vertex-array-quads.png" alt="The SF::Quads primitive type"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="texturing">Texturing</h2>
+<p>Like other SFML entities, vertex arrays can also be textured. To do so, you&apos;ll need to manipulate the <code>tex_coords</code> attribute of the vertices. This attribute defines which pixel of the texture is mapped to the vertex.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># create a quad</span>
 quad = <span class="hljs-symbol">SF:</span>:VertexArray.new(<span class="hljs-symbol">SF:</span>:Quads, <span class="hljs-number">4</span>)
 
 <span class="hljs-comment"># define it as a rectangle, located at (10, 10) and with size 100x100</span>
@@ -555,8 +598,11 @@ quad = <span class="hljs-symbol">SF:</span>:VertexArray.new(<span class="hljs-sy
 quad.append <span class="hljs-symbol">SF:</span>:Vertex.new({ <span class="hljs-number">10</span>,  <span class="hljs-number">10</span>}, <span class="hljs-symbol">tex_coords:</span> { <span class="hljs-number">0</span>,  <span class="hljs-number">0</span>})
 quad.append <span class="hljs-symbol">SF:</span>:Vertex.new({<span class="hljs-number">110</span>,  <span class="hljs-number">10</span>}, <span class="hljs-symbol">tex_coords:</span> {<span class="hljs-number">25</span>,  <span class="hljs-number">0</span>})
 quad.append <span class="hljs-symbol">SF:</span>:Vertex.new({<span class="hljs-number">110</span>, <span class="hljs-number">110</span>}, <span class="hljs-symbol">tex_coords:</span> {<span class="hljs-number">25</span>, <span class="hljs-number">50</span>})
-quad.append <span class="hljs-symbol">SF:</span>:Vertex.new({ <span class="hljs-number">10</span>, <span class="hljs-number">110</span>}, <span class="hljs-symbol">tex_coords:</span> { <span class="hljs-number">0</span>, <span class="hljs-number">50</span>})</code></pre>
-<p>Texture coordinates are defined in <em>pixels</em> (just like the <code>texture_rect</code> of sprites and shapes). They are <em>not</em> normalized (between 0 and 1), as people who are used to OpenGL programming might expect.</p><p>Vertex arrays are low-level entities, they only deal with geometry and do not store additional attributes like a texture. To draw a vertex array with a texture, you must pass it directly to the <code>draw</code> method, through a <a href="http://blaxpirit.github.io/crsfml/api/SF/RenderStates.html" target="_blank">RenderStates</a> object:</p><pre><code class="lang-crystal">vertices = ... <span class="hljs-comment"># SF::VertexArray</span>
+quad.append <span class="hljs-symbol">SF:</span>:Vertex.new({ <span class="hljs-number">10</span>, <span class="hljs-number">110</span>}, <span class="hljs-symbol">tex_coords:</span> { <span class="hljs-number">0</span>, <span class="hljs-number">50</span>})
+</code></pre>
+<p>Texture coordinates are defined in <em>pixels</em> (just like the <code>texture_rect</code> of sprites and shapes). They are <em>not</em> normalized (between 0 and 1), as people who are used to OpenGL programming might expect.</p>
+<p>Vertex arrays are low-level entities, they only deal with geometry and do not store additional attributes like a texture. To draw a vertex array with a texture, you must pass it directly to the <code>draw</code> method, through a <a href="http://blaxpirit.github.io/crsfml/api/SF/RenderStates.html" target="_blank">RenderStates</a> object:</p>
+<pre><code class="lang-crystal">vertices = ... <span class="hljs-comment"># SF::VertexArray</span>
 texture = ... <span class="hljs-comment"># SF::Texture</span>
 
 ...
@@ -564,8 +610,11 @@ texture = ... <span class="hljs-comment"># SF::Texture</span>
 states = <span class="hljs-symbol">SF:</span>:RenderStates.new
 states.texture = texture
 
-window.draw(vertices, states)</code></pre>
-<h2 id="transforming-a-vertex-array">Transforming a vertex array</h2><p>Transforming is similar to texturing. The transform is not stored in the vertex array, you must pass it to the <code>draw</code> method.</p><pre><code class="lang-crystal">vertices = ... <span class="hljs-comment"># SF::VertexArray</span>
+window.draw(vertices, states)
+</code></pre>
+<h2 id="transforming-a-vertex-array">Transforming a vertex array</h2>
+<p>Transforming is similar to texturing. The transform is not stored in the vertex array, you must pass it to the <code>draw</code> method.</p>
+<pre><code class="lang-crystal">vertices = ... <span class="hljs-comment"># SF::VertexArray</span>
 transform = ... <span class="hljs-comment"># SF::Transform</span>
 
 ...
@@ -573,8 +622,13 @@ transform = ... <span class="hljs-comment"># SF::Transform</span>
 states = <span class="hljs-symbol">SF:</span>:RenderStates.new
 states.transform = transform
 
-window.draw(vertices, states)</code></pre>
-<p>To know more about transformations and the <a href="http://blaxpirit.github.io/crsfml/api/SF/Transform.html" target="_blank">Transform</a> class, you can read the tutorial on <a title="Transforming entities tutorial" href="transform.html">transforming entities</a>.</p><h2 id="creating-an-sfml-like-entity">Creating an SFML-like entity</h2><p>Now that you know how to define your own textured/colored/transformed entity, wouldn&apos;t it be nice to wrap it in an SFML-style class? Fortunately, SFML makes this easy for you by providing the <a href="http://blaxpirit.github.io/crsfml/api/SF/Drawable.html" target="_blank">Drawable</a> module and <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> base class. These two classes are the base of the built-in SFML entities Sprite, Text and Shape.</p><p><a href="http://blaxpirit.github.io/crsfml/api/SF/Drawable.html" target="_blank">Drawable</a> is an interface: it declares a single abstract method. Including sf::Drawable allows you to draw instances of your class the same way as SFML classes:</p><pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyEntity</span></span>
+window.draw(vertices, states)
+</code></pre>
+<p>To know more about transformations and the <a href="http://blaxpirit.github.io/crsfml/api/SF/Transform.html" target="_blank">Transform</a> class, you can read the tutorial on <a href="transform.html" title="Transforming entities tutorial">transforming entities</a>.</p>
+<h2 id="creating-an-sfml-like-entity">Creating an SFML-like entity</h2>
+<p>Now that you know how to define your own textured/colored/transformed entity, wouldn&apos;t it be nice to wrap it in an SFML-style class? Fortunately, SFML makes this easy for you by providing the <a href="http://blaxpirit.github.io/crsfml/api/SF/Drawable.html" target="_blank">Drawable</a> module and <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> base class. These two classes are the base of the built-in SFML entities Sprite, Text and Shape.</p>
+<p><a href="http://blaxpirit.github.io/crsfml/api/SF/Drawable.html" target="_blank">Drawable</a> is an interface: it declares a single abstract method. Including sf::Drawable allows you to draw instances of your class the same way as SFML classes:</p>
+<pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyEntity</span></span>
   <span class="hljs-keyword">include</span> <span class="hljs-symbol">SF:</span>:Drawable
 
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">draw</span></span>(target : <span class="hljs-symbol">SF:</span>:RenderTarget, states : <span class="hljs-symbol">SF:</span>:RenderStates)
@@ -582,8 +636,11 @@ window.draw(vertices, states)</code></pre>
 <span class="hljs-keyword">end</span>
 
 entity = MyEntity.new
-window.draw(entity) <span class="hljs-comment"># internally calls entity.draw</span></code></pre>
-<p>Subclassing the <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> class automatically adds the same transformation methods to your class as other CrSFML classes (<code>position=</code>, <code>rotation=</code>, <code>move</code>, <code>scale</code>, ...). You can learn more about this in the tutorial on <a title="Transforming entities tutorial" href="graphics-transform.md">transforming entities</a>.</p><p>Using these two features and a vertex array (in this example we&apos;ll also add a texture), here is what a typical CrSFML-like graphical class would look like:</p><pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyEntity</span> &lt; <span class="hljs-title">SF::Transformable</span></span>
+window.draw(entity) <span class="hljs-comment"># internally calls entity.draw</span>
+</code></pre>
+<p>Subclassing the <a href="http://blaxpirit.github.io/crsfml/api/SF/Transformable.html" target="_blank">Transformable</a> class automatically adds the same transformation methods to your class as other CrSFML classes (<code>position=</code>, <code>rotation=</code>, <code>move</code>, <code>scale</code>, ...). You can learn more about this in the tutorial on <a href="graphics-transform.md" title="Transforming entities tutorial">transforming entities</a>.</p>
+<p>Using these two features and a vertex array (in this example we&apos;ll also add a texture), here is what a typical CrSFML-like graphical class would look like:</p>
+<pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyEntity</span> &lt; <span class="hljs-title">SF::Transformable</span></span>
   <span class="hljs-keyword">include</span> <span class="hljs-symbol">SF:</span>:Drawable
 
   <span class="hljs-comment"># add methods to play with the entity&apos;s geometry / colors / texturing...</span>
@@ -600,16 +657,23 @@ window.draw(entity) <span class="hljs-comment"># internally calls entity.draw</s
     <span class="hljs-comment"># draw the vertex array</span>
     target.draw(@vertices, states)
   <span class="hljs-keyword">end</span>
-<span class="hljs-keyword">end</span></code></pre>
-<p>You can then use this class as if it were a built-in CrSFML class:</p><pre><code class="lang-crystal">entity = MyEntity.new
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>You can then use this class as if it were a built-in CrSFML class:</p>
+<pre><code class="lang-crystal">entity = MyEntity.new
 
 <span class="hljs-comment"># you can transform it</span>
 entity.position = SF.vector2(<span class="hljs-number">10</span>, <span class="hljs-number">50</span>)
 entity.rotation = <span class="hljs-number">45</span>
 
 <span class="hljs-comment"># you can draw it</span>
-window.draw(entity)</code></pre>
-<h2 id="example-tile-map">Example: tile map</h2><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml-examples/tree/master/minesweeper" target="_blank">minesweeper</a></strong></p><p>With what we&apos;ve seen above, let&apos;s create a class that encapsulates a tile map. The whole map will be contained in a single vertex array, therefore it will be super fast to draw. Note that we can apply this strategy only if the whole tile set can fit into a single texture. Otherwise, we would have to use at least one vertex array per texture.</p><p><img alt="The tileset" src="images/vertex-array-tileset.png" width="512" height="128" style="image-rendering: -moz-crisp-edges; image-rendering: pixelated"></p><pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TileMap</span> &lt; <span class="hljs-title">SF::Transformable</span></span>
+window.draw(entity)
+</code></pre>
+<h2 id="example-tile-map">Example: tile map</h2>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml-examples/tree/master/minesweeper" target="_blank">minesweeper</a></strong></p>
+<p>With what we&apos;ve seen above, let&apos;s create a class that encapsulates a tile map. The whole map will be contained in a single vertex array, therefore it will be super fast to draw. Note that we can apply this strategy only if the whole tile set can fit into a single texture. Otherwise, we would have to use at least one vertex array per texture.</p>
+<p><img alt="The tileset" src="images/vertex-array-tileset.png" width="512" height="128" style="image-rendering: -moz-crisp-edges; image-rendering: pixelated"></p>
+<pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TileMap</span> &lt; <span class="hljs-title">SF::Transformable</span></span>
   <span class="hljs-keyword">include</span> <span class="hljs-symbol">SF:</span>:Drawable
 
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">initialize</span></span>(tileset, tile_size, tiles, width, height)
@@ -657,8 +721,10 @@ window.draw(entity)</code></pre>
     <span class="hljs-comment"># draw the vertex array</span>
     target.draw(@vertices, states)
   <span class="hljs-keyword">end</span>
-<span class="hljs-keyword">end</span></code></pre>
-<p>And now, the application that uses it:</p><pre><code class="lang-crystal"><span class="hljs-comment"># create the window</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>And now, the application that uses it:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># create the window</span>
 window = <span class="hljs-symbol">SF:</span>:RenderWindow.new(<span class="hljs-symbol">SF:</span>:VideoMode.new(<span class="hljs-number">512</span>, <span class="hljs-number">256</span>), <span class="hljs-string">&quot;Tilemap&quot;</span>)
 
 <span class="hljs-comment"># define the level with an array of tile indices</span>
@@ -689,8 +755,12 @@ map = TileMap.new(<span class="hljs-string">&quot;tileset.png&quot;</span>, SF.v
   window.clear
   window.draw(map)
   window.display
-<span class="hljs-keyword">end</span></code></pre>
-<p><img alt="The tilemap example" src="images/vertex-array-tilemap.png"></p><h2 id="example-particle-system">Example: particle system</h2><p>This second example implements another common entity: The particle system. This one is very simple, with no texture and as few parameters as possible. It demonstrates the use of the <code>SF::Points</code> primitive type with a dynamic vertex array which changes every frame.</p><pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Particle</span></span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p><img src="images/vertex-array-tilemap.png" alt="The tilemap example"></p>
+<h2 id="example-particle-system">Example: particle system</h2>
+<p>This second example implements another common entity: The particle system. This one is very simple, with no texture and as few parameters as possible. It demonstrates the use of the <code>SF::Points</code> primitive type with a dynamic vertex array which changes every frame.</p>
+<pre><code class="lang-crystal"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Particle</span></span>
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">initialize</span></span>(@velocity, @lifetime, @position)
     @total_lifetime = @lifetime
   <span class="hljs-keyword">end</span>
@@ -759,8 +829,10 @@ map = TileMap.new(<span class="hljs-string">&quot;tileset.png&quot;</span>, SF.v
 
     Particle.new(velocity, lifetime, @emitter)
   <span class="hljs-keyword">end</span>
-<span class="hljs-keyword">end</span></code></pre>
-<p>And a little demo that uses it:</p><pre><code class="lang-crystal"><span class="hljs-comment"># create the window</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>And a little demo that uses it:</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># create the window</span>
 window = <span class="hljs-symbol">SF:</span>:RenderWindow.new(<span class="hljs-symbol">SF:</span>:VideoMode.new(<span class="hljs-number">800</span>, <span class="hljs-number">600</span>), <span class="hljs-string">&quot;Particles&quot;</span>)
 
 <span class="hljs-comment"># create the particle system</span>
@@ -791,8 +863,10 @@ clock = <span class="hljs-symbol">SF:</span>:Clock.new
   window.clear
   window.draw(particles)
   window.display
-<span class="hljs-keyword">end</span></code></pre>
-<p><img alt="The particles example" src="images/vertex-array-particles.png"></p>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p><img src="images/vertex-array-particles.png" alt="The particles example"></p>
+
                                 
                                 </section>
                             
@@ -835,7 +909,7 @@ clock = <span class="hljs-symbol">SF:</span>:Clock.new
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Designing your own entities with vertex arrays","level":"4.5","depth":1,"next":{"title":"Position, rotation, scale: transforming entities","level":"4.6","depth":1,"path":"graphics/transform.md","ref":"graphics/transform.md","articles":[]},"previous":{"title":"Shapes","level":"4.4","depth":1,"path":"graphics/shape.md","ref":"graphics/shape.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/vertex-array.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Designing your own entities with vertex arrays","level":"4.5","depth":1,"next":{"title":"Position, rotation, scale: transforming entities","level":"4.6","depth":1,"path":"graphics/transform.md","ref":"graphics/transform.md","articles":[]},"previous":{"title":"Shapes","level":"4.4","depth":1,"path":"graphics/shape.md","ref":"graphics/shape.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/vertex-array.md","mtime":"2018-03-07T21:45:04.268Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

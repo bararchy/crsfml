@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Spatialization: Sounds in 3D · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Spatialization: Sounds in 3D · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,23 +490,57 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="spatialization-sounds-in-3d">Spatialization: Sounds in 3D</h1><h2 id="introduction">Introduction</h2><p>By default, sounds and music are played at full volume in each speaker; they are not <em>spatialized</em>.</p><p>If a sound is emitted by an entity which is to the right of the screen, you would probably want to hear it from the right speaker. If a music is being played behind the player, you would want to hear it from the rear speakers of your Dolby 5.1 sound system.</p><p>How can this be achieved?</p><h2 id="spatialized-sounds-are-mono">Spatialized sounds are mono</h2><p>A sound can be spatialized only if it has a single channel, i.e. if it&apos;s a mono sound.</p><p>Spatialization is disabled for sounds with more channels, since they already explicitly decide how to use the speakers. This is very important to keep in mind.</p><h2 id="the-listener">The listener</h2><p>All the sounds and music in your audio environment will be heard by a single actor: the <em>listener</em>. What is output from your speakers is determined by what the listener hears.</p><p>The class which defines the listener&apos;s properties is <a href="http://blaxpirit.github.io/crsfml/api/SF/Listener.html" target="_blank">Listener</a>. Since the listener is unique in the environment, this class only contains class methods and is not meant to be instantiated.</p><p>First, you can set the listener&apos;s position in the scene:</p><pre><code class="lang-crystal"><span class="hljs-symbol">SF:</span>:Listener.position = SF.vector3f(<span class="hljs-number">10.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">5.0</span>)</code></pre>
-<p>If you have a 2D world you can just use the same Y value everywhere, usually 0.</p><p>In addition to its position, you can define the listener&apos;s orientation:</p><pre><code class="lang-crystal"><span class="hljs-symbol">SF:</span>:Listener.direction = SF.vector3f(<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>)</code></pre>
-<p>Here, the listener is oriented along the +X axis. This means that, for example, a sound emitted at (15, 0, 5) will be heard from the right speaker.</p><p>The &quot;up&quot; vector of the listener is set to (0, 1, 0) by default, in other words, the top of the listener&apos;s head is pointing towards +Y. You can change the &quot;up&quot; vector if you want. It is rarely necessary though.</p><pre><code class="lang-crystal"><span class="hljs-symbol">SF:</span>:Listener.up_vector = SF.vector3f(<span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>)</code></pre>
-<p>This corresponds to the listener tilting their head towards the right (+X).</p><p>Finally, the listener can adjust the global volume of the scene:</p><pre><code class="lang-crystal"><span class="hljs-symbol">SF:</span>:Listener.global_volume = <span class="hljs-number">50.0</span></code></pre>
-<p>The value of the volume is in the range [0 .. 100], so setting it to 50 reduces it to half of the original volume.</p><p>Of course, all these properties can be read with the corresponding getter methods.</p><h2 id="audio-sources">Audio sources</h2><p>Every audio source provided by SFML (sounds, music, streams) defines the same properties for spatialization.</p><p>The main property is the position of the audio source.</p><pre><code class="lang-crystal">sound.position = SF.vector3f(<span class="hljs-number">2.0</span>, <span class="hljs-number">0.0</span>, -<span class="hljs-number">5.0</span>)</code></pre>
-<p>This position is absolute by default, but it can be relative to the listener if needed.</p><pre><code class="lang-crystal">sound.relative_to_listener = <span class="hljs-literal">true</span></code></pre>
-<p>This can be useful for sounds emitted by the listener itself (like a gun shot, or foot steps). It also has the interesting side-effect of disabling spatialization if you set the position of the audio source to (0, 0, 0). Non-spatialized sounds can be required in various situations: GUI sounds (clicks), ambient music, etc.</p><p>You can also set the factor by which audio sources will be attenuated depending on their distance to the listener.</p><pre><code class="lang-crystal">sound.min_distance = <span class="hljs-number">5.0</span>
-sound.attenuation = <span class="hljs-number">10.0</span></code></pre>
-<p>The <em>minimum distance</em> is the distance under which the sound will be heard at its maximum volume. As an example, louder sounds such as explosions should have a higher minimum distance to ensure that they will be heard from far away. Please note that a minimum distance of 0 (the sound is inside the head of the listener!) would lead to an incorrect spatialization and result in a non-attenuated sound. 0 is an invalid value, never use it.</p><p>The <em>attenuation</em> is a multiplicative factor. The greater the attenuation, the less it will be heard when the sound moves away from the listener. To get a non-attenuated sound, you can use 0. On the other hand, using a value like 100 will highly attenuate the sound, which means that it will be heard only if very close to the listener.</p><p>Here is the exact attenuation formula, in case you need accurate values:</p><ul><li><em>MinDistance</em>   is the sound&apos;s minimum distance, set with min_distance=
-</li>
-<li><em>Attenuation</em>   is the sound&apos;s attenuation, set with attenuation=
-</li>
-<li><em>Distance</em>      is the distance between the sound and the listener
-</li>
-<li><em>Volume factor</em> is the calculated factor, in range [0 .. 1], that will be applied to the sound&apos;s volume
-</li></ul>
+                                <h1 id="spatialization-sounds-in-3d">Spatialization: Sounds in 3D</h1>
+<h2 id="introduction">Introduction</h2>
+<p>By default, sounds and music are played at full volume in each speaker; they are not <em>spatialized</em>.</p>
+<p>If a sound is emitted by an entity which is to the right of the screen, you would probably want to hear it from the right speaker. If a music is being played behind the player, you would want to hear it from the rear speakers of your Dolby 5.1 sound system.</p>
+<p>How can this be achieved?</p>
+<h2 id="spatialized-sounds-are-mono">Spatialized sounds are mono</h2>
+<p>A sound can be spatialized only if it has a single channel, i.e. if it&apos;s a mono sound.<br>Spatialization is disabled for sounds with more channels, since they already explicitly decide how to use the speakers. This is very important to keep in mind.</p>
+<h2 id="the-listener">The listener</h2>
+<p>All the sounds and music in your audio environment will be heard by a single actor: the <em>listener</em>. What is output from your speakers is determined by what the listener hears.</p>
+<p>The class which defines the listener&apos;s properties is <a href="http://blaxpirit.github.io/crsfml/api/SF/Listener.html" target="_blank">Listener</a>. Since the listener is unique in the environment, this class only contains class methods and is not meant to be instantiated.</p>
+<p>First, you can set the listener&apos;s position in the scene:</p>
+<pre><code class="lang-crystal"><span class="hljs-symbol">SF:</span>:Listener.position = SF.vector3f(<span class="hljs-number">10.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">5.0</span>)
+</code></pre>
+<p>If you have a 2D world you can just use the same Y value everywhere, usually 0.</p>
+<p>In addition to its position, you can define the listener&apos;s orientation:</p>
+<pre><code class="lang-crystal"><span class="hljs-symbol">SF:</span>:Listener.direction = SF.vector3f(<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>)
+</code></pre>
+<p>Here, the listener is oriented along the +X axis. This means that, for example, a sound emitted at (15, 0, 5) will be heard from the right speaker.</p>
+<p>The &quot;up&quot; vector of the listener is set to (0, 1, 0) by default, in other words, the top of the listener&apos;s head is pointing towards +Y. You can change the &quot;up&quot; vector if you want. It is rarely necessary though.</p>
+<pre><code class="lang-crystal"><span class="hljs-symbol">SF:</span>:Listener.up_vector = SF.vector3f(<span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>)
+</code></pre>
+<p>This corresponds to the listener tilting their head towards the right (+X).</p>
+<p>Finally, the listener can adjust the global volume of the scene:</p>
+<pre><code class="lang-crystal"><span class="hljs-symbol">SF:</span>:Listener.global_volume = <span class="hljs-number">50.0</span>
+</code></pre>
+<p>The value of the volume is in the range [0 .. 100], so setting it to 50 reduces it to half of the original volume.</p>
+<p>Of course, all these properties can be read with the corresponding getter methods.</p>
+<h2 id="audio-sources">Audio sources</h2>
+<p>Every audio source provided by SFML (sounds, music, streams) defines the same properties for spatialization.</p>
+<p>The main property is the position of the audio source.</p>
+<pre><code class="lang-crystal">sound.position = SF.vector3f(<span class="hljs-number">2.0</span>, <span class="hljs-number">0.0</span>, -<span class="hljs-number">5.0</span>)
+</code></pre>
+<p>This position is absolute by default, but it can be relative to the listener if needed.</p>
+<pre><code class="lang-crystal">sound.relative_to_listener = <span class="hljs-literal">true</span>
+</code></pre>
+<p>This can be useful for sounds emitted by the listener itself (like a gun shot, or foot steps). It also has the interesting side-effect of disabling spatialization if you set the position of the audio source to (0, 0, 0). Non-spatialized sounds can be required in various situations: GUI sounds (clicks), ambient music, etc.</p>
+<p>You can also set the factor by which audio sources will be attenuated depending on their distance to the listener.</p>
+<pre><code class="lang-crystal">sound.min_distance = <span class="hljs-number">5.0</span>
+sound.attenuation = <span class="hljs-number">10.0</span>
+</code></pre>
+<p>The <em>minimum distance</em> is the distance under which the sound will be heard at its maximum volume. As an example, louder sounds such as explosions should have a higher minimum distance to ensure that they will be heard from far away. Please note that a minimum distance of 0 (the sound is inside the head of the listener!) would lead to an incorrect spatialization and result in a non-attenuated sound. 0 is an invalid value, never use it.</p>
+<p>The <em>attenuation</em> is a multiplicative factor. The greater the attenuation, the less it will be heard when the sound moves away from the listener. To get a non-attenuated sound, you can use 0. On the other hand, using a value like 100 will highly attenuate the sound, which means that it will be heard only if very close to the listener.</p>
+<p>Here is the exact attenuation formula, in case you need accurate values:</p>
+<ul>
+<li><em>MinDistance</em>   is the sound&apos;s minimum distance, set with min_distance=</li>
+<li><em>Attenuation</em>   is the sound&apos;s attenuation, set with attenuation=</li>
+<li><em>Distance</em>      is the distance between the sound and the listener</li>
+<li><em>Volume factor</em> is the calculated factor, in range [0 .. 1], that will be applied to the sound&apos;s volume</li>
+</ul>
 <p><code>Volume factor = MinDistance / (MinDistance + Attenuation * (max(Distance, MinDistance) - MinDistance))</code></p>
+
                                 
                                 </section>
                             
@@ -549,7 +583,7 @@ sound.attenuation = <span class="hljs-number">10.0</span></code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Spatialization: Sounds in 3D","level":"5.4","depth":1,"next":{"title":"Communication using sockets","level":"6.1","depth":1,"path":"network/socket.md","ref":"network/socket.md","articles":[]},"previous":{"title":"Custom audio streams","level":"5.3","depth":1,"path":"audio/streams.md","ref":"audio/streams.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"audio/spatialization.md","mtime":"2016-08-10T15:34:53.267Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Spatialization: Sounds in 3D","level":"5.4","depth":1,"next":{"title":"Communication using sockets","level":"6.1","depth":1,"path":"network/socket.md","ref":"network/socket.md","articles":[]},"previous":{"title":"Custom audio streams","level":"5.3","depth":1,"path":"audio/streams.md","ref":"audio/streams.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"audio/spatialization.md","mtime":"2018-03-07T21:44:51.451Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

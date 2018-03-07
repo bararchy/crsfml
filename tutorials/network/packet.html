@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Using packets · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Using packets · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,7 +490,15 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="using-packets">Using packets</h1><h2 id="problems-that-need-to-be-solved">Problems that need to be solved</h2><p>Exchanging data on a network is more tricky than it seems. The reason is that different machines, with different operating systems and processors, can be involved. Several problems arise if you want to exchange data reliably between these different machines.</p><p>The first problem is the endianness. The endianness is the order in which a particular processor interprets the bytes of primitive types that occupy more than a single byte (integers and floating point numbers). There are two main families: &quot;big endian&quot; processors, which store the most significant byte first, and &quot;little endian&quot; processors, which store the least significant byte first. There are other, more exotic byte orders, but you&apos;ll probably never have to deal with them.</p><p>The problem is obvious: If you send a variable between two computers whose endianness doesn&apos;t match, they won&apos;t see the same value. For example, the 16-bit integer &quot;42&quot; in big endian notation is 00000000 00101010, but if you send this to a little endian machine, it will be interpreted as &quot;10752&quot;.</p><p>The second problem is specific to how the TCP protocol works. Because it doesn&apos;t preserve message boundaries, and can split or combine chunks of data, receivers must properly reconstruct incoming messages before interpreting them. Otherwise bad things might happen, like reading incomplete variables, or ignoring useful bytes.</p><p>You may of course face other problems with network programming, but these are the lowest-level ones, that almost everybody will have to solve. This is the reason why SFML provides some simple tools to avoid them.</p><h2 id="packets">Packets</h2><p>The two problems (endianness and message boundaries) are solved by using a specific class to pack your data: <a href="http://blaxpirit.github.io/crsfml/api/SF/Packet.html" target="_blank">Packet</a>. As a bonus, it provides a much nicer interface than plain old byte arrays.</p><pre><code class="lang-crystal"><span class="hljs-comment"># on sending side</span>
+                                <h1 id="using-packets">Using packets</h1>
+<h2 id="problems-that-need-to-be-solved">Problems that need to be solved</h2>
+<p>Exchanging data on a network is more tricky than it seems. The reason is that different machines, with different operating systems and processors, can be involved. Several problems arise if you want to exchange data reliably between these different machines.</p>
+<p>The first problem is the endianness. The endianness is the order in which a particular processor interprets the bytes of primitive types that occupy more than a single byte (integers and floating point numbers). There are two main families: &quot;big endian&quot; processors, which store the most significant byte first, and &quot;little endian&quot; processors, which store the least significant byte first. There are other, more exotic byte orders, but you&apos;ll probably never have to deal with them.<br>The problem is obvious: If you send a variable between two computers whose endianness doesn&apos;t match, they won&apos;t see the same value. For example, the 16-bit integer &quot;42&quot; in big endian notation is 00000000 00101010, but if you send this to a little endian machine, it will be interpreted as &quot;10752&quot;.</p>
+<p>The second problem is specific to how the TCP protocol works. Because it doesn&apos;t preserve message boundaries, and can split or combine chunks of data, receivers must properly reconstruct incoming messages before interpreting them. Otherwise bad things might happen, like reading incomplete variables, or ignoring useful bytes.</p>
+<p>You may of course face other problems with network programming, but these are the lowest-level ones, that almost everybody will have to solve. This is the reason why SFML provides some simple tools to avoid them.</p>
+<h2 id="packets">Packets</h2>
+<p>The two problems (endianness and message boundaries) are solved by using a specific class to pack your data: <a href="http://blaxpirit.github.io/crsfml/api/SF/Packet.html" target="_blank">Packet</a>. As a bonus, it provides a much nicer interface than plain old byte arrays.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># on sending side</span>
 x = <span class="hljs-number">10_u16</span>
 s = <span class="hljs-string">&quot;hello&quot;</span>
 d = <span class="hljs-number">0.6_f64</span>
@@ -498,27 +506,37 @@ d = <span class="hljs-number">0.6_f64</span>
 packet = <span class="hljs-symbol">SF:</span>:Packet.new()
 packet.write(x)
 packet.write(s)
-packet.write(d)</code></pre>
+packet.write(d)
+</code></pre>
 <pre><code class="lang-crystal"><span class="hljs-comment"># on receiving side</span>
 x = packet.read(UInt16)
 s = packet.read(String)
 d = packet.read(Float64)
-pp x, s, d</code></pre>
-<p>Unlike writing, reading from a packet can fail if you try to extract more bytes than the packet contains. If a reading operation fails, the packet error flag is set. To check the error flag of a packet, use the <code>valid?</code> method:</p><pre><code class="lang-crystal">x = packet.read(Int32)
+pp x, s, d
+</code></pre>
+<p>Unlike writing, reading from a packet can fail if you try to extract more bytes than the packet contains. If a reading operation fails, the packet error flag is set. To check the error flag of a packet, use the <code>valid?</code> method:</p>
+<pre><code class="lang-crystal">x = packet.read(Int32)
 <span class="hljs-keyword">unless</span> packet.valid?
   <span class="hljs-comment"># error</span>
-<span class="hljs-keyword">end</span></code></pre>
-<p>Sending and receiving packets is as easy as sending/receiving an array of bytes: sockets have <code>send</code> and <code>receive</code> methods that directly accept a <a href="http://blaxpirit.github.io/crsfml/api/SF/Packet.html" target="_blank">Packet</a>.</p><pre><code class="lang-crystal"><span class="hljs-comment"># with a TCP socket</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>Sending and receiving packets is as easy as sending/receiving an array of bytes: sockets have <code>send</code> and <code>receive</code> methods that directly accept a <a href="http://blaxpirit.github.io/crsfml/api/SF/Packet.html" target="_blank">Packet</a>.</p>
+<pre><code class="lang-crystal"><span class="hljs-comment"># with a TCP socket</span>
 status = tcp_socket.send(packet)
 
 packet = <span class="hljs-symbol">SF:</span>:Packet.new
-status = tcp_socket.receive(packet)</code></pre>
+status = tcp_socket.receive(packet)
+</code></pre>
 <pre><code class="lang-crystal"><span class="hljs-comment"># with a UDP socket</span>
 status = udp_socket.send(packet, recipient_address, recipient_port)
 
 packet = <span class="hljs-symbol">SF:</span>:Packet.new
-status, sender_address, sender_port = udp_socket.receive(packet)</code></pre>
-<p>Packets solve the &quot;message boundaries&quot; problem, which means that when you send a packet on a TCP socket, you receive the exact same packet on the other end, it cannot contain less bytes, or bytes from the next packet that you send. However, it has a slight drawback: To preserve message boundaries, <a href="http://blaxpirit.github.io/crsfml/api/SF/Packet.html" target="_blank">Packet</a> has to send some extra bytes along with your data, which implies that you can only receive them with a <a href="http://blaxpirit.github.io/crsfml/api/SF/Packet.html" target="_blank">Packet</a> if you want them to be properly decoded. Simply put, you can&apos;t send an SFML packet to a non-SFML packet recipient, it has to use an SFML packet for receiving too. Note that this applies to TCP only, UDP is fine since the protocol itself preserves message boundaries.</p><h2 id="extending-packets-to-handle-user-types">Extending packets to handle user types</h2><p>Packets have overloads of their methods for the most common primitive types and the most common standard types, but what about your own classes? It is easy to subclass or reopen <a href="http://blaxpirit.github.io/crsfml/api/SF/Packet.html" target="_blank">Packet</a> and add your own overloads.</p><pre><code class="lang-crystal">record Character, age : UInt8, name : String, weight : Float32
+status, sender_address, sender_port = udp_socket.receive(packet)
+</code></pre>
+<p>Packets solve the &quot;message boundaries&quot; problem, which means that when you send a packet on a TCP socket, you receive the exact same packet on the other end, it cannot contain less bytes, or bytes from the next packet that you send. However, it has a slight drawback: To preserve message boundaries, <a href="http://blaxpirit.github.io/crsfml/api/SF/Packet.html" target="_blank">Packet</a> has to send some extra bytes along with your data, which implies that you can only receive them with a <a href="http://blaxpirit.github.io/crsfml/api/SF/Packet.html" target="_blank">Packet</a> if you want them to be properly decoded. Simply put, you can&apos;t send an SFML packet to a non-SFML packet recipient, it has to use an SFML packet for receiving too. Note that this applies to TCP only, UDP is fine since the protocol itself preserves message boundaries.</p>
+<h2 id="extending-packets-to-handle-user-types">Extending packets to handle user types</h2>
+<p>Packets have overloads of their methods for the most common primitive types and the most common standard types, but what about your own classes? It is easy to subclass or reopen <a href="http://blaxpirit.github.io/crsfml/api/SF/Packet.html" target="_blank">Packet</a> and add your own overloads.</p>
+<pre><code class="lang-crystal">record Character, age : UInt8, name : String, weight : Float32
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SF::Packet</span></span>
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">write</span></span>(c : Character)
@@ -530,11 +548,14 @@ status, sender_address, sender_port = udp_socket.receive(packet)</code></pre>
   <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">read</span></span>(<span class="hljs-keyword">type</span> : Character.<span class="hljs-keyword">class</span>) : Character
     Character.new(read(UInt8), read(String), read(Float32))
   <span class="hljs-keyword">end</span>
-<span class="hljs-keyword">end</span></code></pre>
-<p>Now that these methods are defined, you can insert/extract a <code>Character</code> instance to/from a packet like any other primitive type:</p><pre><code class="lang-crystal">bob = Character.new(<span class="hljs-number">65_u8</span>, <span class="hljs-string">&quot;Bob&quot;</span>, <span class="hljs-number">12.34_f32</span>)
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>Now that these methods are defined, you can insert/extract a <code>Character</code> instance to/from a packet like any other primitive type:</p>
+<pre><code class="lang-crystal">bob = Character.new(<span class="hljs-number">65_u8</span>, <span class="hljs-string">&quot;Bob&quot;</span>, <span class="hljs-number">12.34_f32</span>)
 
 packet.write(bob)
-packet.read(Character)</code></pre>
+packet.read(Character)
+</code></pre>
 
                                 
                                 </section>
@@ -578,7 +599,7 @@ packet.read(Character)</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Using packets","level":"6.2","depth":1,"next":{"title":"Web requests with HTTP","level":"6.3","depth":1,"path":"network/http.md","ref":"network/http.md","articles":[]},"previous":{"title":"Communication using sockets","level":"6.1","depth":1,"path":"network/socket.md","ref":"network/socket.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"network/packet.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Using packets","level":"6.2","depth":1,"next":{"title":"Web requests with HTTP","level":"6.3","depth":1,"path":"network/http.md","ref":"network/http.md","articles":[]},"previous":{"title":"Communication using sockets","level":"6.1","depth":1,"path":"network/socket.md","ref":"network/socket.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"network/packet.md","mtime":"2018-03-07T21:44:51.462Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/blaxpirit/projects/crsfml/voidcsfml/src/voidcsfml/graphics.cpp
+voidcsfml/graphics.h
+-
+SFML/Graphics.hpp
+-
+
+voidcsfml/include/voidcsfml/config.h
+stddef.h
+-
+stdint.h
+-
+
+voidcsfml/include/voidcsfml/graphics.h
+voidcsfml/window.h
+-
+voidcsfml/config.h
+-
+voidcsfml/system.h
+-
+
+voidcsfml/include/voidcsfml/system.h
+voidcsfml/config.h
+-
+
+voidcsfml/include/voidcsfml/window.h
+voidcsfml/system.h
+-
+voidcsfml/config.h
+-
+

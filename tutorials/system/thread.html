@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Threads · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Threads · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,7 +490,17 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="threads">Threads</h1><h2 id="what-is-a-thread">What is a thread?</h2><p>Most of you should already know what a thread is, however here is a little explanation for those who are really new to this concept.</p><p>A thread is basically a sequence of instructions that run in parallel to other threads. Every program is made of at least one thread: the main one, which runs the top level code in your program. Programs that only use the main thread are <em>single-threaded</em>, if you add one or more threads they become <em>multi-threaded</em>.</p><p>So, in short, threads are a way to do multiple things at the same time. This can be useful, for example, to display an animation and reacting to user input while loading images or sounds. Threads are also widely used in network programming, to wait for data to be received while continuing to update and draw the application.</p><h2 id="sfml-threads-or-alternatives">SFML threads or alternatives?</h2><p>Multithreaded code is inherently unsafe. Crystal itself has a <code>Thread</code> class, but it is classified as internal, because better ways to do concurrency are being developed. Crystal&apos;s standard library is not intended to be used with raw threads. <strong>Garbage collection in additional threads causes crashes.</strong> Exceptions don&apos;t work either.</p><p>Please make sure you know what you&apos;re doing before choosing SFML threads.</p><h2 id="creating-a-thread-with-crsfml">Creating a thread with CrSFML</h2><p>Enough talk, let&apos;s see some code. The class that makes it possible to create threads in CrSFML is <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a>, and here is what it looks like in action:</p><pre><code class="lang-crystal"><span class="hljs-keyword">require</span> <span class="hljs-string">&quot;crsfml/system&quot;</span>
+                                <h1 id="threads">Threads</h1>
+<h2 id="what-is-a-thread">What is a thread?</h2>
+<p>Most of you should already know what a thread is, however here is a little explanation for those who are really new to this concept.</p>
+<p>A thread is basically a sequence of instructions that run in parallel to other threads. Every program is made of at least one thread: the main one, which runs the top level code in your program. Programs that only use the main thread are <em>single-threaded</em>, if you add one or more threads they become <em>multi-threaded</em>.</p>
+<p>So, in short, threads are a way to do multiple things at the same time. This can be useful, for example, to display an animation and reacting to user input while loading images or sounds. Threads are also widely used in network programming, to wait for data to be received while continuing to update and draw the application.</p>
+<h2 id="sfml-threads-or-alternatives">SFML threads or alternatives?</h2>
+<p>Multithreaded code is inherently unsafe. Crystal itself has a <code>Thread</code> class, but it is classified as internal, because better ways to do concurrency are being developed. Crystal&apos;s standard library is not intended to be used with raw threads. <strong>Garbage collection in additional threads causes crashes.</strong> Exceptions don&apos;t work either.</p>
+<p>Please make sure you know what you&apos;re doing before choosing SFML threads.</p>
+<h2 id="creating-a-thread-with-crsfml">Creating a thread with CrSFML</h2>
+<p>Enough talk, let&apos;s see some code. The class that makes it possible to create threads in CrSFML is <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a>, and here is what it looks like in action:</p>
+<pre><code class="lang-crystal"><span class="hljs-keyword">require</span> <span class="hljs-string">&quot;crsfml/system&quot;</span>
 
 <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func</span></span>
   <span class="hljs-comment"># this function is started when thread.launch() is called</span>
@@ -513,8 +523,10 @@ SF.sleep SF.seconds(<span class="hljs-number">0.15</span>)
 <span class="hljs-number">7</span>.times <span class="hljs-keyword">do</span>
   puts <span class="hljs-string">&quot;I&apos;m the main thread&quot;</span>
   SF.sleep SF.seconds(<span class="hljs-number">0.3</span>)
-<span class="hljs-keyword">end</span></code></pre>
-<p>In this code, both <code>main</code> and <code>func</code> run in parallel after <code>thread.launch()</code> has been called. The result is that text from both functions should be mixed in the console:</p><pre><code>I&apos;m thread number one
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>In this code, both <code>main</code> and <code>func</code> run in parallel after <code>thread.launch()</code> has been called. The result is that text from both functions should be mixed in the console:</p>
+<pre><code>I&apos;m thread number one
 I&apos;m the main thread
 I&apos;m thread number one
 I&apos;m the main thread
@@ -527,10 +539,17 @@ I&apos;m the main thread
 I&apos;m thread number one
 I&apos;m the main thread
 I&apos;m thread number one
-I&apos;m the main thread</code></pre>
-<p>The entry point of the thread, ie. the function that will be run when the thread is started, must be passed to the constructor of <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a>. <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> can accept any kind of <a href="http://crystal-lang.org/docs/syntax_and_semantics/literals/proc.html" target="_blank">procs</a> without parameters.</p><h2 id="starting-threads">Starting threads</h2><p>Once you&apos;ve created a <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> instance, you must start it with the <code>launch</code> method.</p><pre><code class="lang-crystal">thread = <span class="hljs-symbol">SF:</span>:Thread.new(-&gt;func)
-thread.launch()</code></pre>
-<p><code>launch</code> calls the function that you passed to the constructor in a new thread, and returns immediately so that the calling thread can continue to run.</p><h2 id="stopping-threads">Stopping threads</h2><p>A thread automatically stops when its entry point function returns. If you want to wait for a thread to finish from another thread, you can call its <code>wait</code> method.</p><pre><code class="lang-crystal">thread = <span class="hljs-symbol">SF:</span>:Thread(-&gt;func)
+I&apos;m the main thread
+</code></pre><p>The entry point of the thread, ie. the function that will be run when the thread is started, must be passed to the constructor of <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a>. <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> can accept any kind of <a href="http://crystal-lang.org/docs/syntax_and_semantics/literals/proc.html" target="_blank">procs</a> without parameters.</p>
+<h2 id="starting-threads">Starting threads</h2>
+<p>Once you&apos;ve created a <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> instance, you must start it with the <code>launch</code> method.</p>
+<pre><code class="lang-crystal">thread = <span class="hljs-symbol">SF:</span>:Thread.new(-&gt;func)
+thread.launch()
+</code></pre>
+<p><code>launch</code> calls the function that you passed to the constructor in a new thread, and returns immediately so that the calling thread can continue to run.</p>
+<h2 id="stopping-threads">Stopping threads</h2>
+<p>A thread automatically stops when its entry point function returns. If you want to wait for a thread to finish from another thread, you can call its <code>wait</code> method.</p>
+<pre><code class="lang-crystal">thread = <span class="hljs-symbol">SF:</span>:Thread(-&gt;func)
 
 <span class="hljs-comment"># start the thread</span>
 thread.launch()
@@ -538,33 +557,52 @@ thread.launch()
 ...
 
 <span class="hljs-comment"># block execution until the thread is finished</span>
-thread.wait()</code></pre>
-<p>The <code>wait</code> method is also implicitly called by the destructor of <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a>, so that a thread cannot remain alive (and out of control) after its owner <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> instance is destroyed. Keep this in mind when you manage your threads (see the last section of this tutorial).</p><h2 id="pausing-threads">Pausing threads</h2><p>There&apos;s no method in <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> that allows another thread to pause it, the only way to pause a thread is to do it from the code that it runs. In other words, you can only pause the current thread. To do so, you can call the <code>SF.sleep</code> function, as demonstrated in the first example.</p><p><code>SF.sleep</code> has one argument, which is the time to sleep. This duration can be given with any unit/precision, as seen in the <a title="Time tutorial" href="time.html">time tutorial</a>.
-Note that you can make any thread sleep with this function, even the main one.</p><p><code>SF.sleep</code> is the most efficient way to pause a thread: as long as the thread sleeps, it requires zero CPU. Pauses based on active waiting, like empty <code>while</code> loops, would consume 100% CPU just to do... nothing. However, keep in mind that the sleep duration is just a hint, depending on the OS it will be more or less accurate. So don&apos;t rely on it for very precise timing.</p><h2 id="protecting-shared-data">Protecting shared data</h2><p>All the threads in a program share the same memory, they have access to all variables in the scope they are in. It is very convenient but also dangerous: since threads run in parallel, it means that a variable or function might be used concurrently from several threads at the same time. If the operation is not <em>thread-safe</em>, it can lead to undefined behavior (ie. it might crash or corrupt data).</p><p>In the first example we had to make sure that the <code>puts</code> calls never happen at the same time, by applying appropriate timing. If the sleeps are gone, the program crashes. Crystal&apos;s standard library is not intended to be used with raw threads.</p><p>Several programming tools exist to help you protect shared data and make your code thread-safe, these are called synchronization primitives. Common ones are mutexes, semaphores, condition variables and spin locks. They are all variants of the same concept: they protect a piece of code by allowing only certain threads to access it while blocking the others.</p><p>The most basic (and used) primitive is the mutex. Mutex stands for &quot;MUTual EXclusion&quot;: it ensures that only a single thread is able to run the code that it guards. Let&apos;s see how they can bring some order to the example above:</p><pre><code class="lang-crystal">$mutex = <span class="hljs-symbol">SF:</span>:Mutex.new
+thread.wait()
+</code></pre>
+<p>The <code>wait</code> method is also implicitly called by the destructor of <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a>, so that a thread cannot remain alive (and out of control) after its owner <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> instance is destroyed. Keep this in mind when you manage your threads (see the last section of this tutorial).</p>
+<h2 id="pausing-threads">Pausing threads</h2>
+<p>There&apos;s no method in <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> that allows another thread to pause it, the only way to pause a thread is to do it from the code that it runs. In other words, you can only pause the current thread. To do so, you can call the <code>SF.sleep</code> function, as demonstrated in the first example.</p>
+<p><code>SF.sleep</code> has one argument, which is the time to sleep. This duration can be given with any unit/precision, as seen in the <a href="time.html" title="Time tutorial">time tutorial</a>.
+Note that you can make any thread sleep with this function, even the main one.</p>
+<p><code>SF.sleep</code> is the most efficient way to pause a thread: as long as the thread sleeps, it requires zero CPU. Pauses based on active waiting, like empty <code>while</code> loops, would consume 100% CPU just to do... nothing. However, keep in mind that the sleep duration is just a hint, depending on the OS it will be more or less accurate. So don&apos;t rely on it for very precise timing.</p>
+<h2 id="protecting-shared-data">Protecting shared data</h2>
+<p>All the threads in a program share the same memory, they have access to all variables in the scope they are in. It is very convenient but also dangerous: since threads run in parallel, it means that a variable or function might be used concurrently from several threads at the same time. If the operation is not <em>thread-safe</em>, it can lead to undefined behavior (ie. it might crash or corrupt data).</p>
+<p>In the first example we had to make sure that the <code>puts</code> calls never happen at the same time, by applying appropriate timing. If the sleeps are gone, the program crashes. Crystal&apos;s standard library is not intended to be used with raw threads.</p>
+<p>Several programming tools exist to help you protect shared data and make your code thread-safe, these are called synchronization primitives. Common ones are mutexes, semaphores, condition variables and spin locks. They are all variants of the same concept: they protect a piece of code by allowing only certain threads to access it while blocking the others.</p>
+<p>The most basic (and used) primitive is the mutex. Mutex stands for &quot;MUTual EXclusion&quot;: it ensures that only a single thread is able to run the code that it guards. Let&apos;s see how they can bring some order to the example above:</p>
+<pre><code class="lang-crystal"><span class="hljs-keyword">require</span> <span class="hljs-string">&quot;crsfml/system&quot;</span>
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func</span></span>
-  $mutex.lock
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span></span>
+  @mutex = <span class="hljs-symbol">SF:</span>:Mutex.new
 
-  <span class="hljs-number">7</span>.times <span class="hljs-keyword">do</span>
-    puts <span class="hljs-string">&quot;I&apos;m thread number one&quot;</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">task</span></span>
+    @mutex.lock
+
+    <span class="hljs-number">7</span>.times { puts <span class="hljs-string">&quot;I&apos;m thread number one&quot;</span> }
+
+    @mutex.unlock
   <span class="hljs-keyword">end</span>
 
-  $mutex.unlock
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span></span>
+    thread = <span class="hljs-symbol">SF:</span>:Thread.new(-&gt;task)
+    thread.launch
+
+    @mutex.lock
+
+    <span class="hljs-number">7</span>.times { puts <span class="hljs-string">&quot;I&apos;m the main thread&quot;</span> }
+
+    @mutex.unlock
+
+    thread.wait <span class="hljs-comment"># wait until function task has finished</span>
+  <span class="hljs-keyword">end</span>
 <span class="hljs-keyword">end</span>
 
-thread = <span class="hljs-symbol">SF:</span>:Thread.new(-&gt;func)
-thread.launch
-
-$mutex.lock
-
-<span class="hljs-number">7</span>.times <span class="hljs-keyword">do</span>
-  puts <span class="hljs-string">&quot;I&apos;m the main thread&quot;</span>
-<span class="hljs-keyword">end</span>
-
-$mutex.unlock
-
-thread.wait</code></pre>
-<p>This code uses a shared resource (standard output). Inappropriate use of it causes the lines/letters to be randomly mixed or even crashes. To avoid this, we protect the corresponding region of the code with a mutex.</p><p>The first thread that reaches its <code>mutex.lock()</code> line succeeds to lock the mutex, directly gains access to the code that follows and prints its text. When the other thread reaches its <code>mutex.lock()</code> line, the mutex is already locked and thus the thread is put to sleep (like <code>SF.sleep</code>, no CPU time is consumed by the sleeping thread). When the first thread finally unlocks the mutex, the second thread is awoken and is allowed to lock the mutex and print its text block as well. This leads to the lines of text appearing sequentially in the console instead of being mixed.</p><pre><code>I&apos;m the main thread
+foo = Foo.new
+foo.main
+</code></pre>
+<p>This code uses a shared resource (standard output). Inappropriate use of it causes the lines/letters to be randomly mixed or even crashes. To avoid this, we protect the corresponding region of the code with a mutex.</p>
+<p>The first thread that reaches its <code>mutex.lock()</code> line succeeds to lock the mutex, directly gains access to the code that follows and prints its text. When the other thread reaches its <code>mutex.lock()</code> line, the mutex is already locked and thus the thread is put to sleep (like <code>SF.sleep</code>, no CPU time is consumed by the sleeping thread). When the first thread finally unlocks the mutex, the second thread is awoken and is allowed to lock the mutex and print its text block as well. This leads to the lines of text appearing sequentially in the console instead of being mixed.</p>
+<pre><code>I&apos;m the main thread
 I&apos;m the main thread
 I&apos;m the main thread
 I&apos;m the main thread
@@ -577,33 +615,41 @@ I&apos;m thread number one
 I&apos;m thread number one
 I&apos;m thread number one
 I&apos;m thread number one
-I&apos;m thread number one</code></pre>
-<p>Mutexes are not the only primitive that you can use to protect your shared variables, but it should be enough for most cases. However, if your application does complicated things with threads, and you feel like it is not enough, don&apos;t hesitate to look for alternatives.</p><h2 id="protecting-mutexes">Protecting mutexes</h2><p>Don&apos;t worry: mutexes are already thread-safe, there&apos;s no need to protect them. But what if there is a failure in the code and the mutex never gets a chance to be unlocked? It remains locked forever. All threads that try to lock it in the future will block forever, and in some cases, your whole application could freeze. Pretty bad result.</p><p>To make sure that mutexes are always unlocked in an environment where exceptions can be thrown, CrSFML provides a special method that receives a block: <code>synchronize</code>. The mutex is locked before the block and is unlocked after the block (even if an exception is raised).</p><p>A similar effect can be achieved manually, for example, here is a function with multiple <code>return</code> statements:</p><pre><code class="lang-crystal"><span class="hljs-keyword">require</span> <span class="hljs-string">&quot;crsfml&quot;</span>
+I&apos;m thread number one
+</code></pre><p>Mutexes are not the only primitive that you can use to protect your shared variables, but it should be enough for most cases. However, if your application does complicated things with threads, and you feel like it is not enough, don&apos;t hesitate to look for alternatives.</p>
+<h2 id="protecting-mutexes">Protecting mutexes</h2>
+<p>Don&apos;t worry: mutexes are already thread-safe, there&apos;s no need to protect them. But what if there is a failure in the code and the mutex never gets a chance to be unlocked? It remains locked forever. All threads that try to lock it in the future will block forever, and in some cases, your whole application could freeze. Pretty bad result.</p>
+<p>To make sure that mutexes are always unlocked in an environment where exceptions can be thrown, CrSFML provides a special method that receives a block: <code>synchronize</code>. The mutex is locked before the block and is unlocked after the block (even if an exception is raised).</p>
+<p>Thus, we can write previous code example in a simpler way, using <code>synchronize</code> like this:</p>
+<pre><code class="lang-crystal"><span class="hljs-keyword">require</span> <span class="hljs-string">&quot;crsfml/system&quot;</span>
 
-$mutex = <span class="hljs-symbol">SF:</span>:Mutex.new()
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span></span>
+  @mutex = <span class="hljs-symbol">SF:</span>:Mutex.new
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func</span></span>
-  $mutex.lock
-
-  <span class="hljs-keyword">begin</span>
-    image1 = <span class="hljs-symbol">SF:</span>:Image.from_file(<span class="hljs-string">&quot;...&quot;</span>)
-  <span class="hljs-keyword">rescue</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-comment"># $mutex.unlock()</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">task</span></span>
+    @mutex.synchronize <span class="hljs-keyword">do</span> <span class="hljs-comment"># lock mutex implicitly</span>
+      <span class="hljs-number">7</span>.times { puts <span class="hljs-string">&quot;I&apos;m thread number one&quot;</span> }
+    <span class="hljs-keyword">end</span> <span class="hljs-comment"># unlock mutex implicitly</span>
   <span class="hljs-keyword">end</span>
 
-  <span class="hljs-keyword">begin</span>
-    image2 = <span class="hljs-symbol">SF:</span>:Image.from_file(<span class="hljs-string">&quot;...&quot;</span>)
-  <span class="hljs-keyword">rescue</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-comment"># $mutex.unlock()</span>
-  <span class="hljs-keyword">end</span>
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span></span>
+    thread = <span class="hljs-symbol">SF:</span>:Thread.new(-&gt;task)
+    thread.launch
 
-  <span class="hljs-literal">true</span>
-<span class="hljs-keyword">ensure</span>
-  $mutex.unlock()
+    @mutex.synchronize <span class="hljs-keyword">do</span> <span class="hljs-comment"># same as above</span>
+      <span class="hljs-number">7</span>.times { puts <span class="hljs-string">&quot;I&apos;m the main thread&quot;</span> }
+    <span class="hljs-keyword">end</span>
+
+    thread.wait
+  <span class="hljs-keyword">end</span>
 <span class="hljs-keyword">end</span>
 
-func()</code></pre>
-<h2 id="common-mistakes">Common mistakes</h2><p>One thing that is often overlooked by programmers is that a thread cannot live without its corresponding <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> instance.</p><p>The following code is often seen:</p><pre><code class="lang-crystal"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func</span></span>
+foo = Foo.new
+foo.main
+</code></pre>
+<h2 id="common-mistakes">Common mistakes</h2>
+<p>One thing that is often overlooked by programmers is that a thread cannot live without its corresponding <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> instance.<br>The following code is often seen:</p>
+<pre><code class="lang-crystal"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">func</span></span>
   SF.sleep(SF.seconds(<span class="hljs-number">10</span>))
 <span class="hljs-keyword">end</span>
 
@@ -612,8 +658,12 @@ func()</code></pre>
 <span class="hljs-keyword">end</span>
 
 start_thread()
-<span class="hljs-comment"># ...</span></code></pre>
-<p>Programers who write this kind of code expect the <code>start_thread</code> function to start a thread that will live on its own and be destroyed when the threaded function ends. This is not what happens. The threaded function appears to block the main thread, as if the thread wasn&apos;t working.</p><p>What is the cause of this? The <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> instance is local to the <code>start_thread()</code> function and is therefore destroyed, when the function returns. The finalizer of <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> is invoked, which calls <code>wait()</code> as we&apos;ve learned above, and the result is that the main thread blocks and waits for the threaded function to be finished instead of continuing to run in parallel.</p><p>So don&apos;t forget: You must manage your <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> instance so that it lives as long as the threaded function is supposed to run.</p>
+<span class="hljs-comment"># ...</span>
+</code></pre>
+<p>Programmers who write this kind of code expect the <code>start_thread</code> function to start a thread that will live on its own and be destroyed when the threaded function ends. This is not what happens. The threaded function appears to block the main thread, as if the thread wasn&apos;t working.</p>
+<p>What is the cause of this? The <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> instance is local to the <code>start_thread()</code> function and is therefore destroyed, when the function returns. The finalizer of <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> is invoked, which calls <code>wait()</code> as we&apos;ve learned above, and the result is that the main thread blocks and waits for the threaded function to be finished instead of continuing to run in parallel.</p>
+<p>So don&apos;t forget: You must manage your <a href="http://blaxpirit.github.io/crsfml/api/SF/Thread.html" target="_blank">Thread</a> instance so that it lives as long as the threaded function is supposed to run.</p>
+
                                 
                                 </section>
                             
@@ -656,7 +706,7 @@ start_thread()
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Threads","level":"2.2","depth":1,"next":{"title":"User data streams","level":"2.3","depth":1,"path":"system/stream.md","ref":"system/stream.md","articles":[]},"previous":{"title":"Handling time","level":"2.1","depth":1,"path":"system/time.md","ref":"system/time.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"system/thread.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Threads","level":"2.2","depth":1,"next":{"title":"User data streams","level":"2.3","depth":1,"path":"system/stream.md","ref":"system/stream.md","articles":[]},"previous":{"title":"Handling time","level":"2.1","depth":1,"path":"system/time.md","ref":"system/time.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"system/thread.md","mtime":"2018-03-07T21:44:54.056Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

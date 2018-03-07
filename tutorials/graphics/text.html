@@ -2,12 +2,12 @@
 <!DOCTYPE HTML>
 <html lang="" >
     <head>
-        <title>Text and fonts · CrSFML Tutorials</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Text and fonts · CrSFML Tutorials</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.0">
+        <meta name="generator" content="GitBook 3.2.3">
         
         
         
@@ -490,8 +490,21 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="text-and-fonts">Text and fonts</h1><p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/typing.cr" target="_blank">typing</a></strong></p><h2 id="loading-a-font">Loading a font</h2><p>Before drawing any text, you need to have an available font, just like any other program that prints text. Fonts are encapsulated in the <a href="http://blaxpirit.github.io/crsfml/api/SF/Font.html" target="_blank">Font</a> class, which provides three main features: loading a font, getting glyphs (i.e. visual characters) from it, and reading its attributes. In a typical program, you&apos;ll only have to make use of the first feature, loading the font, so let&apos;s focus on that first.</p><p>The most common way of loading a font is from a file on disk, which is done with the <code>from_file</code> class method.</p><pre><code class="lang-crystal">font = <span class="hljs-symbol">SF:</span>:Font.from_file(<span class="hljs-string">&quot;DejaVuSans.ttf&quot;</span>)</code></pre>
-<p>Note that SFML won&apos;t load your system fonts automatically, i.e. <code>SF::Font.from_file(&quot;Courier New&quot;)</code> won&apos;t work. Firstly, because SFML requires <em>file names</em>, not font names, and secondly because SFML doesn&apos;t have magical access to your system&apos;s font folder. If you want to load a font, you will need to include the font file with your application, just like every other resource (images, sounds, ...).</p><p>The <code>from_file</code> class method can sometimes fail with no obvious reason. First, check the error message that SFML prints to the standard output (check the console). If the message is unable to open file, make sure that the <em>working directory</em> (which is the directory that any file path will be interpreted relative to) is what you think it is: When you run the application from your desktop environment, the working directory is the executable folder. However, when you launch your program from your IDE (Visual Studio, Code::Blocks, ...) the working directory might sometimes be set to the <em>project</em> directory instead. This can usually be changed quite easily in the project settings.</p><p>You can also load a font file from memory (<code>from_memory</code>), or from a <a title="Input streams tutorial" href="../system/stream.html">custom input stream</a> (<code>from_stream</code>).</p><p>SFML supports most common font formats. The full list is available in the API documentation.</p><p>That&apos;s all you need to do. Once your font is loaded, you can start drawing text.</p><h2 id="drawing-text">Drawing text</h2><p>To draw text, you will be using the <a href="http://blaxpirit.github.io/crsfml/api/SF/Text.html" target="_blank">Text</a> class. It&apos;s very simple to use:</p><pre><code class="lang-crystal">text = <span class="hljs-symbol">SF:</span>:Text.new
+                                <h1 id="text-and-fonts">Text and fonts</h1>
+<p>Relevant example: <strong><a href="https://github.com/BlaXpirit/crsfml/tree/master/examples/typing.cr" target="_blank">typing</a></strong></p>
+<h2 id="loading-a-font">Loading a font</h2>
+<p>Before drawing any text, you need to have an available font, just like any other program that prints text. Fonts are encapsulated in the <a href="http://blaxpirit.github.io/crsfml/api/SF/Font.html" target="_blank">Font</a> class, which provides three main features: loading a font, getting glyphs (i.e. visual characters) from it, and reading its attributes. In a typical program, you&apos;ll only have to make use of the first feature, loading the font, so let&apos;s focus on that first.</p>
+<p>The most common way of loading a font is from a file on disk, which is done with the <code>from_file</code> class method.</p>
+<pre><code class="lang-crystal">font = <span class="hljs-symbol">SF:</span>:Font.from_file(<span class="hljs-string">&quot;DejaVuSans.ttf&quot;</span>)
+</code></pre>
+<p>Note that SFML won&apos;t load your system fonts automatically, i.e. <code>SF::Font.from_file(&quot;Courier New&quot;)</code> won&apos;t work. Firstly, because SFML requires <em>file names</em>, not font names, and secondly because SFML doesn&apos;t have magical access to your system&apos;s font folder. If you want to load a font, you will need to include the font file with your application, just like every other resource (images, sounds, ...).</p>
+<p>The <code>from_file</code> class method can sometimes fail with no obvious reason. First, check the error message that SFML prints to the standard output (check the console). If the message is unable to open file, make sure that the <em>working directory</em> (which is the directory that any file path will be interpreted relative to) is what you think it is: When you run the application from your desktop environment, the working directory is the executable folder. However, when you launch your program from your IDE (Visual Studio, Code::Blocks, ...) the working directory might sometimes be set to the <em>project</em> directory instead. This can usually be changed quite easily in the project settings.</p>
+<p>You can also load a font file from memory (<code>from_memory</code>), or from a <a href="../system/stream.html" title="Input streams tutorial">custom input stream</a> (<code>from_stream</code>).</p>
+<p>SFML supports most common font formats. The full list is available in the API documentation.</p>
+<p>That&apos;s all you need to do. Once your font is loaded, you can start drawing text.</p>
+<h2 id="drawing-text">Drawing text</h2>
+<p>To draw text, you will be using the <a href="http://blaxpirit.github.io/crsfml/api/SF/Text.html" target="_blank">Text</a> class. It&apos;s very simple to use:</p>
+<pre><code class="lang-crystal">text = <span class="hljs-symbol">SF:</span>:Text.new
 
 <span class="hljs-comment"># select the font</span>
 text.font = font <span class="hljs-comment"># font is a SF::Font</span>
@@ -511,18 +524,31 @@ text.style = (<span class="hljs-symbol">SF:</span>:<span class="hljs-symbol">Tex
 ...
 
 <span class="hljs-comment"># inside the main loop, between window.clear() and window.display()</span>
-window.draw(text)</code></pre>
-<p><img src="images/text-draw.png"></p><p>Text can also be transformed: They have a position, an orientation and a scale. The methods involved are the same as for the <a href="http://blaxpirit.github.io/crsfml/api/SF/Sprite.html" target="_blank">Sprite</a> class and other CrSFML entities. They are explained in the <a title="&apos;Transforming entities&apos; tutorial" href="transform.html">Transforming entities</a> tutorial.</p><h2 id="making-your-own-text-class">Making your own text class</h2><p>If <a href="http://blaxpirit.github.io/crsfml/api/SF/Text.html" target="_blank">Text</a> is too limited, or if you want to do something else with pre-rendered glyphs, <a href="http://blaxpirit.github.io/crsfml/api/SF/Font.html" target="_blank">Font</a> provides everything that you need.</p><p>You can retrieve the texture which contains all the pre-rendered glyphs of a certain size:</p><pre><code class="lang-crystal">texture = font.get_texture(character_size)</code></pre>
-<p>It is important to note that glyphs are added to the texture when they are requested. There are so many characters (remember, more than 100000) that they can&apos;t all be generated when you load the font. Instead, they are rendered on the fly when you call the <code>get_glyph</code> method (see below).</p><p>To do something meaningful with the font texture, you must get the texture coordinates of glyphs that are contained in it:</p><pre><code class="lang-crystal">glyph = font.get_glyph(character, character_size, bold)</code></pre>
-<p><code>character</code> is the character, the glyph of which you want to get. You must also specify the character size, and whether you want the bold or the regular version of the glyph.</p><p>The <a href="http://blaxpirit.github.io/crsfml/api/SF/Glyph.html" target="_blank">Glyph</a> structure contains three members:</p><ul><li><code>texture_rect</code> contains the texture coordinates of the glyph within the texture
-</li>
-<li><code>bounds</code> contains the bounding rectangle of the glyph, which helps position it relative to the baseline of the text
-</li>
-<li><code>advance</code> is the horizontal offset to apply to get the starting position of the next glyph in the text
-</li></ul>
-<p>You can also get some of the font&apos;s other metrics, such as the kerning between two characters or the line spacing (always for a certain character size):</p><pre><code class="lang-crystal">line_spacing = font.get_line_spacing(character_size)
+window.draw(text)
+</code></pre>
+<p><img src="images/text-draw.png" alt=""></p>
+<p>Text can also be transformed: They have a position, an orientation and a scale. The methods involved are the same as for the <a href="http://blaxpirit.github.io/crsfml/api/SF/Sprite.html" target="_blank">Sprite</a> class and other CrSFML entities. They are explained in the <a href="transform.html" title="&apos;Transforming entities&apos; tutorial">Transforming entities</a> tutorial.</p>
+<h2 id="making-your-own-text-class">Making your own text class</h2>
+<p>If <a href="http://blaxpirit.github.io/crsfml/api/SF/Text.html" target="_blank">Text</a> is too limited, or if you want to do something else with pre-rendered glyphs, <a href="http://blaxpirit.github.io/crsfml/api/SF/Font.html" target="_blank">Font</a> provides everything that you need.</p>
+<p>You can retrieve the texture which contains all the pre-rendered glyphs of a certain size:</p>
+<pre><code class="lang-crystal">texture = font.get_texture(character_size)
+</code></pre>
+<p>It is important to note that glyphs are added to the texture when they are requested. There are so many characters (remember, more than 100000) that they can&apos;t all be generated when you load the font. Instead, they are rendered on the fly when you call the <code>get_glyph</code> method (see below).</p>
+<p>To do something meaningful with the font texture, you must get the texture coordinates of glyphs that are contained in it:</p>
+<pre><code class="lang-crystal">glyph = font.get_glyph(character, character_size, bold)
+</code></pre>
+<p><code>character</code> is the character, the glyph of which you want to get. You must also specify the character size, and whether you want the bold or the regular version of the glyph.</p>
+<p>The <a href="http://blaxpirit.github.io/crsfml/api/SF/Glyph.html" target="_blank">Glyph</a> structure contains three members:</p>
+<ul>
+<li><code>texture_rect</code> contains the texture coordinates of the glyph within the texture</li>
+<li><code>bounds</code> contains the bounding rectangle of the glyph, which helps position it relative to the baseline of the text</li>
+<li><code>advance</code> is the horizontal offset to apply to get the starting position of the next glyph in the text</li>
+</ul>
+<p>You can also get some of the font&apos;s other metrics, such as the kerning between two characters or the line spacing (always for a certain character size):</p>
+<pre><code class="lang-crystal">line_spacing = font.get_line_spacing(character_size)
 
-kerning = font.get_kerning(character_1, character_2, character_size)</code></pre>
+kerning = font.get_kerning(character_1, character_2, character_size)
+</code></pre>
 
                                 
                                 </section>
@@ -566,7 +592,7 @@ kerning = font.get_kerning(character_1, character_2, character_size)</code></pre
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Text and fonts","level":"4.3","depth":1,"next":{"title":"Shapes","level":"4.4","depth":1,"path":"graphics/shape.md","ref":"graphics/shape.md","articles":[]},"previous":{"title":"Sprites and textures","level":"4.2","depth":1,"path":"graphics/sprite.md","ref":"graphics/sprite.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/text.md","mtime":"2016-08-10T15:34:53.271Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-08-10T15:35:08.606Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Text and fonts","level":"4.3","depth":1,"next":{"title":"Shapes","level":"4.4","depth":1,"path":"graphics/shape.md","ref":"graphics/shape.md","articles":[]},"previous":{"title":"Sprites and textures","level":"4.2","depth":1,"path":"graphics/sprite.md","ref":"graphics/sprite.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-sharing"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{"api":"http://blaxpirit.github.io/crsfml/api/SF","examples":"https://github.com/BlaXpirit/crsfml/tree/master/examples","examples2":"https://github.com/BlaXpirit/crsfml-examples/tree/master"},"title":"CrSFML Tutorials","links":{"sidebar":{"CrSFML":"http://github.com/BlaXpirit/crsfml"}},"gitbook":">= 3.0.0"},"file":{"path":"graphics/text.md","mtime":"2018-03-07T21:45:04.268Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-03-07T21:45:56.311Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
